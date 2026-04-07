@@ -207,14 +207,14 @@ func _jump(delta: float) -> Vector3:
 
 
 func _interact() -> void:
-	#if held != null:
-		#_drop()
-		#return
+	if held != null:
+		_drop()
+		return
 	var collider = interaction_raycast.get_collider()
 	if collider is Interactable:
 		collider.interact()
-	#elif collider is RigidBody3D:
-		#_pick_up(collider)
+	elif collider is RigidBody3D:
+		_pick_up(collider)
 
 
 func death() -> void:
