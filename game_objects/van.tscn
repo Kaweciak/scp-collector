@@ -9,6 +9,7 @@ data = PackedVector3Array(-0.7763672, 0.08544922, -3.9104004, -0.7763672, 0.1912
 [node name="Van" type="StaticBody3D" unique_id=1665049532]
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="." unique_id=1012291353]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 
 [node name="CSGBox3D6" type="CSGBox3D" parent="CSGCombiner3D" unique_id=1560788780]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.06616211, 0.7927246, -3.2052002)
@@ -51,13 +52,12 @@ height = 0.24072266
 sides = 16
 material = SubResource("StandardMaterial3D_2tban")
 
-[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="." unique_id=412885796]
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="." unique_id=468851966]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0)
 shape = SubResource("ConcavePolygonShape3D_2tban")
 
 [node name="SpotLight3D" type="SpotLight3D" parent="." unique_id=628221972]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2, -2)
-spot_range = 3.0
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4, -4)
 
 [node name="SpotLight3D2" type="SpotLight3D" parent="." unique_id=490709674]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2, 0)
-spot_range = 3.0
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 4, 0)
