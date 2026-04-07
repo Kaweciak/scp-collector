@@ -51,7 +51,3 @@ size = Vector3(3, 1, 3)
 
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=390816002]
 shape = SubResource("ConcavePolygonShape3D_iufgh")
-
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=8226037]
-_spawnable_scenes = PackedStringArray("uid://bb8bwrx7l5cng")
-spawn_path = NodePath("..")

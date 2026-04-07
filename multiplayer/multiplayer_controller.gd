@@ -3,8 +3,12 @@ extends Node
 var peer = ENetMultiplayerPeer.new()
 var player_scene: PackedScene = preload("res://player/player_body_3d.tscn")
 
+var spawner: MultiplayerSpawner = MultiplayerSpawner.new()
 
 func _ready() -> void:
+	spawner.add_spawnable_scene("res://player/player_body_3d.tscn")
+	spawner.spawn_path = ".."
+	add_child(spawner)
 	var args = OS.get_cmdline_args()
 	if "--host" in args:
 		_host()

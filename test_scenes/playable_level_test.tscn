@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://c6hk3k3eww3sr"]
+
+[ext_resource type="Script" uid="uid://1fpd6w0diisb" path="res://multiplayer/multiplayer_controller.gd" id="1_6ljyq"]
+[ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="2_1aoms"]
+
+[node name="PlayableLevelTest" type="Node3D" unique_id=1178682070]
+script = ExtResource("1_6ljyq")
+
+[node name="Van" parent="." unique_id=1665049532 instance=ExtResource("2_1aoms")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.35947883, -0.29335004, 1.1865344)
