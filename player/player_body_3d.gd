@@ -48,6 +48,9 @@ func _ready() -> void:
 	camera.current = is_multiplayer_authority()
 
 func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority():
+		return
+
 	var on_floor: bool = is_on_floor()
 
 	if on_floor:
@@ -68,6 +71,8 @@ func _physics_process(delta: float) -> void:
 		_update_held()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not is_multiplayer_authority():
+		return
 	if event is InputEventMouseMotion:
 		look_dir = event.relative * 0.001
 		if mouse_captured: _rotate_camera()
@@ -88,8 +93,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			if(Input.is_action_pressed("sprint")):
 				_sprint()
 
-		#elif event.is_action_pressed("interact"):
-			#_interact()
+		elif event.is_action_pressed("interact"):
+			_interact()
 
 		elif event.is_action_pressed("debug_activate"):
 			debug_mode_enabled = true
@@ -201,15 +206,15 @@ func _jump(delta: float) -> Vector3:
 	return jump_vel
 
 
-#func _interact() -> void:
-	#if held != null:
-		#_drop()
-		#return
-	#var collider = interaction_raycast.get_collider()
-	#if collider is Interactable:
-		#collider.interact()
-	#elif collider is RigidBody3D:
-		#_pick_up(collider)
+func _interact() -> void:
+	if held != null:
+		_drop()
+		return
+	var collider = interaction_raycast.get_collider()
+	if collider is Interactable:
+		collider.interact()
+	elif collider is RigidBody3D:
+		_pick_up(collider)
 
 
 func death() -> void:
