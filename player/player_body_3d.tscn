@@ -61,6 +61,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
 [node name="InteractionRaycast" type="RayCast3D" parent="MainCamera" unique_id=799756827]
 target_position = Vector3(0, 0, -2)
+collision_mask = 32769
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")
