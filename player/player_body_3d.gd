@@ -40,8 +40,12 @@ static var debug_mode_enabled: bool = false
 # @onready var pause_menu: PauseMenu = $MainCamera/PauseMenu
 # @onready var hud: Hud = $MainCamera/Hud
 
+func _enter_tree() -> void:
+	set_multiplayer_authority(name.to_int())
+
 func _ready() -> void:
 	_capture_mouse()
+	camera.current = is_multiplayer_authority()
 
 func _physics_process(delta: float) -> void:
 	var on_floor: bool = is_on_floor()
@@ -111,6 +115,8 @@ func _crouch() -> void:
 	crouching = true
 	base_collision.disabled = true
 	crouch_collision.disabled = false
+	crouch_collision.visible = true
+	base_collision.visible = false
 	camera.position.y = 0.2
 
 func _can_uncrouch() -> bool:
@@ -137,6 +143,8 @@ func _uncrouch() -> void:
 	crouching = false
 	base_collision.disabled = false
 	crouch_collision.disabled = true
+	base_collision.visible = true
+	crouch_collision.visible = false
 	camera.position.y = 0.7
 
 func _sprint() -> void:

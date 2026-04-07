@@ -5,8 +5,34 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
 height = 1.8
 
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ied1u"]
+height = 1.8
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4qwy5"]
 height = 1.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ryni8"]
+height = 1.2
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ied1u"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath("BaseCollision:disabled")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath("CrouchCollision:disabled")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+properties/4/path = NodePath("CrouchCollision:visible")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath("BaseCollision:visible")
+properties/5/spawn = true
+properties/5/replication_mode = 1
 
 [node name="PlayerBody3D" type="CharacterBody3D" unique_id=1605310021]
 script = ExtResource("1_4qwy5")
@@ -18,13 +44,23 @@ crouch_factor = 0.7999999999999999
 [node name="BaseCollision" type="CollisionShape3D" parent="." unique_id=1628177780]
 shape = SubResource("CapsuleShape3D_ugv4o")
 
+[node name="BaseMesh" type="MeshInstance3D" parent="BaseCollision" unique_id=1058749584]
+mesh = SubResource("CapsuleMesh_ied1u")
+
 [node name="CrouchCollision" type="CollisionShape3D" parent="." unique_id=1560757918]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+visible = false
 shape = SubResource("CapsuleShape3D_4qwy5")
 disabled = true
+
+[node name="CrouchMesh" type="MeshInstance3D" parent="CrouchCollision" unique_id=221280091]
+mesh = SubResource("CapsuleMesh_ryni8")
 
 [node name="MainCamera" type="Camera3D" parent="." unique_id=1737546687]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 
 [node name="InteractionRaycast" type="RayCast3D" parent="MainCamera" unique_id=799756827]
 target_position = Vector3(0, 0, -2)
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
+replication_config = SubResource("SceneReplicationConfig_ied1u")
