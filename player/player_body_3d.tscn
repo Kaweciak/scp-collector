@@ -3,17 +3,14 @@
 [ext_resource type="Script" uid="uid://tjnmydpq6mo0" path="res://player/player_body_3d.gd" id="1_4qwy5"]
 [ext_resource type="Script" uid="uid://dxynsrgu67x7y" path="res://player/hud.gd" id="2_rjoga"]
 [ext_resource type="Shader" uid="uid://brlqm58kcl17r" path="res://player/sanity_distortion.gdshader" id="2_ryni8"]
+[ext_resource type="PackedScene" uid="uid://blux03ijdura0" path="res://player/model/remade.tscn" id="2_ryni8"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
-height = 1.8
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ied1u"]
+radius = 0.3
 height = 1.8
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4qwy5"]
-height = 1.2
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_ryni8"]
+radius = 0.3
 height = 1.2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rjoga"]
@@ -42,7 +39,7 @@ properties/5/replication_mode = 1
 
 [node name="PlayerBody3D" type="CharacterBody3D" unique_id=1605310021]
 script = ExtResource("1_4qwy5")
-speed = 4.0
+speed = 3.0
 camera_sens = 2.1
 sprint_factor = 1.5
 crouch_factor = 0.7999999999999999
@@ -50,20 +47,14 @@ crouch_factor = 0.7999999999999999
 [node name="BaseCollision" type="CollisionShape3D" parent="." unique_id=1628177780]
 shape = SubResource("CapsuleShape3D_ugv4o")
 
-[node name="BaseMesh" type="MeshInstance3D" parent="BaseCollision" unique_id=1058749584]
-mesh = SubResource("CapsuleMesh_ied1u")
-
 [node name="CrouchCollision" type="CollisionShape3D" parent="." unique_id=1560757918]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
 visible = false
 shape = SubResource("CapsuleShape3D_4qwy5")
 disabled = true
 
-[node name="CrouchMesh" type="MeshInstance3D" parent="CrouchCollision" unique_id=221280091]
-mesh = SubResource("CapsuleMesh_ryni8")
-
 [node name="MainCamera" type="Camera3D" parent="." unique_id=1737546687]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78374916, 0)
 
 [node name="InteractionRaycast" type="RayCast3D" parent="MainCamera" unique_id=799756827]
 target_position = Vector3(0, 0, -2)
@@ -83,3 +74,8 @@ mouse_filter = 2
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")
+
+[node name="ModelHolder" type="Node3D" parent="." unique_id=1476649938]
+transform = Transform3D(-0.29999998, 0, -2.622683e-08, 0, 0.29999998, 0, 2.622683e-08, 0, -0.29999998, 0.0172019, -0.65, 0.12842727)
+
+[node name="Model" parent="ModelHolder" unique_id=1737684792 instance=ExtResource("2_ryni8")]

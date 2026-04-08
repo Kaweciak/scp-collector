@@ -43,6 +43,9 @@ static var debug_mode_enabled: bool = false
 @onready var crouch_collision: CollisionShape3D = $CrouchCollision
 @onready var interaction_raycast: RayCast3D = $MainCamera/InteractionRaycast
 
+@onready var animation_player: AnimationPlayer = $ModelHolder/Model/AnimationPlayer
+@onready var model: Node3D = $ModelHolder/Model
+
 # @onready var pause_menu: PauseMenu = $MainCamera/PauseMenu
 # @onready var hud: Hud = $MainCamera/Hud
 
@@ -52,6 +55,8 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	_capture_mouse()
 	camera.current = is_multiplayer_authority()
+	if is_multiplayer_authority():
+		model.visible = false
 
 func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority():
@@ -78,6 +83,9 @@ func _physics_process(delta: float) -> void:
 	
 	_process_sanity(delta)
 	
+
+	if is_multiplayer_authority():
+		_update_animation()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
@@ -179,7 +187,7 @@ func _release_mouse() -> void:
 	mouse_captured = false
 
 func _rotate_camera(sens_mod: float = 1.0) -> void:
-	camera.rotation.y -= look_dir.x * camera_sens * sens_mod
+	rotation.y -= look_dir.x * camera_sens * sens_mod
 	camera.rotation.x = clamp(camera.rotation.x - look_dir.y * camera_sens * sens_mod, -1.5, 1.5)
 
 func _walk(delta: float) -> Vector3:
@@ -297,7 +305,21 @@ func _process_sanity(delta: float) -> void:
 	if sanity <= 0:
 		sanity = 100.0
 		death()
+    
 	
-	
-	
-	
+func _update_animation():
+	var is_moving := move_dir.length() > 0.1
+
+	var anim := "idle"
+
+	if crouching:
+		anim = "crouch_walking" if is_moving else "crouch_idle"
+	else:
+		anim = "walking" if is_moving else "idle"
+
+	play_animation.rpc(anim)
+
+@rpc("call_local")
+func play_animation(anim_name: String) -> void:
+	if animation_player.current_animation != anim_name:
+		animation_player.play(anim_name)
