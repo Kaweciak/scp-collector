@@ -1,0 +1,280 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://d1cv2w7ijxe2b"
+path="res://.godot/imported/vintage_smeg_kitchen_appliance_p.1.glb-691b465c16aede49b0e633f63f681928.scn"
+
+[deps]
+
+source_file="res://game_objects/SCP-426/vintage_smeg_kitchen_appliance_p.1.glb"
+dest_files=["res://.godot/imported/vintage_smeg_kitchen_appliance_p.1.glb-691b465c16aede49b0e633f63f681928.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=0.025
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=false
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"meshes": {
+"Sketchfab_Scene_Coffee Grinder_Icons Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Coffee Grinder_Icons Dark_0.res",
+"save_to_file/path": "uid://hjnd750skkrd"
+},
+"Sketchfab_Scene_Coffee Grinder_Metalic_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Coffee Grinder_Metalic_0.res",
+"save_to_file/path": "uid://e7nl1r7f4coy"
+},
+"Sketchfab_Scene_Coffee Grinder_Plastic Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Coffee Grinder_Plastic Dark_0.res",
+"save_to_file/path": "uid://ddyxf4ns0r5wq"
+},
+"Sketchfab_Scene_Coffee Grinder_Plastic Light_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Coffee Grinder_Plastic Light_0.res",
+"save_to_file/path": "uid://bscgi8b5yck75"
+},
+"Sketchfab_Scene_Coffee Grinder_Plastic TRANSPARENT Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Coffee Grinder_Plastic TRANSPARENT Dark_0.res",
+"save_to_file/path": "uid://c7pu18k7qg6kj"
+},
+"Sketchfab_Scene_Coffee Grinder_RED Surface_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Coffee Grinder_RED Surface_0.res",
+"save_to_file/path": "uid://drt3ngpd1ohsb"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_Dark_0.res",
+"save_to_file/path": "uid://cvwvq7r2ojp44"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_Grey_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_Grey_0.res",
+"save_to_file/path": "uid://syp34ocb5rst"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_Icons Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_Icons Dark_0.res",
+"save_to_file/path": "uid://dcr6nlisxsxws"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_Metalic_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_Metalic_0.res",
+"save_to_file/path": "uid://dci5cduufylox"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_Metalic_02": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_Metalic_02.res",
+"save_to_file/path": "uid://qp4geoh0q1pp"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_Plastic Light_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_Plastic Light_0.res",
+"save_to_file/path": "uid://oaryo67esi0"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_Plastic TRANSPARENT_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_Plastic TRANSPARENT_0.res",
+"save_to_file/path": "uid://mb6g0qkvhig"
+},
+"Sketchfab_Scene_Drip Coffee Mashine_RED Surface_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Drip Coffee Mashine_RED Surface_0.res",
+"save_to_file/path": "uid://chdlxqlxatiot"
+},
+"Sketchfab_Scene_Espresso Coffee Mashine _Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Espresso Coffee Mashine _Dark_0.res",
+"save_to_file/path": "uid://dbb5qqwyfb3g7"
+},
+"Sketchfab_Scene_Espresso Coffee Mashine _Icons Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Espresso Coffee Mashine _Icons Dark_0.res",
+"save_to_file/path": "uid://ctr1v6wmly22r"
+},
+"Sketchfab_Scene_Espresso Coffee Mashine _Metalic_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Espresso Coffee Mashine _Metalic_0.res",
+"save_to_file/path": "uid://djhej145js1ak"
+},
+"Sketchfab_Scene_Espresso Coffee Mashine _Metalic_02": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Espresso Coffee Mashine _Metalic_02.res",
+"save_to_file/path": "uid://da56wn0glvbng"
+},
+"Sketchfab_Scene_Espresso Coffee Mashine _Plastic TRANSPARENT Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Espresso Coffee Mashine _Plastic TRANSPARENT Dark_0.res",
+"save_to_file/path": "uid://rst74p8kc5tm"
+},
+"Sketchfab_Scene_Espresso Coffee Mashine _RED Surface_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Espresso Coffee Mashine _RED Surface_0.res",
+"save_to_file/path": "uid://vfl0tdjpb7ik"
+},
+"Sketchfab_Scene_Kettle_Dark_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_Dark_0.res",
+"save_to_file/path": "uid://cne1hmlbexu30"
+},
+"Sketchfab_Scene_Kettle_Grey_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_Grey_0.res",
+"save_to_file/path": "uid://b5qvkbpnkouoc"
+},
+"Sketchfab_Scene_Kettle_Metalic_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_Metalic_0.res",
+"save_to_file/path": "uid://swot8kvaf01o"
+},
+"Sketchfab_Scene_Kettle_Metalic_02": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_Metalic_02.res",
+"save_to_file/path": "uid://c4ysmx5mqe60x"
+},
+"Sketchfab_Scene_Kettle_Metalic_03": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_Metalic_03.res",
+"save_to_file/path": "uid://b80cqukj87g8u"
+},
+"Sketchfab_Scene_Kettle_Plastic Light_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_Plastic Light_0.res",
+"save_to_file/path": "uid://b4pd2rv2widkq"
+},
+"Sketchfab_Scene_Kettle_Plastic TRANSPARENT_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_Plastic TRANSPARENT_0.res",
+"save_to_file/path": "uid://bdi5k1e3aowg7"
+},
+"Sketchfab_Scene_Kettle_RED Surface_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_RED Surface_0.res",
+"save_to_file/path": "uid://dgr0cfd0b6gyo"
+},
+"Sketchfab_Scene_Kettle_RED Surface_02": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_RED Surface_02.res",
+"save_to_file/path": "uid://dr4c6txh0wx2i"
+},
+"Sketchfab_Scene_Kettle_RED Surface_03": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Kettle_RED Surface_03.res",
+"save_to_file/path": "uid://cba68ynbrhl3x"
+},
+"Sketchfab_Scene_Plane_Grey_0": {
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Plane_Grey_0.res",
+"save_to_file/path": "uid://3ykujo1p11ym"
+},
+"Sketchfab_Scene_Toaster_Dark_0": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Dark_0.res",
+"save_to_file/path": "uid://hsx8sdyddo1t"
+},
+"Sketchfab_Scene_Toaster_Icons Dark_0": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Icons Dark_0.res",
+"save_to_file/path": "uid://bv67rn1otkthc"
+},
+"Sketchfab_Scene_Toaster_Metalic_0": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_0.res",
+"save_to_file/path": "uid://dqaifb8wlujg0"
+},
+"Sketchfab_Scene_Toaster_Metalic_02": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_02.res",
+"save_to_file/path": "uid://caoixtuypqwm6"
+},
+"Sketchfab_Scene_Toaster_Plastic Dark_0": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Dark_0.res",
+"save_to_file/path": "uid://cmtpf0dnaffpk"
+},
+"Sketchfab_Scene_Toaster_Plastic Light_0": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Light_0.res",
+"save_to_file/path": "uid://buya7lajwsn22"
+},
+"Sketchfab_Scene_Toaster_RED Surface_0": {
+"generate/lightmap_uv": 0,
+"generate/lods": 0,
+"generate/shadow_meshes": 0,
+"lods/normal_merge_angle": 20.0,
+"save_to_file/enabled": true,
+"save_to_file/fallback_path": "res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_RED Surface_0.res",
+"save_to_file/path": "uid://douh8p08lnlrp"
+}
+},
+"nodes": {
+"PATH:Sketchfab_model/732c3a838f494a1bbdbf25078d0459de_fbx/RootNode/Coffee Grinder Empty": {
+"import/skip_import": true
+},
+"PATH:Sketchfab_model/732c3a838f494a1bbdbf25078d0459de_fbx/RootNode/Drip Coffee Mashine Empty": {
+"import/skip_import": true
+},
+"PATH:Sketchfab_model/732c3a838f494a1bbdbf25078d0459de_fbx/RootNode/Espresso Coffee Mashine Empty": {
+"import/skip_import": true
+},
+"PATH:Sketchfab_model/732c3a838f494a1bbdbf25078d0459de_fbx/RootNode/Kettle Empty": {
+"import/skip_import": true
+},
+"PATH:Sketchfab_model/732c3a838f494a1bbdbf25078d0459de_fbx/RootNode/Plane": {
+"import/skip_import": true
+}
+}
+}
+gltf/naming_version=2
+gltf/embedded_image_handling=1

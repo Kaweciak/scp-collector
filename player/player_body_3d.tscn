@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://bb8bwrx7l5cng"]
 
 [ext_resource type="Script" uid="uid://tjnmydpq6mo0" path="res://player/player_body_3d.gd" id="1_4qwy5"]
+[ext_resource type="Script" uid="uid://dxynsrgu67x7y" path="res://player/hud.gd" id="2_rjoga"]
+[ext_resource type="Shader" uid="uid://brlqm58kcl17r" path="res://player/sanity_distortion.gdshader" id="2_ryni8"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
 height = 1.8
@@ -13,6 +15,10 @@ height = 1.2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ryni8"]
 height = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rjoga"]
+shader = ExtResource("2_ryni8")
+shader_parameter/distortion_strength = 0.0
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ied1u"]
 properties/0/path = NodePath(".:position")
@@ -62,6 +68,18 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
 [node name="InteractionRaycast" type="RayCast3D" parent="MainCamera" unique_id=799756827]
 target_position = Vector3(0, 0, -2)
 collision_mask = 32769
+
+[node name="HUD" type="CanvasLayer" parent="MainCamera" unique_id=1812656686]
+script = ExtResource("2_rjoga")
+
+[node name="ColorRect" type="ColorRect" parent="MainCamera/HUD" unique_id=195940665]
+material = SubResource("ShaderMaterial_rjoga")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")

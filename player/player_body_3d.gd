@@ -1,5 +1,7 @@
 class_name PlayerBody3D extends CharacterBody3D
 
+@onready var hud: CanvasLayer = $MainCamera/HUD
+
 @export_range(1, 35, 1) var speed: float = 10
 @export_range(10, 400, 1) var acceleration: float = 100
 
@@ -11,6 +13,10 @@ class_name PlayerBody3D extends CharacterBody3D
 
 @export_range(0.01, 0.5, 0.01) var coyote_time: float = 0.2
 var coyote_timer: float = 0.0
+
+#Sanity variable
+@export var sanity: float = 100.0
+@export var sanity_drain_rate = 5.0
 
 var sprinting: bool = false
 var crouching: bool = false
@@ -48,27 +54,30 @@ func _ready() -> void:
 	camera.current = is_multiplayer_authority()
 
 func _physics_process(delta: float) -> void:
-	if not is_multiplayer_authority():
-		return
+	if is_multiplayer_authority():
 
-	var on_floor: bool = is_on_floor()
+		var on_floor: bool = is_on_floor()
 
-	if on_floor:
-		coyote_timer = coyote_time
-	else:
-		coyote_timer = max(coyote_timer - delta, 0.0)
+		if on_floor:
+			coyote_timer = coyote_time
+		else:
+			coyote_timer = max(coyote_timer - delta, 0.0)
 
-	if Input.is_action_just_pressed("jump"):
-		jumping = true
+		if Input.is_action_just_pressed("jump"):
+			jumping = true
 
-	if tried_uncroaching:
-		_try_uncroach()
+		if tried_uncroaching:
+			_try_uncroach()
 
-	velocity = _walk(delta) + _gravity(delta) + _jump(delta)
-	move_and_slide()
-
-	if held != null:
-		_update_held()
+		velocity = _walk(delta) + _gravity(delta) + _jump(delta)
+		move_and_slide()
+	
+	if is_multiplayer_authority() or multiplayer.is_server():
+		if held != null:
+			_update_held()
+	
+	_process_sanity(delta)
+	
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
@@ -101,8 +110,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.is_action_released("debug_activate"):
 			debug_mode_enabled = false
 
-		#elif event.is_action_pressed("pause"):
-			#_pause()
+		elif event.is_action_pressed("pause"):
+			if mouse_captured:
+				_release_mouse()
+			else:
+				_capture_mouse()
 
 		if debug_mode_enabled:
 			if event.is_action_pressed("debug_death"):
@@ -208,13 +220,13 @@ func _jump(delta: float) -> Vector3:
 
 func _interact() -> void:
 	if held != null:
-		_drop()
+		_server_drop.rpc()
 		return
 	var collider = interaction_raycast.get_collider()
 	if collider is Interactable:
 		collider.interact()
 	elif collider is RigidBody3D:
-		_pick_up(collider)
+		_server_pick_up.rpc(collider.get_path())
 
 
 func death() -> void:
@@ -232,12 +244,18 @@ func death() -> void:
 #func _bus_disabled(idx: int) -> void:
 	#hud.bus_disabled(idx)
 
-func _pick_up(object: RigidBody3D):
-	held = object
-	held.gravity_scale = 0
+@rpc("any_peer", "call_local")
+func _server_pick_up(path: NodePath):
+	var object = get_node_or_null(path)
+	if object is RigidBody3D:
+		held = object
+		held.gravity_scale = 0
 
-func _drop():
-	held.gravity_scale = 1
+@rpc("any_peer", "call_local")
+func _server_drop():
+	if is_instance_valid(held):
+		held.gravity_scale = 1
+	
 	held = null
 
 func _update_held():
@@ -245,3 +263,41 @@ func _update_held():
 	var target: Vector3 = self.global_position - 1.75* camera.global_transform.basis.z
 	held.linear_velocity = 10 * (target - held.global_position)
 	held.angular_velocity = 1 * (target_rotation - held.global_rotation)
+
+#Decrease the player sanity if looking at the Toaster
+func _process_sanity(delta: float) -> void:
+	var anomalies = get_tree().get_nodes_in_group("Anomaly")
+	var is_draining = false
+	
+	#Check if the Toaster is visible on the screen
+	for anomaly in anomalies:
+		if anomaly is Toaster:
+			if camera.is_position_in_frustum(anomaly.global_position):
+				#Raycast for walls to block the effect
+				var space_state = get_world_3d().direct_space_state
+				var query = PhysicsRayQueryParameters3D.create(camera.global_position, anomaly.global_position)
+				query.exclude = [self]
+				var result = space_state.intersect_ray(query)
+				
+				if result.is_empty() or result.collider == anomaly:
+					is_draining = true
+					break
+	
+	#Drain or regain sanity depending on if the anomaly is in sight
+	if is_draining:
+		sanity = max(0, sanity - sanity_drain_rate * delta)
+	else:
+		sanity = min(100, sanity + (sanity_drain_rate * 0.1) * delta)
+	
+	#Update the HUD shader strength
+	var strength = (100.0 - sanity) / 100.0
+	hud.update_distortion(strength)
+	
+	#Kill the player if sanity reaches zero
+	if sanity <= 0:
+		sanity = 100.0
+		death()
+	
+	
+	
+	
