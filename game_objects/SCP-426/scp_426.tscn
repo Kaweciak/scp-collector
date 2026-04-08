@@ -1,0 +1,94 @@
+[gd_scene format=3 uid="uid://yhvx6grd7fl0"]
+
+[ext_resource type="Script" uid="uid://nk47aikpybmy" path="res://game_objects/SCP-426/scp_426.gd" id="1_ey5d2"]
+[ext_resource type="ArrayMesh" uid="uid://burp40vck0f5h" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Icons Dark_0.res" id="1_f81i0"]
+[ext_resource type="ArrayMesh" uid="uid://c4pm446vt3ere" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_0.res" id="2_ey5d2"]
+[ext_resource type="ArrayMesh" uid="uid://caoixtuypqwm6" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_02.res" id="3_gk7ay"]
+[ext_resource type="ArrayMesh" uid="uid://cg1n10mn1gbmj" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Dark_0.res" id="4_od64x"]
+[ext_resource type="ArrayMesh" uid="uid://bmnpjfkqay16t" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Light_0.res" id="5_x8abv"]
+[ext_resource type="ArrayMesh" uid="uid://cp6eiswnrb50h" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_RED Surface_0.res" id="6_6oobr"]
+[ext_resource type="ArrayMesh" uid="uid://hsx8sdyddo1t" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Dark_0.res" id="7_ymocq"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjwm"]
+albedo_color = Color(0.33333334, 0.21176471, 0.3254902, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_f81i0"]
+size = Vector3(0.41904745, 0.35990712, 0.34946194)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ey5d2"]
+height = 0.5208788
+radius = 0.20410156
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_gk7ay"]
+height = 0.60491943
+radius = 0.18798828
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ey5d2"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:linear_velocity")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:angular_velocity")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[node name="Toaster" type="RigidBody3D" unique_id=843890881 groups=["Anomaly"]]
+collision_layer = 49152
+collision_mask = 32769
+script = ExtResource("1_ey5d2")
+
+[node name="Pivot" type="Node3D" parent="." unique_id=328695925]
+transform = Transform3D(1.6739992e-07, -1, 8.660763e-08, -0.5735764, -2.507182e-08, 0.81915206, -0.81915206, -1.8680208e-07, -0.5735764, 0, 0, 0)
+
+[node name="Toaster_Icons Dark_0" type="MeshInstance3D" parent="Pivot" unique_id=1650420356]
+transform = Transform3D(1, 0, 0, 1.4210855e-14, 1, 7.1054274e-15, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("1_f81i0")
+
+[node name="Toaster_Metalic_0" type="MeshInstance3D" parent="Pivot" unique_id=1738930866]
+transform = Transform3D(1, 0, 0, 1.4210855e-14, 1, 7.1054274e-15, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("2_ey5d2")
+
+[node name="Toaster_Metalic_02" type="MeshInstance3D" parent="Pivot" unique_id=2046801078]
+transform = Transform3D(1, 0, 0, 1.4210855e-14, 1, 7.1054274e-15, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("3_gk7ay")
+
+[node name="Toaster_Plastic Dark_0" type="MeshInstance3D" parent="Pivot" unique_id=804368887]
+transform = Transform3D(1, 0, 0, 1.4210855e-14, 1, 7.1054274e-15, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("4_od64x")
+
+[node name="Toaster_Plastic Light_0" type="MeshInstance3D" parent="Pivot" unique_id=649566014]
+transform = Transform3D(1, 0, 0, 1.4210855e-14, 1, 7.1054274e-15, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("5_x8abv")
+
+[node name="Toaster_RED Surface_0" type="MeshInstance3D" parent="Pivot" unique_id=12246042]
+transform = Transform3D(1, 0, 0, 1.4210855e-14, 1, 7.1054274e-15, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("6_6oobr")
+surface_material_override/0 = SubResource("StandardMaterial3D_8wjwm")
+
+[node name="Toaster_Dark_0" type="MeshInstance3D" parent="Pivot" unique_id=87043031]
+transform = Transform3D(1, 0, 0, 1.4210855e-14, 1, 7.1054274e-15, 0, 0, 1, 0, 0, 0)
+mesh = ExtResource("7_ymocq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1202463186]
+transform = Transform3D(1.6739988e-07, -1, 8.660763e-08, 0.010593951, 8.837621e-08, 0.999944, -0.999944, -1.6647301e-07, 0.010593951, -0.00029143644, 0.18115285, 0.0025803978)
+shape = SubResource("BoxShape3D_f81i0")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=2080738653]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17143446, 0.25957942, 0)
+shape = SubResource("CylinderShape3D_ey5d2")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=217948991]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16328022, 0.25523975, 0)
+shape = SubResource("CylinderShape3D_ey5d2")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="." unique_id=309016168]
+transform = Transform3D(-0.0007154548, -0.9999701, -0.0076946206, 0.99944496, -0.00045874162, -0.033312835, 0.033308312, -0.007714212, 0.9994156, 0.0066789538, 0.32122663, -0.005095385)
+shape = SubResource("CylinderShape3D_gk7ay")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1388690759]
+replication_config = SubResource("SceneReplicationConfig_ey5d2")

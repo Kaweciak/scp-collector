@@ -11,9 +11,18 @@ config_version=5
 [application]
 
 config/name="SCP collector"
-run/main_scene="uid://c6hk3k3eww3sr"
+run/main_scene="uid://dc0o1xomipg3e"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+MultiplayerController="*uid://1fpd6w0diisb"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=540
 
 [dotnet]
 
@@ -84,6 +93,7 @@ throw={
 
 [layer_names]
 
+3d_physics/layer_15="Anomaly"
 3d_physics/layer_16="Interactable"
 
 [physics]
