@@ -9,4 +9,8 @@ func _ready() -> void:
 func _on_van_area_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Anomaly"):
 		if multiplayer.is_server():
-			get_tree().reload_current_scene()
+			sync_reload.rpc()
+
+@rpc("authority", "call_local", "reliable")
+func sync_reload() -> void:
+	get_tree().reload_current_scene()

@@ -38,6 +38,8 @@ var held: RigidBody3D
 
 static var debug_mode_enabled: bool = false
 
+var current_anim_state: String = ""
+
 @onready var camera: Camera3D = $MainCamera
 @onready var base_collision: CollisionShape3D = $BaseCollision
 @onready var crouch_collision: CollisionShape3D = $CrouchCollision
@@ -76,16 +78,14 @@ func _physics_process(delta: float) -> void:
 
 		velocity = _walk(delta) + _gravity(delta) + _jump(delta)
 		move_and_slide()
+		
+		_update_animation()
 	
 	if is_multiplayer_authority() or multiplayer.is_server():
 		if held != null:
 			_update_held()
 	
 	_process_sanity(delta)
-	
-
-	if is_multiplayer_authority():
-		_update_animation()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
@@ -305,19 +305,20 @@ func _process_sanity(delta: float) -> void:
 	if sanity <= 0:
 		sanity = 100.0
 		death()
-    
 	
 func _update_animation():
 	var is_moving := move_dir.length() > 0.1
-
+	
 	var anim := "idle"
-
+	
 	if crouching:
 		anim = "crouch_walking" if is_moving else "crouch_idle"
 	else:
 		anim = "walking" if is_moving else "idle"
-
-	play_animation.rpc(anim)
+	
+	if anim != current_anim_state:
+		play_animation.rpc(anim)
+		current_anim_state = anim
 
 @rpc("call_local")
 func play_animation(anim_name: String) -> void:

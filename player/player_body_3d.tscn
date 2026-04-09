@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://bb8bwrx7l5cng"]
 
 [ext_resource type="Script" uid="uid://tjnmydpq6mo0" path="res://player/player_body_3d.gd" id="1_4qwy5"]
-[ext_resource type="Script" uid="uid://dxynsrgu67x7y" path="res://player/hud.gd" id="2_rjoga"]
+[ext_resource type="Script" path="res://player/hud.gd" id="2_rjoga"]
 [ext_resource type="Shader" uid="uid://brlqm58kcl17r" path="res://player/sanity_distortion.gdshader" id="2_ryni8"]
-[ext_resource type="PackedScene" uid="uid://blux03ijdura0" path="res://player/model/remade.tscn" id="2_ryni8"]
+[ext_resource type="PackedScene" uid="uid://blux03ijdura0" path="res://player/model/remade.tscn" id="3_model"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
 radius = 0.3
@@ -63,7 +63,7 @@ collision_mask = 32769
 [node name="HUD" type="CanvasLayer" parent="MainCamera" unique_id=1812656686]
 script = ExtResource("2_rjoga")
 
-[node name="ColorRect" type="ColorRect" parent="MainCamera/HUD" unique_id=195940665]
+[node name="SanityFilter" type="ColorRect" parent="MainCamera/HUD" unique_id=195940665]
 material = SubResource("ShaderMaterial_rjoga")
 anchors_preset = 15
 anchor_right = 1.0
@@ -78,4 +78,4 @@ replication_config = SubResource("SceneReplicationConfig_ied1u")
 [node name="ModelHolder" type="Node3D" parent="." unique_id=1476649938]
 transform = Transform3D(-0.29999998, 0, -2.622683e-08, 0, 0.29999998, 0, 2.622683e-08, 0, -0.29999998, 0.0172019, -0.65, 0.12842727)
 
-[node name="Model" parent="ModelHolder" unique_id=1737684792 instance=ExtResource("2_ryni8")]
+[node name="Model" parent="ModelHolder" unique_id=1737684792 instance=ExtResource("3_model")]

@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://yhvx6grd7fl0"]
 
 [ext_resource type="Script" uid="uid://nk47aikpybmy" path="res://game_objects/SCP-426/scp_426.gd" id="1_ey5d2"]
-[ext_resource type="ArrayMesh" uid="uid://burp40vck0f5h" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Icons Dark_0.res" id="1_f81i0"]
-[ext_resource type="ArrayMesh" uid="uid://c4pm446vt3ere" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_0.res" id="2_ey5d2"]
+[ext_resource type="ArrayMesh" uid="uid://bv67rn1otkthc" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Icons Dark_0.res" id="1_f81i0"]
+[ext_resource type="ArrayMesh" uid="uid://dqaifb8wlujg0" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_0.res" id="2_ey5d2"]
 [ext_resource type="ArrayMesh" uid="uid://caoixtuypqwm6" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_02.res" id="3_gk7ay"]
-[ext_resource type="ArrayMesh" uid="uid://cg1n10mn1gbmj" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Dark_0.res" id="4_od64x"]
-[ext_resource type="ArrayMesh" uid="uid://bmnpjfkqay16t" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Light_0.res" id="5_x8abv"]
-[ext_resource type="ArrayMesh" uid="uid://cp6eiswnrb50h" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_RED Surface_0.res" id="6_6oobr"]
+[ext_resource type="ArrayMesh" uid="uid://cmtpf0dnaffpk" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Dark_0.res" id="4_od64x"]
+[ext_resource type="ArrayMesh" uid="uid://buya7lajwsn22" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Light_0.res" id="5_x8abv"]
+[ext_resource type="ArrayMesh" uid="uid://douh8p08lnlrp" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_RED Surface_0.res" id="6_6oobr"]
 [ext_resource type="ArrayMesh" uid="uid://hsx8sdyddo1t" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Dark_0.res" id="7_ymocq"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjwm"]
@@ -39,7 +39,7 @@ properties/3/replication_mode = 1
 
 [node name="Toaster" type="RigidBody3D" unique_id=843890881 groups=["Anomaly"]]
 collision_layer = 49152
-collision_mask = 32769
+collision_mask = 49153
 script = ExtResource("1_ey5d2")
 
 [node name="Pivot" type="Node3D" parent="." unique_id=328695925]
