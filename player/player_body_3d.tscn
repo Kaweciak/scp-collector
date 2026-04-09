@@ -37,7 +37,9 @@ properties/5/path = NodePath("BaseCollision:visible")
 properties/5/spawn = true
 properties/5/replication_mode = 1
 
-[node name="PlayerBody3D" type="CharacterBody3D" unique_id=1605310021]
+[node name="PlayerBody3D" type="CharacterBody3D" unique_id=1605310021 groups=["Player"]]
+collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_4qwy5")
 speed = 3.0
 camera_sens = 2.1

@@ -3467,10 +3467,10 @@ _data = {
 
 [node name="Sketchfab_Scene" unique_id=1737684792 instance=ExtResource("1_jev3u")]
 
-[node name="Sketchfab_model" parent="." index="0" unique_id=962559698]
+[node name="Sketchfab_model" parent="." index="0" unique_id=607309002]
 transform = Transform3D(0.3, 0, 0, 0, -1.3113417e-08, 0.3, 0, -0.3, -1.3113417e-08, 0, 0, 0)
 
-[node name="Skeleton3D" parent="Sketchfab_model/root/GLTF_SceneRootNode/scientist_hurt_ARM_001_99/GLTF_created_0" parent_id_path=PackedInt32Array(1991934966) index="0" unique_id=857425566]
+[node name="Skeleton3D" parent="Sketchfab_model/root/GLTF_SceneRootNode/scientist_hurt_ARM_001_99/GLTF_created_0" parent_id_path=PackedInt32Array(1549764554) index="0" unique_id=1901876271]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.15680514, 0)
 bones/5/rotation = Quaternion(1.03895786e-07, 1.36429765e-08, 0.017099392, 0.9998539)
 bones/20/rotation = Quaternion(-0.5572075, 0.43533805, -0.4353382, 0.5572085)
@@ -3485,5 +3485,5 @@ bones/67/rotation = Quaternion(-0.00059701595, -0.0032529773, -0.18048835, 0.983
 bones/68/rotation = Quaternion(-0.00025617704, -0.0020895298, -0.12185264, 0.9925461)
 bones/72/rotation = Quaternion(0.00086768717, -0.00473025, 0.18045662, 0.9835713)
 
-[node name="AnimationPlayer" parent="." index="1" unique_id=887376614]
+[node name="AnimationPlayer" parent="." index="1" unique_id=320337748]
 libraries/ = SubResource("AnimationLibrary_mdp80")

@@ -4,6 +4,8 @@ extends Interactable
 
 @export var opened: bool = false
 
+@onready var main_collision: CollisionShape3D = $CollisionShape3D
+
 func interact() -> void:
 	if opened:
 		close()
