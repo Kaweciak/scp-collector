@@ -16,7 +16,7 @@ var coyote_timer: float = 0.0
 
 #Sanity variable
 @export var sanity: float = 100.0
-@export var sanity_drain_rate = 5.0
+@export var sanity_drain_rate = 5
 
 var sprinting: bool = false
 var crouching: bool = false
@@ -35,6 +35,8 @@ var grav_vel: Vector3
 var jump_vel: Vector3
 
 var held: RigidBody3D
+
+var dead: bool = false
 
 static var debug_mode_enabled: bool = false
 
@@ -78,14 +80,15 @@ func _physics_process(delta: float) -> void:
 
 		velocity = _walk(delta) + _gravity(delta) + _jump(delta)
 		move_and_slide()
-		
+
 		_update_animation()
-	
+
+		_process_sanity(delta)
+
 	if is_multiplayer_authority() or multiplayer.is_server():
 		if held != null:
 			_update_held()
-	
-	_process_sanity(delta)
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_multiplayer_authority():
@@ -110,7 +113,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			if(Input.is_action_pressed("sprint")):
 				_sprint()
 
-		elif event.is_action_pressed("interact"):
+		elif event.is_action_pressed("interact") and not dead:
 			_interact()
 
 		elif event.is_action_pressed("debug_activate"):
@@ -126,7 +129,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 		if debug_mode_enabled:
 			if event.is_action_pressed("debug_death"):
-				death()
+				death.rpc()
 
 #func _pause() -> void:
 	#pause_menu.show()
@@ -236,9 +239,13 @@ func _interact() -> void:
 	elif collider is RigidBody3D:
 		_server_pick_up.rpc(collider.get_path())
 
-
+@rpc("call_local", "any_peer")
 func death() -> void:
-	get_tree().reload_current_scene()
+	dead = true
+	_server_drop.rpc()
+	model.reparent(get_parent(), true)
+	model.visible = true
+	sanity = 100
 
 #func set_dialog_image(texture: CompressedTexture2D) -> void:
 	#hud.set_dialog_image(texture)
@@ -263,7 +270,7 @@ func _server_pick_up(path: NodePath):
 func _server_drop():
 	if is_instance_valid(held):
 		held.gravity_scale = 1
-	
+
 	held = null
 
 func _update_held():
@@ -276,7 +283,7 @@ func _update_held():
 func _process_sanity(delta: float) -> void:
 	var anomalies = get_tree().get_nodes_in_group("Anomaly")
 	var is_draining = false
-	
+
 	#Check if the Toaster is visible on the screen
 	for anomaly in anomalies:
 		if anomaly is Toaster:
@@ -286,36 +293,37 @@ func _process_sanity(delta: float) -> void:
 				var query = PhysicsRayQueryParameters3D.create(camera.global_position, anomaly.global_position)
 				query.exclude = [self]
 				var result = space_state.intersect_ray(query)
-				
+
 				if result.is_empty() or result.collider == anomaly:
 					is_draining = true
 					break
-	
+
 	#Drain or regain sanity depending on if the anomaly is in sight
-	if is_draining:
+	if is_draining and not dead:
 		sanity = max(0, sanity - sanity_drain_rate * delta)
 	else:
 		sanity = min(100, sanity + (sanity_drain_rate * 0.1) * delta)
-	
+
 	#Update the HUD shader strength
 	var strength = (100.0 - sanity) / 100.0
 	hud.update_distortion(strength)
-	
+
 	#Kill the player if sanity reaches zero
 	if sanity <= 0:
-		sanity = 100.0
-		death()
-	
+		death.rpc()
+
 func _update_animation():
+	if dead:
+		return
 	var is_moving := move_dir.length() > 0.1
-	
+
 	var anim := "idle"
-	
+
 	if crouching:
 		anim = "crouch_walking" if is_moving else "crouch_idle"
 	else:
 		anim = "walking" if is_moving else "idle"
-	
+
 	if anim != current_anim_state:
 		play_animation.rpc(anim)
 		current_anim_state = anim

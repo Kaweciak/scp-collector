@@ -39,7 +39,7 @@ properties/3/replication_mode = 1
 
 [node name="Toaster" type="RigidBody3D" unique_id=843890881 groups=["Anomaly"]]
 collision_layer = 49152
-collision_mask = 49153
+collision_mask = 16385
 script = ExtResource("1_ey5d2")
 
 [node name="Pivot" type="Node3D" parent="." unique_id=328695925]
