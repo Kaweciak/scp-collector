@@ -1,6 +1,7 @@
 class_name PlayerBody3D extends CharacterBody3D
 
 @onready var hud: CanvasLayer = $MainCamera/HUD
+@onready var blink_timer: Timer = $BlinkTimer
 
 @export_range(1, 35, 1) var speed: float = 10
 @export_range(10, 400, 1) var acceleration: float = 100
@@ -14,9 +15,18 @@ class_name PlayerBody3D extends CharacterBody3D
 @export_range(0.01, 0.5, 0.01) var coyote_time: float = 0.2
 var coyote_timer: float = 0.0
 
-#Sanity variable
+#Sanity variables
 @export var sanity: float = 100.0
-@export var sanity_drain_rate = 5
+@export var sanity_drain_rate: float = 5.0
+
+#Blinking variables
+@export var blink_limit: float = 20.0
+@export var time_since_last_blink: float = 0.0
+@export var blink_duration: float = 1.0 / 10.0
+@export var eyes_open_duration: float = 1.0 / 15.0
+@export var eyes_close_duration: float = 1.0 / 15.0
+enum Eyes_state {OPEN, CLOSING, CLOSED, OPENING}
+var current_eyes_state: Eyes_state = Eyes_state.OPEN
 
 var sprinting: bool = false
 var crouching: bool = false
@@ -105,6 +115,9 @@ func _physics_process(delta: float) -> void:
 		
 		#Process sanity drain for SCP-426
 		_process_sanity(delta)
+		
+		#Process blinking mechanics
+		_process_blinking(delta)
 
 	#Process entity holding mechanics
 	if is_multiplayer_authority() or multiplayer.is_server():
@@ -118,15 +131,20 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 		
 	#Debug logic processing
-	elif event.is_action_pressed("debug_activate"):
-		debug_mode_enabled = true
-	elif event.is_action_released("debug_activate"):
-		debug_mode_enabled = false
+	if event is InputEventKey:
+		if event.is_action_pressed("debug_activate"):
+			debug_mode_enabled = true
+		elif event.is_action_released("debug_activate"):
+			debug_mode_enabled = false
+		elif debug_mode_enabled:
+			if event.is_action_pressed("debug_death"):
+				death.rpc()
 		
 	#Process spectator inputs
 	if dead:
-		if event.is_action_pressed("interact"):
-			_find_next_spectate_target()
+		if event is InputEventKey:
+			if event.is_action_pressed("interact"):
+				_find_next_spectate_target()
 		return
 		
 	#Process mouse inputs
@@ -161,10 +179,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				_release_mouse()
 			else:
 				_capture_mouse()
-		
-		if debug_mode_enabled:
-			if event.is_action_pressed("debug_death"):
-				death.rpc()
 
 
 #func _pause() -> void:
@@ -379,24 +393,26 @@ func _update_held():
 	held.linear_velocity = 10 * (target - held.global_position)
 	held.angular_velocity = 1 * (target_rotation - held.global_rotation)
 
-#Decrease the player sanity if looking at the Toaster
+#Decrease the player sanity when interacting with the Toaster
 func _process_sanity(delta: float) -> void:
-	var anomalies = get_tree().get_nodes_in_group("Anomaly")
 	var is_draining = false
+	
+	#Check if the player's eyes are closed
+	if not current_eyes_state == Eyes_state.CLOSED:
+		var anomalies = get_tree().get_nodes_in_group("Anomaly")
+		#Check if the Toaster is visible on the screen
+		for anomaly in anomalies:
+			if anomaly is Toaster:
+				if camera.is_position_in_frustum(anomaly.global_position):
+					#Raycast for walls to block the effect
+					var space_state = get_world_3d().direct_space_state
+					var query = PhysicsRayQueryParameters3D.create(camera.global_position, anomaly.global_position)
+					query.exclude = [self]
+					var result = space_state.intersect_ray(query)
 
-	#Check if the Toaster is visible on the screen
-	for anomaly in anomalies:
-		if anomaly is Toaster:
-			if camera.is_position_in_frustum(anomaly.global_position):
-				#Raycast for walls to block the effect
-				var space_state = get_world_3d().direct_space_state
-				var query = PhysicsRayQueryParameters3D.create(camera.global_position, anomaly.global_position)
-				query.exclude = [self]
-				var result = space_state.intersect_ray(query)
-
-				if result.is_empty() or result.collider == anomaly:
-					is_draining = true
-					break
+					if result.is_empty() or result.collider == anomaly:
+						is_draining = true
+						break
 
 	#Drain or regain sanity depending on if the anomaly is in sight
 	if is_draining and not dead:
@@ -415,6 +431,49 @@ func _process_sanity(delta: float) -> void:
 		hud.update_distortion(0.0)
 		death.rpc()
 
+#Process the player's blinking timer and input
+func _process_blinking(delta) -> void:
+	var blinking_detected: bool = false
+	
+	#Increment the time since last blink
+	if current_eyes_state == Eyes_state.OPEN:
+		time_since_last_blink += delta
+	
+	#Check if the player blinked
+	if Input.is_action_pressed("blink") or time_since_last_blink >= blink_limit:
+		time_since_last_blink = 0.0
+		blinking_detected = true
+	
+	#If the player blinked show a black screen
+	if blinking_detected:
+		match current_eyes_state:
+			Eyes_state.OPEN, Eyes_state.OPENING:
+				hud.update_blinking(eyes_close_duration, "close_eyes")
+				current_eyes_state = Eyes_state.CLOSING
+				print("Eyes closing!")
+			Eyes_state.CLOSED:
+				blink_timer.start(blink_duration)
+				print("Blink duration extended!")
+
+#Closes the eyes once the blink animation finishes
+func _on_hud_blink_closed() -> void:
+	current_eyes_state = Eyes_state.CLOSED
+	print("Eyes closed!")
+	blink_timer.start(blink_duration)
+
+#Changes the eyes state to open as a mark of the blinking process finishing
+func _on_hud_blink_opened() -> void:
+	current_eyes_state = Eyes_state.OPEN
+	print("Eyes open!")
+
+#Opens the eyes once the timer runs out
+func _on_blink_timer_timeout() -> void:
+	if current_eyes_state == Eyes_state.CLOSED:
+		current_eyes_state = Eyes_state.OPENING
+		hud.update_blinking(eyes_open_duration, "open_eyes")
+		print("Eyes opening!")
+		time_since_last_blink = 0.0
+	
 #Run correct animation for player actions
 func _update_animation():
 	if dead:
@@ -431,7 +490,7 @@ func _update_animation():
 	if anim != current_anim_state:
 		play_animation.rpc(anim)
 		current_anim_state = anim
-
+	
 #Plays animation on both remote and local peers
 @rpc("call_local")
 func play_animation(anim_name: String) -> void:

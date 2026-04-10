@@ -148,6 +148,6 @@ shape = SubResource("ConcavePolygonShape3D_1aoms")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.732224, -1.0138817, 3.449963)
 
 [node name="Toaster" parent="." unique_id=843890881 instance=ExtResource("4_ej0qp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2105255, -1.6218916, 7.2158527)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2105255, -1.8245118, 7.2158527)
 
 [node name="PlayerContainer" type="Node3D" parent="." unique_id=462948951]
