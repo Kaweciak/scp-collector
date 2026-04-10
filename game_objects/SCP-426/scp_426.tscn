@@ -9,6 +9,9 @@
 [ext_resource type="ArrayMesh" uid="uid://douh8p08lnlrp" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_RED Surface_0.res" id="6_6oobr"]
 [ext_resource type="ArrayMesh" uid="uid://hsx8sdyddo1t" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Dark_0.res" id="7_ymocq"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ey5d2"]
+friction = 0.5
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjwm"]
 albedo_color = Color(0.33333334, 0.21176471, 0.3254902, 1)
 
@@ -38,8 +41,11 @@ properties/3/spawn = true
 properties/3/replication_mode = 1
 
 [node name="Toaster" type="RigidBody3D" unique_id=843890881 groups=["Anomaly"]]
-collision_layer = 49152
-collision_mask = 49155
+collision_layer = 49156
+collision_mask = 16391
+mass = 2.0
+physics_material_override = SubResource("PhysicsMaterial_ey5d2")
+continuous_cd = true
 script = ExtResource("1_ey5d2")
 
 [node name="Pivot" type="Node3D" parent="." unique_id=328695925]

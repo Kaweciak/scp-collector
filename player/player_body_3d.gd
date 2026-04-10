@@ -1,8 +1,7 @@
 class_name PlayerBody3D extends CharacterBody3D
 
-@onready var hud: CanvasLayer = $MainCamera/HUD
-@onready var blink_timer: Timer = $BlinkTimer
-
+#Movement export variables
+@export_group("Movement")
 @export_range(1, 35, 1) var speed: float = 10
 @export_range(10, 400, 1) var acceleration: float = 100
 
@@ -13,13 +12,50 @@ class_name PlayerBody3D extends CharacterBody3D
 @export_range(0.1, 0.9, 0.05) var crouch_factor: float = 0.9
 
 @export_range(0.01, 0.5, 0.01) var coyote_time: float = 0.2
+
+#Variable giving the player time to jump after they start falling
 var coyote_timer: float = 0.0
 
+#Physic interaction variables
+@export_group("Physics Interaction")
+@export var push_force: float = 0.1
+@export var player_mass: float = 80.0
+@export var terminal_velociy: float = -30.0
+
+#Movement variables
+var sprinting: bool = false
+var crouching: bool = false
+var jumping: bool = false
+var mouse_captured: bool = false
+var was_on_floor: bool = true
+var tried_uncroaching: bool = false
+
+#Gravity strength variable
+var gravity_factor: float = ProjectSettings.get_setting("physics/3d/default_gravity")
+
+#Acceleration and velocity related variables
+var move_dir: Vector2
+var look_dir: Vector2
+
+var walk_vel: Vector3
+var grav_vel: Vector3
+var jump_vel: Vector3
+
 #Sanity variables
+@export_group("Sanity")
 @export var sanity: float = 100.0
-@export var sanity_drain_rate: float = 5.0
+@export var vision_sanity_drain_rate: float = 2.0
+@export var touch_sanity_drain_rate: float = 1.0
+@export var proximity_sanity_drain_rate: float = 0.0
+@export var proximity_sanity_drain_radius: float = 1.0
+@export var sanity_regeneration_rate: float = 0.5
+@export var sanity_checkpoint: int = -1
+@export var checkpoints: Array[SanityResourceCheckpoint] = []
+
+var sanity_drain_active: bool = false
 
 #Blinking variables
+@export_group("Blinking")
 @export var blink_limit: float = 20.0
 @export var time_since_last_blink: float = 0.0
 @export var blink_duration: float = 1.0 / 10.0
@@ -28,34 +64,29 @@ var coyote_timer: float = 0.0
 enum Eyes_state {OPEN, CLOSING, CLOSED, OPENING}
 var current_eyes_state: Eyes_state = Eyes_state.OPEN
 
-var sprinting: bool = false
-var crouching: bool = false
-var jumping: bool = false
-var mouse_captured: bool = false
-var was_on_floor: bool = true
-var tried_uncroaching: bool = false
-
-var gravity_factor: float = ProjectSettings.get_setting("physics/3d/default_gravity")
-
-var move_dir: Vector2
-var look_dir: Vector2
-
-var walk_vel: Vector3
-var grav_vel: Vector3
-var jump_vel: Vector3
-
+#Object held by the player
 var held: RigidBody3D
 
+#Flag for whether the player is dead
 var dead: bool = false
 
+#Debug mode variable
 static var debug_mode_enabled: bool = false
 
+#Current animation state variable
 var current_anim_state: String = ""
 
 #Spectator variables
 var spectator_target: PlayerBody3D = null
 var last_spectator_target: PlayerBody3D = null
 var spectator_index: int = 0
+
+#Admin variables
+var admin_privelege: bool = false
+var admin_sanity_enabled: bool = false
+var admin_blinking_enabled: bool = false
+var admin_noclip_enabled: bool = false
+var admin_immortality_enabled: bool = false
 
 @onready var camera: Camera3D = $MainCamera
 @onready var base_collision: CollisionShape3D = $BaseCollision
@@ -65,13 +96,15 @@ var spectator_index: int = 0
 @onready var animation_player: AnimationPlayer = $ModelHolder/Model/AnimationPlayer
 @onready var model: Node3D = $ModelHolder/Model
 
-# @onready var pause_menu: PauseMenu = $MainCamera/PauseMenu
-# @onready var hud: Hud = $MainCamera/Hud
+@onready var hud: CanvasLayer = $MainCamera/HUD
+@onready var blink_timer: Timer = $BlinkTimer
 
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 
+	if multiplayer.is_server():
+		admin_privelege = true
 
 func _ready() -> void:
 	#Get the mouse to focus on the screen once the player spawn
@@ -109,6 +142,9 @@ func _physics_process(delta: float) -> void:
 		#Process movement logic
 		velocity = _walk(delta) + _gravity(delta) + _jump(delta)
 		move_and_slide()
+		
+		#Apply force to RigidBody collision objects
+		_push_objects(delta)
 		
 		#Process player animation
 		_update_animation()
@@ -180,13 +216,35 @@ func _unhandled_input(event: InputEvent) -> void:
 			else:
 				_capture_mouse()
 
-
-#func _pause() -> void:
-	#pause_menu.show()
-	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	#set_process_unhandled_input(false)
-	#pause_menu.set_process_unhandled_input(true)
-	#set_physics_process(false)
+func _push_objects(delta: float) -> void:
+	for i in get_slide_collision_count():
+			var collision = get_slide_collision(i)
+			var collider = collision.get_collider()
+			
+			if collider is RigidBody3D:
+				#Get the direction of the collision
+				var push_dir = -collision.get_normal()
+				
+				#Get contact point relative to the center of the object
+				var contact_point = collision.get_position() - collider.global_position
+				
+				#Calculate velocity relative to the object
+				var velocity_diff = velocity.dot(push_dir) - collider.linear_velocity.dot(push_dir)
+				velocity_diff = max(0.0, velocity_diff)
+				
+				#Scale the force by mass
+				var mass_ratio = min(1.0, player_mass / collider.mass)
+				
+				#Base push impulse calculation
+				var impulse = push_dir * speed * push_force * mass_ratio
+				
+				#Weight logic for standing on objects
+				if collision.get_normal().y > 0.5:
+					var weight_impulse = Vector3.DOWN * gravity_factor * delta * mass_ratio
+					impulse += weight_impulse
+				
+				#Apply the final impulse
+				collider.apply_impulse(impulse, contact_point)
 
 #Crouch mechanic processing -> should be adjusted to play an animation
 #TODO
@@ -257,7 +315,7 @@ func _update_spectator_camera() -> void:
 		return
 	
 	if is_instance_valid(spectator_target):
-		#Adjust spectate players' visibility
+		#Adjust spectator players' visibility
 		if spectator_target != last_spectator_target:
 			if is_instance_valid(last_spectator_target):
 				last_spectator_target.model.show()
@@ -277,11 +335,13 @@ func _walk(delta: float) -> Vector3:
 
 #Process gravity based on player position in world space
 func _gravity(delta: float) -> Vector3:
-	if is_on_floor():
+	var grounded: bool = is_on_floor()
+	
+	if grounded: #Apply a small grounding force
 		grav_vel = Vector3.ZERO
-	else:
-		grav_vel = grav_vel.move_toward(Vector3(0, velocity.y - gravity_factor, 0), gravity_factor * delta)
-		
+	else: #Apply gravity and clamp it to a terminal velocity
+		grav_vel.y = max(grav_vel.y - gravity_factor * delta, terminal_velociy)
+	
 	return grav_vel
 
 #Process jumping mechanics
@@ -395,30 +455,52 @@ func _update_held():
 
 #Decrease the player sanity when interacting with the Toaster
 func _process_sanity(delta: float) -> void:
-	var is_draining = false
+	var sanity_drain = 0.0
 	
-	#Check if the player's eyes are closed
+	#Check if the player's eyes are closed for the visual sanity drain
 	if not current_eyes_state == Eyes_state.CLOSED:
+		#Find the Toaster in the scene
 		var anomalies = get_tree().get_nodes_in_group("Anomaly")
-		#Check if the Toaster is visible on the screen
 		for anomaly in anomalies:
 			if anomaly is Toaster:
+				#Check if the Toaster is visible on the screen
 				if camera.is_position_in_frustum(anomaly.global_position):
 					#Raycast for walls to block the effect
 					var space_state = get_world_3d().direct_space_state
 					var query = PhysicsRayQueryParameters3D.create(camera.global_position, anomaly.global_position)
 					query.exclude = [self]
 					var result = space_state.intersect_ray(query)
-
+					
 					if result.is_empty() or result.collider == anomaly:
-						is_draining = true
+						sanity_drain = vision_sanity_drain_rate
 						break
-
-	#Drain or regain sanity depending on if the anomaly is in sight
-	if is_draining and not dead:
-		sanity = max(0, sanity - sanity_drain_rate * delta)
+						
+				#Check if the player is within the proximity of the Toaster and apply drain
+				var dist_squared = global_position.distance_squared_to(anomaly.global_position)
+				var radius_squared = proximity_sanity_drain_radius * proximity_sanity_drain_radius
+				if dist_squared <= radius_squared:
+					sanity_drain = max(sanity_drain, proximity_sanity_drain_rate)
+	
+	#Check if the player is touching the Toaster and apply drain
+	if held is Toaster:
+		sanity_drain = max(sanity_drain, touch_sanity_drain_rate)
+	
+	#Update current sanity checkpoint
+	if not GameState.sanity_drain_first_activated and sanity_drain > 0.0:
+		GameState.request_sanity_activation.rpc()
+	if GameState.sanity_drain_first_activated:
+		GameState.time_since_sanity_drain_first_activated += delta
+		if GameState.time_since_sanity_drain_first_activated >= checkpoints[sanity_checkpoint].time_to_increment_sanity_checkpoint:
+			sanity_checkpoint += 1
+			
+		if checkpoints.size() - 1 <= sanity_checkpoint:
+			set_interpolated_values()
+			
+	#Drain or regain sanity
+	if sanity_drain > 0.0 and not dead:
+		sanity = max(0, sanity - sanity_drain * delta)
 	else:
-		sanity = min(100, sanity + (sanity_drain_rate * 0.1) * delta)
+		sanity = min(100, sanity + sanity_regeneration_rate * delta)
 
 	#Update the HUD shader strength
 	var strength = (100.0 - sanity) / 100.0
@@ -427,10 +509,43 @@ func _process_sanity(delta: float) -> void:
 	#Kill the player if sanity reaches zero
 	if sanity <= 0:
 		sanity = 100.0
-		sanity_drain_rate = 0.0
+		vision_sanity_drain_rate = 0.0
+		proximity_sanity_drain_rate = 0.0
+		touch_sanity_drain_rate = 0.0
 		hud.update_distortion(0.0)
 		death.rpc()
 
+#Sets the values based on the set checkpoint values for the Toaster sanity drain process
+func set_interpolated_values() -> void:
+	#Check if the checkpoints are correctly formatted
+	if sanity_checkpoint < 0:
+		return
+	elif checkpoints.is_empty():
+		sanity_checkpoint += 1
+		return
+	elif checkpoints.size() - 1 >= sanity_checkpoint:
+		vision_sanity_drain_rate = checkpoints[checkpoints.size() - 1].vision_sanity_drain_rate
+		touch_sanity_drain_rate = checkpoints[checkpoints.size() - 1].touch_sanity_drain_rate
+		proximity_sanity_drain_rate = checkpoints[checkpoints.size() - 1].proximity_sanity_drain_rate
+		proximity_sanity_drain_radius = checkpoints[checkpoints.size() - 1].proximity_sanity_drain_radius
+		sanity_regeneration_rate = checkpoints[checkpoints.size() - 1].sanity_regeneration_rate
+		sanity_checkpoint += 1
+		return
+	
+	#Calculate interpolation weight
+	var start_point = checkpoints[sanity_checkpoint]
+	var end_point = checkpoints[sanity_checkpoint+1]
+	var segment_duration = start_point.time_to_increment_sanity_checkpoint - end_point.time_to_increment_sanity_checkpoint
+	var elapsed_in_segment = GameState.time_since_sanity_drain_first_activated - start_point.time_to_increment_sanity_checkpoint
+	var t = elapsed_in_segment / segment_duration
+	
+	#Set the interpolated values
+	vision_sanity_drain_rate = lerp(start_point.vision_sanity_drain_rate, end_point.vision_sanity_drain_rate, t)
+	touch_sanity_drain_rate = lerp(start_point.touch_sanity_drain_rate, end_point.touch_sanity_drain_rate, t)
+	proximity_sanity_drain_rate = lerp(start_point.proximity_sanity_drain_rate, end_point.proximity_sanity_drain_rate, t)
+	proximity_sanity_drain_radius = lerp(start_point.proximity_sanity_drain_radius, end_point.proximity_sanity_drain_radius, t)
+	sanity_regeneration_rate = lerp(start_point.sanity_regeneration_rate, end_point.sanity_regeneration_rate, t)
+	
 #Process the player's blinking timer and input
 func _process_blinking(delta) -> void:
 	var blinking_detected: bool = false
