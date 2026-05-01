@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dn6shk65dp47t"]
+
+[ext_resource type="Script" uid="uid://bnb5d8vsijw8f" path="res://ui/menus/main_menu/main_menu.gd" id="1_ioe73"]
+[ext_resource type="PackedScene" uid="uid://be4lnr1yn6kdb" path="res://ui/clipboard/clipboard.glb" id="2_txwgg"]
+[ext_resource type="PackedScene" uid="uid://3uuttntmofks" path="res://ui/clipboard/paper.tscn" id="3_j3h1s"]
+[ext_resource type="PackedScene" uid="uid://dbsd108b657cb" path="res://ui/menus/screens/title_screen/title_screen.tscn" id="4_txwgg"]
+
+[node name="MainMenu" type="Node3D" unique_id=1910017354]
+script = ExtResource("1_ioe73")
+
+[node name="clipboard" parent="." unique_id=1763273513 instance=ExtResource("2_txwgg")]
+transform = Transform3D(0.98970145, 0, -0.14314716, 0, 1, 0, 0.14314716, 0, 0.98970145, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=887067800]
+transform = Transform3D(0.99953943, 0.030346615, 4.3691255e-08, -4.371139e-08, 1.9106855e-15, 1, 0.030346615, -0.99953943, 1.3264946e-09, 0, 0.5580243, 0)
+
+[node name="Pages" type="Node3D" parent="." unique_id=966412674]
+transform = Transform3D(0.98970145, 0, -0.14314716, 0, 1, 0, 0.14314716, 0, 0.98970145, 0, 0, 0)
+
+[node name="TitleScreenPage" parent="Pages" unique_id=1764183819 instance=ExtResource("3_j3h1s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.019303381, -0.29839706)
+screen_scene = ExtResource("4_txwgg")
+
+[node name="StartGameScreenPage" parent="Pages" unique_id=1235011638 instance=ExtResource("3_j3h1s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.019303381, -0.29839706)
+screen_scene = ExtResource("4_txwgg")
+
+[connection signal="screen_event" from="Pages/TitleScreenPage" to="." method="_on_paper_screen_event"]
+[connection signal="screen_event" from="Pages/StartGameScreenPage" to="." method="_on_paper_screen_event"]
