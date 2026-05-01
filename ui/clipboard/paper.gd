@@ -5,6 +5,7 @@ signal screen_event(event_name: String)
 
 @onready var sub_viewport: SubViewport = $SubViewport
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var collision_shape: CollisionShape3D = $StaticBody3D/CollisionShape3D
 
 @export var screen_scene: PackedScene
 var screen: Control
@@ -32,6 +33,12 @@ func flip_forward() -> void:
 
 func flip_back() -> void:
 	animation_player.play_backwards("FlipNext")
+
+func activate() -> void:
+	collision_shape.disabled = false
+
+func deactivate() -> void:
+	collision_shape.disabled = true
 
 func _screen_signal(signal_name: String):
 	emit_signal("screen_event", signal_name)

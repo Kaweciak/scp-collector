@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://dhpbrm8e0oi3u"]
+
+[ext_resource type="Texture2D" uid="uid://cnjmhnru3c5fe" path="res://game_objects/decorations/flat_desk_top/Wood027_1K-JPG_Color.jpg" id="1_iov0v"]
+[ext_resource type="Texture2D" uid="uid://dpetivlyscrud" path="res://game_objects/decorations/flat_desk_top/Wood027_1K-JPG_NormalDX.jpg" id="2_86im6"]
+[ext_resource type="Texture2D" uid="uid://dke02vro3hpdq" path="res://game_objects/decorations/flat_desk_top/Wood027_1K-JPG_Roughness.jpg" id="3_vcbos"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k1ojb"]
+albedo_texture = ExtResource("1_iov0v")
+roughness_texture = ExtResource("3_vcbos")
+normal_enabled = true
+normal_texture = ExtResource("2_86im6")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1bjn3"]
+material = SubResource("StandardMaterial3D_k1ojb")
+size = Vector2(5, 2)
+
+[node name="FlatDeskTop" type="MeshInstance3D" unique_id=523672489]
+mesh = SubResource("PlaneMesh_1bjn3")

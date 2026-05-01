@@ -10,7 +10,9 @@ func _ready() -> void:
 	pages_arr = get_node("Pages").get_children()
 	for page in pages_arr:
 		pages[page.name] = page
+		page.deactivate()
 	current_page = pages_arr[0]
+	current_page.activate()
 
 # taking button press signal back from paper
 func _on_paper_screen_event(event_name: String) -> void:
@@ -18,6 +20,13 @@ func _on_paper_screen_event(event_name: String) -> void:
 	match event_name:
 		"play_pressed":
 			_flip_page_to("StartGameScreenPage")
+		"extras_pressed":
+			_flip_page_to("ExtrasScreenPage")
+		"quit_pressed":
+			get_tree().quit()
+		"return_pressed":
+			_flip_page_to("TitleScreenPage")
+
 
 
 func _flip_page_to(page_name: String) -> bool:
@@ -33,15 +42,18 @@ func _flip_page_to(page_name: String) -> bool:
 	if current_index == -1 or target_index == -1:
 		return false
 
+	current_page.deactivate()
+	target.activate()
+
 	while current_index < target_index:
 		current_page.flip_forward()
 		current_index += 1
 		current_page = pages_arr[current_index]
 
 	while current_index > target_index:
-		current_page.flip_back()
 		current_index -= 1
 		current_page = pages_arr[current_index]
+		current_page.flip_back()
 
 	return true
 

@@ -4,26 +4,64 @@
 [ext_resource type="PackedScene" uid="uid://be4lnr1yn6kdb" path="res://ui/clipboard/clipboard.glb" id="2_txwgg"]
 [ext_resource type="PackedScene" uid="uid://3uuttntmofks" path="res://ui/clipboard/paper.tscn" id="3_j3h1s"]
 [ext_resource type="PackedScene" uid="uid://dbsd108b657cb" path="res://ui/menus/screens/title_screen/title_screen.tscn" id="4_txwgg"]
+[ext_resource type="PackedScene" uid="uid://c22tqeaql5olk" path="res://ui/menus/screens/start_game_screen/start_game_screen.tscn" id="5_j3h1s"]
+[ext_resource type="PackedScene" uid="uid://dgp7vfmt8bidg" path="res://game_objects/decorations/desk_lamp/desk_lamp_low_poly.glb" id="6_igis3"]
+[ext_resource type="PackedScene" uid="uid://bqioyx4wpp0j0" path="res://ui/menus/screens/extras_screen/extras_screen.tscn" id="6_uni0y"]
+[ext_resource type="PackedScene" uid="uid://dhpbrm8e0oi3u" path="res://game_objects/decorations/flat_desk_top/flat_desk_top.tscn" id="7_m57jf"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_igis3"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_m57jf"]
+sky_material = SubResource("ProceduralSkyMaterial_igis3")
+
+[sub_resource type="Environment" id="Environment_uni0y"]
+background_mode = 2
+sky = SubResource("Sky_m57jf")
+ambient_light_sky_contribution = 0.4
+tonemap_mode = 2
+glow_enabled = true
 
 [node name="MainMenu" type="Node3D" unique_id=1910017354]
 script = ExtResource("1_ioe73")
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2107231598]
+environment = SubResource("Environment_uni0y")
+
 [node name="clipboard" parent="." unique_id=1763273513 instance=ExtResource("2_txwgg")]
-transform = Transform3D(0.98970145, 0, -0.14314716, 0, 1, 0, 0.14314716, 0, 0.98970145, 0, 0, 0)
+transform = Transform3D(0.9966203, 0, -0.08214724, 0, 1, 0, 0.08214724, 0, 0.9966203, 0.015326486, 0.020318776, -0.1059654)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=887067800]
-transform = Transform3D(0.99953943, 0.030346615, 4.3691255e-08, -4.371139e-08, 1.9106855e-15, 1, 0.030346615, -0.99953943, 1.3264946e-09, 0, 0.5580243, 0)
+transform = Transform3D(0.99953943, 0.028999014, -0.008942828, -4.3713953e-08, 0.29469085, 0.9555926, 0.030346617, -0.9551524, 0.2945551, -0.014037727, 2.0144532, 0.46236867)
+fov = 30.0
 
 [node name="Pages" type="Node3D" parent="." unique_id=966412674]
-transform = Transform3D(0.98970145, 0, -0.14314716, 0, 1, 0, 0.14314716, 0, 0.98970145, 0, 0, 0)
+transform = Transform3D(0.9966203, 0, -0.08214724, 0, 1, 0, 0.08214724, 0, 0.9966203, 0.014149809, 0.020318776, -0.09783)
 
 [node name="TitleScreenPage" parent="Pages" unique_id=1764183819 instance=ExtResource("3_j3h1s")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.019303381, -0.29839706)
 screen_scene = ExtResource("4_txwgg")
 
 [node name="StartGameScreenPage" parent="Pages" unique_id=1235011638 instance=ExtResource("3_j3h1s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.019303381, -0.29839706)
-screen_scene = ExtResource("4_txwgg")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.018, -0.298)
+screen_scene = ExtResource("5_j3h1s")
+
+[node name="ExtrasScreenPage" parent="Pages" unique_id=2094364490 instance=ExtResource("3_j3h1s")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.017, -0.298)
+screen_scene = ExtResource("6_uni0y")
+
+[node name="Decorations" type="Node3D" parent="." unique_id=998910503]
+
+[node name="Lamp" parent="Decorations" unique_id=1050655681 instance=ExtResource("6_igis3")]
+transform = Transform3D(0.010488678, 0, 0.02269334, 0, 0.025, 0, -0.02269334, 0, 0.010488678, -0.66710794, 0, -0.29602796)
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Decorations/Lamp" unique_id=627817082]
+transform = Transform3D(0.98116374, -0.19316807, -0.0019163201, -0.123871796, -0.63673556, 0.7610674, -0.14823413, -0.7464944, -0.6486699, 1.7579262, 33.033306, 11.591513)
+spot_range = 2.0
+
+[node name="FlatDeskTop" parent="Decorations" unique_id=523672489 instance=ExtResource("7_m57jf")]
 
 [connection signal="screen_event" from="Pages/TitleScreenPage" to="." method="_on_paper_screen_event"]
 [connection signal="screen_event" from="Pages/StartGameScreenPage" to="." method="_on_paper_screen_event"]
+[connection signal="screen_event" from="Pages/ExtrasScreenPage" to="." method="_on_paper_screen_event"]
