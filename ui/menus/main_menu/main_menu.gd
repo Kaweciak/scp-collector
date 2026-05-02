@@ -24,6 +24,10 @@ func _on_paper_screen_event(event_name: String) -> void:
 			_flip_page_to("ExtrasScreenPage")
 		"quit_pressed":
 			get_tree().quit()
+		"host_pressed":
+			pass # hosting game logic
+		"join_pressed":
+			pass # joining game logic
 		"return_pressed":
 			_flip_page_to("TitleScreenPage")
 

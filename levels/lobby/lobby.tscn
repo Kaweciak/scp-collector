@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://upfigsc4dnmq"]
+
+[ext_resource type="PackedScene" uid="uid://dhggd4ek8ipxb" path="res://levels/lobby/assets/lobby_edited.tscn" id="1_sxh6j"]
+[ext_resource type="Script" uid="uid://b78djm1hgcgbw" path="res://game_objects/button.gd" id="2_7viv4"]
+[ext_resource type="Script" uid="uid://v3y46ka1b017" path="res://game_objects/togglable_light.gd" id="2_ooalj"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sxh6j"]
+size = Vector3(0.2, 0.2, 0.11953125)
+
+[node name="Lobby" type="Node3D" unique_id=1802275906]
+
+[node name="Mesh" parent="." unique_id=1245646185 instance=ExtResource("1_sxh6j")]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+
+[node name="Light" type="SpotLight3D" parent="." unique_id=1101123759]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.5337906, 2.953179, -1.4154828)
+spot_range = 6.0
+spot_attenuation = 0.49
+spot_angle = 86.65
+script = ExtResource("2_ooalj")
+
+[node name="LightSwitch" type="StaticBody3D" parent="." unique_id=1943404433]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -0.5546756, 0.7897355, 0.96901333)
+script = ExtResource("2_7viv4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LightSwitch" unique_id=1296591656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18684652, 0.2871762, 0.34085137)
+shape = SubResource("BoxShape3D_sxh6j")
+
+[connection signal="pressed" from="LightSwitch" to="Light" method="toggle"]
