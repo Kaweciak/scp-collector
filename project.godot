@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 MultiplayerController="*uid://1fpd6w0diisb"
 GameState="*uid://cdfgc14qs4q5a"
+PortalManager="*uid://duuypebhqhmq8"
 
 [display]
 
@@ -28,6 +29,10 @@ window/size/viewport_height=540
 [dotnet]
 
 project/assembly_name="SCP collector"
+
+[global_group]
+
+Portals=""
 
 [input]
 
@@ -107,6 +112,7 @@ admin_console={
 3d_physics/layer_1="Environment"
 3d_physics/layer_2="Player"
 3d_physics/layer_3="Object"
+3d_physics/layer_4="HeldObject"
 3d_physics/layer_15="Anomaly"
 3d_physics/layer_16="Interactable"
 

@@ -2,7 +2,7 @@ extends Node3D
 
 
 func _ready() -> void:
-	#Spawn players once the level is loaded
+	#Spawn players
 	MultiplayerController.spawner.spawn_path = $PlayerContainer.get_path()
 	MultiplayerController.spawn_players_in_new_scene()
 	
@@ -24,6 +24,10 @@ func _on_van_area_body_entered(body: Node3D) -> void:
 #Multiplayer synchronized call for reloading the level
 @rpc("authority", "call_local", "reliable")
 func sync_reload() -> void:
+	#Reset all variables to a starting state
+	GameState.reset_game_state.rpc()
+		
+	#Reload the scene
 	get_tree().reload_current_scene()
 
 #Check game over conditions

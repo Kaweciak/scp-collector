@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://crgkgv4ejb0b6"]
+
+[ext_resource type="Script" uid="uid://bxkjoelfhfb5h" path="res://rooms/room.gd" id="1_i27ei"]
+
+[node name="RoomBase" type="Node3D" unique_id=2101259333]
+script = ExtResource("1_i27ei")
+
+[node name="Visuals" type="Node3D" parent="." unique_id=379260594]
+
+[node name="Portals" type="Node3D" parent="." unique_id=287305527]
+
+[node name="SpawnPoints" type="Node3D" parent="." unique_id=1915954669]
+
+[node name="FurnitureMarkers" type="Node3D" parent="SpawnPoints" unique_id=1067950089]
+
+[node name="MazeGrid" type="GridMap" parent="." unique_id=193648497]
+
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=521437159]

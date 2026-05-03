@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="2_1aoms"]
 [ext_resource type="PackedScene" uid="uid://dx84qligg4usn" path="res://game_objects/doors/house_doors.tscn" id="3_yc33k"]
 [ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="4_ej0qp"]
+[ext_resource type="PackedScene" uid="uid://diln36m863vwt" path="res://game_objects/SCP-184/scp_184.tscn" id="5_6l8mq"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1aoms"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -144,10 +145,24 @@ size = Vector3(1, 2, 2)
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Scene" unique_id=338895821]
 shape = SubResource("ConcavePolygonShape3D_1aoms")
 
-[node name="HouseDoors" parent="." unique_id=677386291 instance=ExtResource("3_yc33k")]
+[node name="PlayerContainer" type="Node3D" parent="." unique_id=462948951]
+
+[node name="PortalLocations" type="Node3D" parent="." unique_id=1794261321]
+
+[node name="HouseDoors" parent="PortalLocations" unique_id=677386291 instance=ExtResource("3_yc33k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.732224, -1.0138817, 3.449963)
 
-[node name="Toaster" parent="." unique_id=843890881 instance=ExtResource("4_ej0qp")]
+[node name="HouseDoors2" parent="PortalLocations" unique_id=1223519166 instance=ExtResource("3_yc33k")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -21.525352, -1.0138817, 1.2708082)
+
+[node name="HouseDoors3" parent="PortalLocations" unique_id=2136297492 instance=ExtResource("3_yc33k")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -18.467136, -1.0138817, 8.95484)
+
+[node name="Anomalies" type="Node3D" parent="." unique_id=796600648]
+
+[node name="Toaster" parent="Anomalies" unique_id=843890881 instance=ExtResource("4_ej0qp")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2105255, -1.8245118, 7.2158527)
 
-[node name="PlayerContainer" type="Node3D" parent="." unique_id=462948951]
+[node name="Scp184" parent="Anomalies" unique_id=273090344 groups=["Anomaly"] instance=ExtResource("5_6l8mq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.248845, -1.6686045, 7.1034355)
+mass = 5.79

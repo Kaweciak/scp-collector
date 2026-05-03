@@ -44,14 +44,6 @@ var jump_vel: Vector3
 #Sanity variables
 @export_group("Sanity")
 @export var sanity: float = 100.0
-@export var vision_sanity_drain_rate: float = 2.0
-@export var touch_sanity_drain_rate: float = 1.0
-@export var proximity_sanity_drain_rate: float = 0.0
-@export var proximity_sanity_drain_radius: float = 1.0
-@export var sanity_regeneration_rate: float = 0.5
-@export var sanity_checkpoint: int = -1
-@export var checkpoints: Array[SanityResourceCheckpoint] = []
-
 var sanity_drain_active: bool = false
 
 #Blinking variables
@@ -109,11 +101,28 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	#Get the mouse to focus on the screen once the player spawn
 	_capture_mouse()
+	
 	#Assign the authority to the camera
 	camera.current = is_multiplayer_authority()
-	#If the instance owns the player make the model invisible so that the player doesn't see visual glitches
+	
 	if is_multiplayer_authority():
-		model.visible = false
+		#If the instance owns the player make the model invisible so that the player doesn't see visual glitches
+		camera.set_cull_mask_value(2, false)
+		camera.set_cull_mask_value(19, false)
+		
+		#Aplly the invisibility mask to the children meshes as well
+		var all_meshes = model.find_children("*", "MeshInstance3D", true, false)
+		for m in all_meshes:
+			m.set_layer_mask_value(1, false)
+			m.set_layer_mask_value(2, true)
+		
+		#Inject the camera for all portals in the scene
+		var all_portals = get_tree().get_nodes_in_group("Portals") 
+		for portal in all_portals:
+			if portal.back_portal is Portal3D:
+				portal.back_portal.player_camera = camera
+			if portal.front_portal is Portal3D:
+				portal.front_portal.player_camera = camera
 
 
 func _physics_process(delta: float) -> void:
@@ -382,8 +391,11 @@ func _interact() -> void:
 	if held != null:
 		_server_drop.rpc()
 		return
-	#Check if the player is looking at any interactable entity, if so -> process it
+	
+	#Get the initial interaction object
 	var collider = interaction_raycast.get_collider()
+	
+	#Check if the player is looking at any interactable entity, if so -> process it
 	if collider is Interactable:
 		collider.interact()
 	elif collider is RigidBody3D:
@@ -443,18 +455,55 @@ func _server_pick_up(path: NodePath):
 func _server_drop():
 	if is_instance_valid(held):
 		held.gravity_scale = 1
-	
+		
 	held = null
 
 #Process logic for held items regarding their velocity and rotation
 func _update_held():
-	var target_rotation = Vector3(camera.rotation.x, self.rotation.y, held.rotation.z)
 	var target: Vector3 = self.global_position - 1.75 * camera.global_transform.basis.z
+	var target_rotation = Vector3(camera.rotation.x, self.rotation.y, held.rotation.z)
+	
+	#Check if the held object and target are physically separated
+	if held.global_position.distance_squared_to(target) > 6.0:
+		var all_portals = get_tree().get_nodes_in_group("Portals")
+		var closest_portal_to_held = null
+		var min_dist_to_held = INF
+		
+		#Find the portal closest to the held object
+		for p in all_portals:
+			if p.back_portal is Portal3D and p.back_portal.exit_portal != null:
+				var dist = p.back_portal.global_position.distance_squared_to(held.global_position)
+				if dist < min_dist_to_held:
+					min_dist_to_held = dist
+					closest_portal_to_held = p.back_portal
+			if p.front_portal is Portal3D and p.front_portal.exit_portal != null:
+				var dist = p.front_portal.global_position.distance_squared_to(held.global_position)
+				if dist < min_dist_to_held:
+					min_dist_to_held = dist
+					closest_portal_to_held = p.front_portal
+					
+		#If a portal was found, verify the player is near its connected exit
+		if closest_portal_to_held != null:
+			var player_portal = closest_portal_to_held.exit_portal
+			if player_portal.global_position.distance_squared_to(target) < 25.0:
+				#Transform the target point through the portal back to the object's side
+				target = player_portal.to_exit_position(target)
+				
+				#Transform the target rotation to match the new space
+				var target_basis = Basis.from_euler(target_rotation)
+				var target_transform = Transform3D(target_basis, target)
+				var exit_transform = player_portal.to_exit_transform(target_transform)
+				target_rotation = exit_transform.basis.get_euler()
+				print("Target location adjusted by: ", self.global_position - 1.75 * camera.global_transform.basis.z - target)
+	
 	held.linear_velocity = 10 * (target - held.global_position)
 	held.angular_velocity = 1 * (target_rotation - held.global_rotation)
 
 #Decrease the player sanity when interacting with the Toaster
 func _process_sanity(delta: float) -> void:
+	if not GameState.toaster_present or dead:
+		return
+	
 	var sanity_drain = 0.0
 	
 	#Check if the player's eyes are closed for the visual sanity drain
@@ -472,35 +521,28 @@ func _process_sanity(delta: float) -> void:
 					var result = space_state.intersect_ray(query)
 					
 					if result.is_empty() or result.collider == anomaly:
-						sanity_drain = vision_sanity_drain_rate
+						sanity_drain = anomaly.vision_sanity_drain_rate
 						break
 						
 				#Check if the player is within the proximity of the Toaster and apply drain
 				var dist_squared = global_position.distance_squared_to(anomaly.global_position)
-				var radius_squared = proximity_sanity_drain_radius * proximity_sanity_drain_radius
+				var radius_squared = anomaly.proximity_sanity_drain_radius * anomaly.proximity_sanity_drain_radius
 				if dist_squared <= radius_squared:
-					sanity_drain = max(sanity_drain, proximity_sanity_drain_rate)
+					sanity_drain = max(sanity_drain, anomaly.proximity_sanity_drain_rate)
 	
 	#Check if the player is touching the Toaster and apply drain
 	if held is Toaster:
-		sanity_drain = max(sanity_drain, touch_sanity_drain_rate)
+		sanity_drain = max(sanity_drain, held.touch_sanity_drain_rate)
 	
 	#Update current sanity checkpoint
 	if not GameState.sanity_drain_first_activated and sanity_drain > 0.0:
 		GameState.request_sanity_activation.rpc()
-	if GameState.sanity_drain_first_activated:
-		GameState.time_since_sanity_drain_first_activated += delta
-		if GameState.time_since_sanity_drain_first_activated >= checkpoints[sanity_checkpoint].time_to_increment_sanity_checkpoint:
-			sanity_checkpoint += 1
-			
-		if checkpoints.size() - 1 <= sanity_checkpoint:
-			set_interpolated_values()
 			
 	#Drain or regain sanity
 	if sanity_drain > 0.0 and not dead:
 		sanity = max(0, sanity - sanity_drain * delta)
 	else:
-		sanity = min(100, sanity + sanity_regeneration_rate * delta)
+		sanity = min(100, sanity + GameState.sanity_regeneration_rate * delta)
 
 	#Update the HUD shader strength
 	var strength = (100.0 - sanity) / 100.0
@@ -509,43 +551,9 @@ func _process_sanity(delta: float) -> void:
 	#Kill the player if sanity reaches zero
 	if sanity <= 0:
 		sanity = 100.0
-		vision_sanity_drain_rate = 0.0
-		proximity_sanity_drain_rate = 0.0
-		touch_sanity_drain_rate = 0.0
 		hud.update_distortion(0.0)
 		death.rpc()
 
-#Sets the values based on the set checkpoint values for the Toaster sanity drain process
-func set_interpolated_values() -> void:
-	#Check if the checkpoints are correctly formatted
-	if sanity_checkpoint < 0:
-		return
-	elif checkpoints.is_empty():
-		sanity_checkpoint += 1
-		return
-	elif checkpoints.size() - 1 >= sanity_checkpoint:
-		vision_sanity_drain_rate = checkpoints[checkpoints.size() - 1].vision_sanity_drain_rate
-		touch_sanity_drain_rate = checkpoints[checkpoints.size() - 1].touch_sanity_drain_rate
-		proximity_sanity_drain_rate = checkpoints[checkpoints.size() - 1].proximity_sanity_drain_rate
-		proximity_sanity_drain_radius = checkpoints[checkpoints.size() - 1].proximity_sanity_drain_radius
-		sanity_regeneration_rate = checkpoints[checkpoints.size() - 1].sanity_regeneration_rate
-		sanity_checkpoint += 1
-		return
-	
-	#Calculate interpolation weight
-	var start_point = checkpoints[sanity_checkpoint]
-	var end_point = checkpoints[sanity_checkpoint+1]
-	var segment_duration = start_point.time_to_increment_sanity_checkpoint - end_point.time_to_increment_sanity_checkpoint
-	var elapsed_in_segment = GameState.time_since_sanity_drain_first_activated - start_point.time_to_increment_sanity_checkpoint
-	var t = elapsed_in_segment / segment_duration
-	
-	#Set the interpolated values
-	vision_sanity_drain_rate = lerp(start_point.vision_sanity_drain_rate, end_point.vision_sanity_drain_rate, t)
-	touch_sanity_drain_rate = lerp(start_point.touch_sanity_drain_rate, end_point.touch_sanity_drain_rate, t)
-	proximity_sanity_drain_rate = lerp(start_point.proximity_sanity_drain_rate, end_point.proximity_sanity_drain_rate, t)
-	proximity_sanity_drain_radius = lerp(start_point.proximity_sanity_drain_radius, end_point.proximity_sanity_drain_radius, t)
-	sanity_regeneration_rate = lerp(start_point.sanity_regeneration_rate, end_point.sanity_regeneration_rate, t)
-	
 #Process the player's blinking timer and input
 func _process_blinking(delta) -> void:
 	var blinking_detected: bool = false
@@ -611,3 +619,21 @@ func _update_animation():
 func play_animation(anim_name: String) -> void:
 	if animation_player.current_animation != anim_name:
 		animation_player.play(anim_name)
+		
+#Returns all MeshInstance3D nodes that make up the player so the portal can clone them
+func get_teleportable_meshes() -> Array[MeshInstance3D]:
+	var meshes: Array[MeshInstance3D] = []
+	
+	var found_meshes = model.find_children("*", "MeshInstance3D", true, false)
+	for m in found_meshes:
+		if m is MeshInstance3D:
+			meshes.append(m)
+	
+	return meshes
+	
+#Called automatically by the Portal3D plugin when the player steps through
+func on_teleport(portal: Portal3D) -> void:
+	walk_vel = portal.to_exit_direction(walk_vel)
+	grav_vel = portal.to_exit_direction(grav_vel)
+	jump_vel = portal.to_exit_direction(jump_vel)
+	velocity = portal.to_exit_direction(velocity)

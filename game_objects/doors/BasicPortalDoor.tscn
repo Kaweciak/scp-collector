@@ -1,0 +1,157 @@
+[gd_scene format=3 uid="uid://buejykclth2f7"]
+
+[ext_resource type="Script" uid="uid://cw1r4c1d7beyv" path="res://addons/portals/scripts/portal_3d.gd" id="1_vc7lc"]
+[ext_resource type="Script" uid="uid://baadss0b4lk1p" path="res://game_objects/doors/basic_portal_door.gd" id="1_xjwgw"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0drjl"]
+size = Vector3(1.8, 2, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vc7lc"]
+size = Vector3(0.5, 2, 2)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_xjwgw"]
+data = PackedVector3Array(-0.25, -1, 0.875, -0.25, 1, 0.875, -0.25, -1, 1.125, -0.25, -1, 0.875, -0.25, -1, 1.125, 0.25, -1, 0.875, -0.25, -1, 0.875, -0.25, 0.8999999, 0.875, -0.25, 0.99999994, 0.875, -0.25, -1, 0.875, -0.25, 0.99999994, 0.875, -0.25, 1, 0.875, -0.25, -1, 1.125, -0.25, 1, 0.875, -0.25, 1, 1.125, -0.25, -1, 0.875, 0.25, 0.8999999, 0.875, -0.25, 0.8999999, 0.875, -0.25, -1, 1.125, -0.25, 1, 1.125, 0.25, 1, 1.125, -0.25, 1, 0.875, -0.25, 0.99999994, 0.875, 0.25, 0.99999994, 0.875, -0.25, 1, 0.875, 0.25, 1, 1.125, -0.25, 1, 1.125, -0.25, -1, 1.125, 0.25, -1, 1.125, 0.25, -1, 0.875, -0.25, -1, 0.875, 0.25, -1, 0.875, 0.25, 0.8999999, 0.875, -0.25, -1, 1.125, 0.25, 1, 1.125, 0.25, -1, 1.125, 0.25, -1, 0.875, 0.25, -1, 1.125, 0.25, 1, 1.125, 0.25, 1, 0.875, -0.25, 1, 0.875, 0.25, 0.99999994, 0.875, -0.25, 1, 0.875, 0.25, 1, 0.875, 0.25, 1, 1.125, 0.25, -1, 0.875, 0.25, 1, 1.125, 0.25, 0.8999999, 0.875, 0.25, 1, 0.875, 0.25, 0.99999994, 0.875, 0.25, 0.8999999, 0.875, 0.25, 0.8999999, 0.875, 0.25, 1, 1.125, 0.25, 1, 0.875, -0.25, -1, -1.125, -0.25, 1, -1.125, -0.25, -1, -0.875, -0.25, -1, -1.125, -0.25, -1, -0.875, 0.25, -1, -1.125, -0.25, -1, -1.125, 0.25, -1, -1.125, -0.25, 1, -1.125, -0.25, -1, -0.875, -0.25, 0.90000004, -0.875, 0.25, -1, -0.875, -0.25, -1, -0.875, -0.25, 1, -1.125, -0.25, 0.90000004, -0.875, -0.25, 0.90000004, -0.875, -0.25, 1, -1.125, -0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, 0.90000004, -0.875, -0.25, 1, -1.125, 0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, 1, -0.875, 0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, -1, -0.875, 0.25, -1, -0.875, 0.25, -1, -1.125, 0.25, -1, -1.125, 0.25, -1, -0.875, 0.25, 1, -0.875, -0.25, 1, -1.125, 0.25, -1, -1.125, 0.25, 1, -1.125, 0.25, -1, -0.875, -0.25, 0.90000004, -0.875, 0.25, 0.90000004, -0.875, -0.25, 1, -1.125, 0.25, 1, -1.125, 0.25, 1, -0.875, -0.25, 1, -0.875, 0.25, 1, -0.875, 0.25, 1, -0.875, 0.25, -1, -1.125, 0.25, 1, -0.875, 0.25, 1, -1.125, 0.25, -1, -0.875, 0.25, 0.90000004, -0.875, 0.25, 1, -0.875, 0.25, -1, -0.875, 0.25, 1, -0.875, 0.25, 1, -0.875, -0.25, 0.8999999, 0.875, -0.25, 0.90000004, -0.875, -0.25, 1, -0.875, 0.25, 1, -0.875, -0.25, 0.99999994, 0.875, -0.25, 1, -0.875, -0.25, 0.8999999, 0.875, -0.25, 1, -0.875, -0.25, 0.99999994, 0.875, 0.25, 0.8999999, 0.875, -0.25, 0.90000004, -0.875, -0.25, 0.8999999, 0.875, -0.25, 0.90000004, -0.875, 0.25, 0.8999999, 0.875, 0.25, 0.90000004, -0.875, 0.25, 0.90000004, -0.875, 0.25, 0.99999994, 0.875, 0.25, 1, -0.875, 0.25, 1, -0.875, 0.25, 0.99999994, 0.875, -0.25, 0.99999994, 0.875, 0.25, 0.90000004, -0.875, 0.25, 0.8999999, 0.875, 0.25, 0.99999994, 0.875)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0drjl"]
+albedo_color = Color(0.55318403, 0.24467477, 0.006754477, 1)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_1rndd"]
+data = PackedVector3Array(-0.125, -0.95, 0.45, -0.125, -0.95, -0.45, -0.125, 0.95, -0.45, 0.125, -0.95, -0.45, -0.125, -0.95, -0.45, -0.125, -0.95, 0.45, -0.125, 0.95, -0.45, -0.125, -0.95, -0.45, 0.125, -0.95, -0.45, -0.125, 0.95, -0.45, -0.125, 0.95, 0.45, -0.125, -0.95, 0.45, -0.125, -0.95, 0.45, -0.125, 0.95, 0.45, 0.125, 0.95, 0.45, 0.125, 0.95, 0.45, -0.125, 0.95, 0.45, -0.125, 0.95, -0.45, -0.125, -0.95, 0.45, 0.125, -0.95, 0.45, 0.125, -0.95, -0.45, 0.125, 0.95, 0.45, 0.125, -0.95, 0.45, -0.125, -0.95, 0.45, 0.125, -0.95, -0.45, 0.125, -0.95, 0.45, 0.125, 0.95, 0.45, 0.125, -0.95, -0.45, 0.125, 0.95, -0.45, -0.125, 0.95, -0.45, -0.125, 0.95, -0.45, 0.125, 0.95, -0.45, 0.125, 0.95, 0.45, 0.125, 0.95, 0.45, 0.125, 0.95, -0.45, 0.125, -0.95, -0.45)
+
+[sub_resource type="Animation" id="Animation_7jqqt"]
+length = 0.001
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Wing1")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Wing2")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 1, 0, 0)
+
+[sub_resource type="Animation" id="Animation_w64up"]
+resource_name = "doors_close_animation"
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Wing1")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.707107, 0, 0.707107, 1, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Wing2")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 0.707107, 0, 0.707107, 1, 1, 0, 1, 0, 0)
+
+[sub_resource type="Animation" id="Animation_dgk66"]
+resource_name = "doors_open_animation"
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Wing1")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, 0.707107, 0, 0.707107)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Wing2")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 1, 0, 0, 1, 1, 0, 0.707107, 0, 0.707107)
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1p5ub"]
+_data = {
+&"RESET": SubResource("Animation_7jqqt"),
+&"doors_close_animation": SubResource("Animation_w64up"),
+&"doors_open_animation": SubResource("Animation_dgk66")
+}
+
+[node name="BasicPortalDoor" type="StaticBody3D" unique_id=289391983]
+script = ExtResource("1_xjwgw")
+
+[node name="Portal3D" type="Node3D" parent="." unique_id=1835864171]
+transform = Transform3D(-4.3711385e-08, 0, -0.99999994, 0, 1, 0, 0.99999994, 0, -4.3711385e-08, 0, 0, 0)
+script = ExtResource("1_vc7lc")
+_teleport_area_path = NodePath("TeleportArea")
+_teleport_collider_path = NodePath("TeleportArea/Collider")
+portal_size = Vector2(1.8, 2)
+portal_frame_width = 0.0
+viewport_size_mode = 0
+view_direction = 0
+portal_render_layer = 524288
+is_teleport = true
+teleport_direction = 0
+rigidbody_boost = 0.0
+teleport_tolerance = 0.5
+teleport_interactions = 3
+teleport_collision_mask = 16390
+start_deactivated = true
+
+[node name="TeleportArea" type="Area3D" parent="Portal3D" unique_id=1248403079]
+
+[node name="Collider" type="CollisionShape3D" parent="Portal3D/TeleportArea" unique_id=1373875749]
+shape = SubResource("BoxShape3D_0drjl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1481771047]
+shape = SubResource("BoxShape3D_vc7lc")
+
+[node name="Frame" type="StaticBody3D" parent="." unique_id=1225087110]
+collision_mask = 0
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="Frame" unique_id=2065124298]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Frame/CSGCombiner3D" unique_id=1817910694]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
+size = Vector3(0.5, 2, 0.25)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Frame/CSGCombiner3D" unique_id=32370375]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1)
+size = Vector3(0.5, 2, 0.25)
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Frame/CSGCombiner3D" unique_id=729875617]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.95, 0)
+size = Vector3(0.5, 2, 0.1)
+
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Frame" unique_id=1354513594]
+shape = SubResource("ConcavePolygonShape3D_xjwgw")
+
+[node name="Wing1" type="AnimatableBody3D" parent="." unique_id=80658613]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
+collision_layer = 32769
+collision_mask = 49154
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Wing1" unique_id=943336433]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
+size = Vector3(0.25, 1.9, 0.9)
+material = SubResource("StandardMaterial3D_0drjl")
+
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Wing1" unique_id=157708266]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
+shape = SubResource("ConcavePolygonShape3D_1rndd")
+
+[node name="Wing2" type="AnimatableBody3D" parent="." unique_id=1093661128]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.90610814)
+collision_layer = 32769
+collision_mask = 49154
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Wing2" unique_id=1101388749]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
+size = Vector3(0.25, 1.9, 0.9)
+material = SubResource("StandardMaterial3D_0drjl")
+
+[node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Wing2" unique_id=1666780991]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
+shape = SubResource("ConcavePolygonShape3D_1rndd")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1716556188]
+libraries/ = SubResource("AnimationLibrary_1p5ub")
