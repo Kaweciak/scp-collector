@@ -1,0 +1,36 @@
+[gd_resource type="Theme" format=3 uid="uid://djigfo8k4diud"]
+
+[ext_resource type="Texture2D" uid="uid://cs6q4msutd6kc" path="res://levels/lobby/level_selector/checkbox_checked.png" id="1_bqmg3"]
+[ext_resource type="FontFile" uid="uid://buyckl5t2s0ic" path="res://ui/fonts/JosefinSans-BoldItalic.ttf" id="1_q6n1m"]
+[ext_resource type="Texture2D" uid="uid://bkfeviuvdmxk7" path="res://levels/lobby/level_selector/checkbox_empty.png" id="2_w4w8j"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_q6n1m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q6n1m"]
+bg_color = Color(0.2324, 0.25223336, 0.28, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2uh6p"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_2uh6p"]
+
+[resource]
+default_font = ExtResource("1_q6n1m")
+default_font_size = 48
+CheckBox/icons/checked = ExtResource("1_bqmg3")
+CheckBox/icons/unchecked = ExtResource("2_w4w8j")
+HBoxContainer/constants/separation = 8
+HSeparator/constants/separation = 64
+HSeparator/styles/separator = SubResource("StyleBoxEmpty_q6n1m")
+MarginContainer/constants/margin_bottom = 16
+MarginContainer/constants/margin_left = 16
+MarginContainer/constants/margin_right = 16
+MarginContainer/constants/margin_top = 16
+Panel/styles/panel = SubResource("StyleBoxFlat_q6n1m")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_2uh6p")
+VSeparator/styles/separator = SubResource("StyleBoxEmpty_2uh6p")

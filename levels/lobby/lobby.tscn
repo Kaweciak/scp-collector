@@ -3,9 +3,21 @@
 [ext_resource type="PackedScene" uid="uid://dhggd4ek8ipxb" path="res://levels/lobby/assets/lobby_edited.tscn" id="1_sxh6j"]
 [ext_resource type="Script" uid="uid://b78djm1hgcgbw" path="res://game_objects/button.gd" id="2_7viv4"]
 [ext_resource type="Script" uid="uid://v3y46ka1b017" path="res://game_objects/togglable_light.gd" id="2_ooalj"]
+[ext_resource type="PackedScene" uid="uid://b050fa42bm88j" path="res://levels/lobby/level_selector/level_selector.tscn" id="4_4ks1f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sxh6j"]
 size = Vector3(0.2, 0.2, 0.11953125)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_4ks1f"]
+viewport_path = NodePath("LevelSelectorScreen/Screen/SelectorViewport")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sse2f"]
+resource_local_to_scene = true
+albedo_texture = SubResource("ViewportTexture_4ks1f")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4ks1f"]
+material = SubResource("StandardMaterial3D_sse2f")
+size = Vector2(4, 2)
 
 [node name="Lobby" type="Node3D" unique_id=1802275906]
 
@@ -26,5 +38,19 @@ script = ExtResource("2_7viv4")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LightSwitch" unique_id=1296591656]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18684652, 0.2871762, 0.34085137)
 shape = SubResource("BoxShape3D_sxh6j")
+
+[node name="LevelSelectorScreen" type="Node3D" parent="." unique_id=1647499558]
+
+[node name="Screen" type="MeshInstance3D" parent="LevelSelectorScreen" unique_id=142317567]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -1.5, 1.551, -4.463)
+mesh = SubResource("PlaneMesh_4ks1f")
+
+[node name="SelectorViewport" type="SubViewport" parent="LevelSelectorScreen/Screen" unique_id=1158108066]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(2048, 1024)
+render_target_update_mode = 4
+
+[node name="LevelSelector" parent="LevelSelectorScreen/Screen/SelectorViewport" unique_id=1573150728 instance=ExtResource("4_4ks1f")]
 
 [connection signal="pressed" from="LightSwitch" to="Light" method="toggle"]

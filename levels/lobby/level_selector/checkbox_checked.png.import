@@ -2,24 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cdl17yj3afyfe"
-path.s3tc="res://.godot/imported/lobby_poster.png-bbe733197e43b09c255af9c917f9e206.s3tc.ctex"
+uid="uid://cs6q4msutd6kc"
+path="res://.godot/imported/checkbox_checked.png-9d250483f3a380176acda2d631f18f8c.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
-}
-generator_parameters={
-"md5": "3fb9d8646b342e95a51e74ef452c98a9"
+"vram_texture": false
 }
 
 [deps]
 
-source_file="res://levels/lobby/assets/lobby_poster.png"
-dest_files=["res://.godot/imported/lobby_poster.png-bbe733197e43b09c255af9c917f9e206.s3tc.ctex"]
+source_file="res://levels/lobby/level_selector/checkbox_checked.png"
+dest_files=["res://.godot/imported/checkbox_checked.png-9d250483f3a380176acda2d631f18f8c.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=false
 compress/lossy_quality=0.7
 compress/uastc_level=0
@@ -27,7 +23,7 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-mipmaps/generate=true
+mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
@@ -41,4 +37,4 @@ process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1
