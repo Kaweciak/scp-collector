@@ -126,6 +126,39 @@ func sync_link_portals(path_a: NodePath, path_b: NodePath) -> void:
 		var door_a = portal_a.get_parent()
 		var door_b = portal_b.get_parent()
 		
+		#Cleanup variables
+		var doors_to_close = []
+		var both_open = door_a.opened and door_b.opened
+		
+		#Identify any old portal links that need their doors closed
+		if portal_a.exit_portal != null:
+			var old_door_a = portal_a.exit_portal.get_parent()
+			if old_door_a.opened:
+				if not (both_open and (old_door_a == door_a or old_door_a == door_b)):
+					doors_to_close.append(old_door_a)
+		
+		if portal_b.exit_portal != null:
+			var old_door_b = portal_b.exit_portal.get_parent()
+			if old_door_b.opened and not doors_to_close.has(old_door_b):
+				if not (both_open and (old_door_b == door_a or old_door_b == door_b)):
+					doors_to_close.append(old_door_b)
+		
+		#Check if the doors of the new portals need to be cleaned up
+		if not both_open:
+			if door_a.opened and not doors_to_close.has(door_a):
+				doors_to_close.append(door_a)
+			if door_b.opened and not doors_to_close.has(door_b):
+				doors_to_close.append(door_b)
+				
+		#Close collected doors locally and wait for the animation to finish
+		if doors_to_close.size() > 0:
+			for door in doors_to_close:
+				#Calling _close directly avoids duplicating RPC calls since we are inside one
+				door._close(true)
+				
+			#Waits slightly longer than the 0.5s animation to ensure states settle
+			await get_tree().create_timer(0.55).timeout
+		
 		#Clean up old portal links
 		_unlink_portal(portal_a)
 		_unlink_portal(portal_b)
