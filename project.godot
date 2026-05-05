@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="SCP collector"
-run/main_scene="uid://dc0o1xomipg3e"
+run/main_scene="uid://dn6shk65dp47t"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 

@@ -1,7 +1,8 @@
 extends Light3D
 
 func toggle() -> void:
-	if visible:
+	print(visible)
+	if !visible:
 		enable()
 	else:
 		disable()

@@ -4,6 +4,7 @@ var pages: Dictionary
 var pages_arr: Array[Node]
 var current_page: Node
 @onready var camera: Camera3D = $Camera3D
+@export var lobby_scene: PackedScene
 
 
 func _ready() -> void:
@@ -15,8 +16,7 @@ func _ready() -> void:
 	current_page.activate()
 
 # taking button press signal back from paper
-func _on_paper_screen_event(event_name: String) -> void:
-	print(event_name)
+func _on_paper_screen_event(event_name: String, args: Array = []) -> void:
 	match event_name:
 		"play_pressed":
 			_flip_page_to("StartGameScreenPage")
@@ -25,9 +25,13 @@ func _on_paper_screen_event(event_name: String) -> void:
 		"quit_pressed":
 			get_tree().quit()
 		"host_pressed":
-			pass # hosting game logic
+			_flip_page_to("HostGameScreenPage")
 		"join_pressed":
-			pass # joining game logic
+			_flip_page_to("JoinGameScreenPage")
+		"host_game":
+			_host_game(args[0])
+		"join_game":
+			_join_game(args[0], args[1])
 		"return_pressed":
 			_flip_page_to("TitleScreenPage")
 
@@ -61,6 +65,15 @@ func _flip_page_to(page_name: String) -> bool:
 
 	return true
 
+func _host_game(nickname: String) -> void:
+	MultiplayerController.host(nickname)
+
+	get_tree().change_scene_to_packed(lobby_scene)
+
+func _join_game(ip: String, nickname: String) -> void:
+	MultiplayerController.join(ip, nickname)
+
+	get_tree().change_scene_to_packed(lobby_scene)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -85,6 +98,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		var node = collider
 		while node:
 			if node is Paper:
-				node.forward_input(event, result)
+				node.forward_mouse_input(event, result)
 				return
 			node = node.get_parent()
+	elif event is InputEventKey:
+		current_page.forward_keyboard_input(event)

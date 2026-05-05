@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="2_81ny1"]
 [ext_resource type="Script" uid="uid://bln8yx3dhecm7" path="res://ui/menus/screens/start_game_screen/start_game_screen.gd" id="2_arju3"]
 
-[node name="TitleScreen" type="MarginContainer" unique_id=1072418236]
+[node name="StartGameScreen" type="MarginContainer" unique_id=1072418236]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

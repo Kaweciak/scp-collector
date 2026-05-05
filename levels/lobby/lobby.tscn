@@ -1,5 +1,6 @@
 [gd_scene format=3 uid="uid://upfigsc4dnmq"]
 
+[ext_resource type="Script" uid="uid://dmt1pj0c82mi3" path="res://levels/lobby/lobby.gd" id="1_jl2pe"]
 [ext_resource type="PackedScene" uid="uid://dhggd4ek8ipxb" path="res://levels/lobby/assets/lobby_edited.tscn" id="1_sxh6j"]
 [ext_resource type="Script" uid="uid://b78djm1hgcgbw" path="res://game_objects/button.gd" id="2_7viv4"]
 [ext_resource type="Script" uid="uid://v3y46ka1b017" path="res://game_objects/togglable_light.gd" id="2_ooalj"]
@@ -11,28 +12,43 @@ size = Vector3(0.2, 0.2, 0.11953125)
 [sub_resource type="ViewportTexture" id="ViewportTexture_4ks1f"]
 viewport_path = NodePath("LevelSelectorScreen/Screen/SelectorViewport")
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_jl2pe"]
+viewport_path = NodePath("LevelSelectorScreen/Screen/SelectorViewport")
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sse2f"]
 resource_local_to_scene = true
 albedo_texture = SubResource("ViewportTexture_4ks1f")
+emission_enabled = true
+emission_texture = SubResource("ViewportTexture_jl2pe")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_4ks1f"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_sse2f")
 size = Vector2(4, 2)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_jl2pe"]
+size = Vector3(8, 1, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_803di"]
+size = Vector3(1, 5, 8)
+
 [node name="Lobby" type="Node3D" unique_id=1802275906]
+script = ExtResource("1_jl2pe")
 
 [node name="Mesh" parent="." unique_id=1245646185 instance=ExtResource("1_sxh6j")]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, 0)
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 2, 0, 2)
 
 [node name="Light" type="SpotLight3D" parent="." unique_id=1101123759]
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -1.5337906, 2.953179, -1.4154828)
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0.4662094, 2.953179, 0.58451724)
 spot_range = 6.0
 spot_attenuation = 0.49
 spot_angle = 86.65
 script = ExtResource("2_ooalj")
 
 [node name="LightSwitch" type="StaticBody3D" parent="." unique_id=1943404433]
-transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -0.5546756, 0.7897355, 0.96901333)
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 1.4453244, 0.7897355, 2.9690132)
+collision_layer = 32768
+collision_mask = 32768
 script = ExtResource("2_7viv4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LightSwitch" unique_id=1296591656]
@@ -40,6 +56,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18684652, 0.2871762, 0.340
 shape = SubResource("BoxShape3D_sxh6j")
 
 [node name="LevelSelectorScreen" type="Node3D" parent="." unique_id=1647499558]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 2)
 
 [node name="Screen" type="MeshInstance3D" parent="LevelSelectorScreen" unique_id=142317567]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -1.5, 1.551, -4.463)
@@ -52,5 +69,34 @@ size = Vector2i(2048, 1024)
 render_target_update_mode = 4
 
 [node name="LevelSelector" parent="LevelSelectorScreen/Screen/SelectorViewport" unique_id=1573150728 instance=ExtResource("4_4ks1f")]
+
+[node name="PlayerContainer" type="Node3D" parent="." unique_id=1083528122]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 2)
+
+[node name="Collisions" type="StaticBody3D" parent="." unique_id=1740955253]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Collisions" unique_id=1148076618]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_jl2pe")
+
+[node name="CollisionShape3D6" type="CollisionShape3D" parent="Collisions" unique_id=96724305]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.5, 0)
+shape = SubResource("BoxShape3D_jl2pe")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Collisions" unique_id=1942671394]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.5, 0)
+shape = SubResource("BoxShape3D_803di")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Collisions" unique_id=327830721]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1.5, 0)
+shape = SubResource("BoxShape3D_803di")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Collisions" unique_id=614105909]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1, 1.5, -3)
+shape = SubResource("BoxShape3D_803di")
+
+[node name="CollisionShape3D5" type="CollisionShape3D" parent="Collisions" unique_id=835226046]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1, 1.5, 4)
+shape = SubResource("BoxShape3D_803di")
 
 [connection signal="pressed" from="LightSwitch" to="Light" method="toggle"]

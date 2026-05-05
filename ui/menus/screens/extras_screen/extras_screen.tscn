@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://dgyif7kahddsg" path="res://ui/menus/screens/extras_screen/extras_screen.gd" id="2_45t6i"]
 [ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="3_vd8ih"]
 
-[node name="TitleScreen" type="MarginContainer" unique_id=1072418236]
+[node name="ExtrasScreen" type="MarginContainer" unique_id=1072418236]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0

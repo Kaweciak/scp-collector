@@ -1,7 +1,7 @@
 class_name Paper
 extends Node3D
 
-signal screen_event(event_name: String)
+signal screen_event(event_name: String, args: Array)
 
 @onready var sub_viewport: SubViewport = $SubViewport
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
@@ -40,10 +40,25 @@ func activate() -> void:
 func deactivate() -> void:
 	collision_shape.disabled = true
 
-func _screen_signal(signal_name: String):
-	emit_signal("screen_event", signal_name)
+func _screen_signal(arg = null, signal_name: String = ""):
+	var args: Array = []
 
-func forward_input(event: InputEvent, ray_result: Dictionary):
+	if arg is String and signal_name == "":
+		signal_name = arg
+		args = []
+
+	elif arg is Array:
+		args = arg
+
+	elif arg != null:
+		args = [arg]
+
+	emit_signal("screen_event", signal_name, args)
+
+func forward_keyboard_input(event: InputEvent):
+	sub_viewport.push_input(event.duplicate())
+
+func forward_mouse_input(event: InputEvent, ray_result: Dictionary):
 	var ev := event.duplicate()
 
 	var hit_pos: Vector3 = ray_result.position
