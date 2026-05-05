@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b050fa42bm88j" path="res://levels/lobby/level_selector/level_selector.tscn" id="4_4ks1f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sxh6j"]
-size = Vector3(0.2, 0.2, 0.11953125)
+size = Vector3(0.5317627, 0.2, 0.11953125)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_4ks1f"]
 viewport_path = NodePath("LevelSelectorScreen/Screen/SelectorViewport")
@@ -70,6 +70,26 @@ render_target_update_mode = 4
 
 [node name="LevelSelector" parent="LevelSelectorScreen/Screen/SelectorViewport" unique_id=1573150728 instance=ExtResource("4_4ks1f")]
 
+[node name="ReadyButton" type="StaticBody3D" parent="LevelSelectorScreen" unique_id=1848693774]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -2.21622, 1.3664598, -4.4614253)
+collision_layer = 32768
+collision_mask = 32768
+script = ExtResource("2_7viv4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelSelectorScreen/ReadyButton" unique_id=139676347]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965174, -0.016914785, -0.010869622)
+shape = SubResource("BoxShape3D_sxh6j")
+
+[node name="StartButton" type="StaticBody3D" parent="LevelSelectorScreen" unique_id=1008175123]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -0.7344034, 1.3664598, -4.4208636)
+collision_layer = 32768
+collision_mask = 32768
+script = ExtResource("2_7viv4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelSelectorScreen/StartButton" unique_id=2016088406]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965174, -0.016914785, -0.010869622)
+shape = SubResource("BoxShape3D_sxh6j")
+
 [node name="PlayerContainer" type="Node3D" parent="." unique_id=1083528122]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1, 2)
 
@@ -100,3 +120,5 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1, 1
 shape = SubResource("BoxShape3D_803di")
 
 [connection signal="pressed" from="LightSwitch" to="Light" method="toggle"]
+[connection signal="pressed" from="LevelSelectorScreen/ReadyButton" to="LevelSelectorScreen/Screen/SelectorViewport/LevelSelector" method="_on_ready_button_pressed"]
+[connection signal="pressed" from="LevelSelectorScreen/StartButton" to="LevelSelectorScreen/Screen/SelectorViewport/LevelSelector" method="_on_start_button_pressed"]

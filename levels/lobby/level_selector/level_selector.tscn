@@ -3,6 +3,7 @@
 [ext_resource type="Theme" uid="uid://djigfo8k4diud" path="res://levels/lobby/level_selector/selector_theme.tres" id="1_4yyyh"]
 [ext_resource type="Texture2D" uid="uid://yu1krbe7f4h5" path="res://levels/lobby/level_selector/icon_house.png" id="1_eqlup"]
 [ext_resource type="Texture2D" uid="uid://b2xiobtqtxfv4" path="res://levels/lobby/level_selector/icon_factory.png" id="2_4yyyh"]
+[ext_resource type="Script" uid="uid://ffjkufh8vc2" path="res://levels/lobby/level_selector/level_selector.gd" id="2_tauot"]
 [ext_resource type="Texture2D" uid="uid://crddhj3rd1jds" path="res://levels/lobby/level_selector/icon_lab.png" id="3_qu054"]
 [ext_resource type="Texture2D" uid="uid://cnb2bi2br7wnb" path="res://levels/lobby/level_selector/scientist.png" id="5_qu054"]
 
@@ -10,6 +11,7 @@
 offset_right = 2048.0
 offset_bottom = 1024.0
 theme = ExtResource("1_4yyyh")
+script = ExtResource("2_tauot")
 
 [node name="Panel" type="Panel" parent="." unique_id=1436574730]
 layout_mode = 2
@@ -139,6 +141,35 @@ color = Color(0.92976016, 0.70772594, 0, 1)
 [node name="HSeparator" type="HSeparator" parent="MenusContainer" unique_id=1855261290]
 layout_mode = 2
 
+[node name="ButtonsContainer" type="HBoxContainer" parent="MenusContainer" unique_id=352543953]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=1070524528]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReadyButton" type="Button" parent="MenusContainer/ButtonsContainer" unique_id=1415190560]
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 2
+text = "Ready up"
+
+[node name="VSeparator2" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=461148279]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StartButton" type="Button" parent="MenusContainer/ButtonsContainer" unique_id=1296626611]
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 2
+disabled = true
+text = "Start"
+
+[node name="VSeparator3" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=121580733]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator2" type="HSeparator" parent="MenusContainer" unique_id=954425875]
+layout_mode = 2
+
 [node name="PlayersContainer" type="HBoxContainer" parent="MenusContainer" unique_id=2086930096]
 layout_mode = 2
 
@@ -170,7 +201,7 @@ clip_text = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CheckBox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1106224859]
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1106224859]
 layout_mode = 2
 button_mask = 0
 text = "Ready?"
@@ -206,7 +237,7 @@ clip_text = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CheckBox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1982312178]
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1982312178]
 layout_mode = 2
 button_mask = 0
 text = "Ready?"
@@ -242,7 +273,7 @@ clip_text = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CheckBox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=16683270]
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=16683270]
 layout_mode = 2
 button_mask = 0
 text = "Ready?"
@@ -278,35 +309,7 @@ clip_text = true
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CheckBox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1234699579]
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1234699579]
 layout_mode = 2
 button_mask = 0
 text = "Ready?"
-
-[node name="HSeparator2" type="HSeparator" parent="MenusContainer" unique_id=954425875]
-layout_mode = 2
-
-[node name="ButtonsContainer" type="HBoxContainer" parent="MenusContainer" unique_id=352543953]
-layout_mode = 2
-
-[node name="VSeparator" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=1070524528]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="ReadyButton" type="Button" parent="MenusContainer/ButtonsContainer" unique_id=1415190560]
-custom_minimum_size = Vector2(256, 64)
-layout_mode = 2
-text = "Ready up"
-
-[node name="VSeparator2" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=461148279]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="StartButton" type="Button" parent="MenusContainer/ButtonsContainer" unique_id=1296626611]
-custom_minimum_size = Vector2(256, 64)
-layout_mode = 2
-text = "Start"
-
-[node name="VSeparator3" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=121580733]
-layout_mode = 2
-size_flags_horizontal = 3

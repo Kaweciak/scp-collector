@@ -1,5 +1,7 @@
 extends Node
 
+signal players_updated
+
 var peer = ENetMultiplayerPeer.new()
 var player_scene: PackedScene = preload("res://player/player_body_3d.tscn")
 
@@ -53,12 +55,15 @@ func register_player(nickname: String) -> void:
 
 	add_player(id)
 
-	rpc("sync_player_names", player_names)
+	rpc("sync_player_names", connected_peer_ids, player_names)
+	emit_signal("players_updated")
 
 
 @rpc("authority")
-func sync_player_names(names: Dictionary) -> void:
+func sync_player_names(ids: Array, names: Dictionary) -> void:
+	connected_peer_ids = ids
 	player_names = names
+	emit_signal("players_updated")
 
 
 func _on_peer_connected(id: int) -> void:
@@ -74,7 +79,9 @@ func _on_peer_disconnected(id: int) -> void:
 	del_player(id)
 
 	if multiplayer.is_server():
-		rpc("sync_player_names", player_names)
+		rpc("sync_player_names", connected_peer_ids, player_names)
+
+	emit_signal("players_updated")
 
 
 func spawn_players_in_new_scene() -> void:
