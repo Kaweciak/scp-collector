@@ -23,8 +23,8 @@ PortalManager="*uid://duuypebhqhmq8"
 
 [display]
 
-window/size/viewport_width=720
-window/size/viewport_height=540
+window/size/viewport_width=1024
+window/size/viewport_height=768
 
 [dotnet]
 

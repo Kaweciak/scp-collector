@@ -3,10 +3,9 @@
 [ext_resource type="Script" uid="uid://tjnmydpq6mo0" path="res://player/player_body_3d.gd" id="1_4qwy5"]
 [ext_resource type="Script" uid="uid://dxynsrgu67x7y" path="res://player/hud.gd" id="2_rjoga"]
 [ext_resource type="Shader" uid="uid://brlqm58kcl17r" path="res://player/sanity_distortion.gdshader" id="2_ryni8"]
-[ext_resource type="Shader" uid="uid://bss1vsl4apqyh" path="res://player/BlinkingShader.gdshader" id="4_qh2r7"]
-[ext_resource type="PackedScene" uid="uid://dst2bsilth5mb" path="res://player/model/player_model.res" id="5_qh2r7"]
-[ext_resource type="PackedScene" uid="uid://blux03ijdura0" path="res://player/model/remade.tscn" id="3_model"]
+[ext_resource type="Shader" uid="uid://bss1vsl4apqyh" path="res://player/BlinkingShader.gdshader" id="4_pyi6a"]
 [ext_resource type="PackedScene" uid="uid://cb7eyfa8i7nlo" path="res://ui/menus/pause_menu/pause_menu.tscn" id="4_qh2r7"]
+[ext_resource type="PackedScene" uid="uid://dst2bsilth5mb" path="res://player/model/player_model.res" id="5_qh2r7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
 radius = 0.3
@@ -17,14 +16,9 @@ radius = 0.3
 height = 1.2
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rjoga"]
+resource_local_to_scene = true
 shader = ExtResource("2_ryni8")
 shader_parameter/distortion_strength = 0.0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_pyi6a"]
-shader = ExtResource("4_qh2r7")
-shader_parameter/blink_progress = 0.0
-shader_parameter/smoothness = 0.1
-shader_parameter/curvature = 0.05
 
 [sub_resource type="Animation" id="Animation_pyi6a"]
 length = 0.001
@@ -77,6 +71,12 @@ _data = {
 &"close_eyes": SubResource("Animation_qh2r7"),
 &"open_eyes": SubResource("Animation_iveab")
 }
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pyi6a"]
+shader = ExtResource("4_pyi6a")
+shader_parameter/blink_progress = 0.0
+shader_parameter/smoothness = 0.1
+shader_parameter/curvature = 0.1
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ied1u"]
 properties/0/path = NodePath(".:position")
@@ -141,6 +141,10 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MainCamera/HUD" unique_id=266477069]
+root_node = NodePath("../../..")
+libraries/ = SubResource("AnimationLibrary_pyi6a")
+
 [node name="BlinkingFilter" type="ColorRect" parent="MainCamera/HUD" unique_id=1844247417]
 material = SubResource("ShaderMaterial_pyi6a")
 anchors_preset = 15
@@ -151,14 +155,11 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MainCamera/HUD" unique_id=266477069]
-root_node = NodePath("../../..")
-libraries/ = SubResource("AnimationLibrary_pyi6a")
-
 [node name="Flashlight" type="SpotLight3D" parent="MainCamera" unique_id=1871008492]
 visible = false
 spot_range = 15.0
 spot_angle = 30.0
+
 [node name="PauseMenu" parent="MainCamera" unique_id=83991203 instance=ExtResource("4_qh2r7")]
 visible = false
 
@@ -177,6 +178,5 @@ one_shot = true
 [connection signal="blink_closed" from="MainCamera/HUD" to="." method="_on_hud_blink_closed"]
 [connection signal="blink_opened" from="MainCamera/HUD" to="." method="_on_hud_blink_opened"]
 [connection signal="animation_finished" from="MainCamera/HUD/AnimationPlayer" to="MainCamera/HUD" method="_on_animation_player_animation_finished"]
-[connection signal="timeout" from="BlinkTimer" to="." method="_on_blink_timer_timeout"]
-
 [connection signal="unpause" from="MainCamera/PauseMenu" to="." method="_unpause"]
+[connection signal="timeout" from="BlinkTimer" to="." method="_on_blink_timer_timeout"]

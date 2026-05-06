@@ -22,7 +22,7 @@ var ready_state := {}
 var map_votes := {}
 
 var maps := {
-	"House": "TBA",
+	"House": "test_scenes/playable_level_test.tscn",
 	"Factory": "TBA",
 	"Lab": "TBA"
 }
