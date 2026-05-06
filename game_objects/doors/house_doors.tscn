@@ -1,18 +1,152 @@
 [gd_scene format=3 uid="uid://dx84qligg4usn"]
 
 [ext_resource type="Script" uid="uid://ogk0ra030f84" path="res://game_objects/doors/doors.gd" id="1_dgk66"]
+[ext_resource type="Script" uid="uid://cw1r4c1d7beyv" path="res://addons/portals/scripts/portal_3d.gd" id="2_7jqqt"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gvu4j"]
-size = Vector3(0.5, 2, 2)
+size = Vector3(0.18, 2, 2)
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_gvu4j"]
 data = PackedVector3Array(-0.25, -1, 0.875, -0.25, 1, 0.875, -0.25, -1, 1.125, -0.25, -1, 0.875, -0.25, -1, 1.125, 0.25, -1, 0.875, -0.25, -1, 0.875, -0.25, 0.8999999, 0.875, -0.25, 0.99999994, 0.875, -0.25, -1, 0.875, -0.25, 0.99999994, 0.875, -0.25, 1, 0.875, -0.25, -1, 1.125, -0.25, 1, 0.875, -0.25, 1, 1.125, -0.25, -1, 0.875, 0.25, 0.8999999, 0.875, -0.25, 0.8999999, 0.875, -0.25, -1, 1.125, -0.25, 1, 1.125, 0.25, 1, 1.125, -0.25, 1, 0.875, -0.25, 0.99999994, 0.875, 0.25, 0.99999994, 0.875, -0.25, 1, 0.875, 0.25, 1, 1.125, -0.25, 1, 1.125, -0.25, -1, 1.125, 0.25, -1, 1.125, 0.25, -1, 0.875, -0.25, -1, 0.875, 0.25, -1, 0.875, 0.25, 0.8999999, 0.875, -0.25, -1, 1.125, 0.25, 1, 1.125, 0.25, -1, 1.125, 0.25, -1, 0.875, 0.25, -1, 1.125, 0.25, 1, 1.125, 0.25, 1, 0.875, -0.25, 1, 0.875, 0.25, 0.99999994, 0.875, -0.25, 1, 0.875, 0.25, 1, 0.875, 0.25, 1, 1.125, 0.25, -1, 0.875, 0.25, 1, 1.125, 0.25, 0.8999999, 0.875, 0.25, 1, 0.875, 0.25, 0.99999994, 0.875, 0.25, 0.8999999, 0.875, 0.25, 0.8999999, 0.875, 0.25, 1, 1.125, 0.25, 1, 0.875, -0.25, -1, -1.125, -0.25, 1, -1.125, -0.25, -1, -0.875, -0.25, -1, -1.125, -0.25, -1, -0.875, 0.25, -1, -1.125, -0.25, -1, -1.125, 0.25, -1, -1.125, -0.25, 1, -1.125, -0.25, -1, -0.875, -0.25, 0.90000004, -0.875, 0.25, -1, -0.875, -0.25, -1, -0.875, -0.25, 1, -1.125, -0.25, 0.90000004, -0.875, -0.25, 0.90000004, -0.875, -0.25, 1, -1.125, -0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, 0.90000004, -0.875, -0.25, 1, -1.125, 0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, 1, -0.875, 0.25, 1, -0.875, -0.25, 1, -0.875, -0.25, -1, -0.875, 0.25, -1, -0.875, 0.25, -1, -1.125, 0.25, -1, -1.125, 0.25, -1, -0.875, 0.25, 1, -0.875, -0.25, 1, -1.125, 0.25, -1, -1.125, 0.25, 1, -1.125, 0.25, -1, -0.875, -0.25, 0.90000004, -0.875, 0.25, 0.90000004, -0.875, -0.25, 1, -1.125, 0.25, 1, -1.125, 0.25, 1, -0.875, -0.25, 1, -0.875, 0.25, 1, -0.875, 0.25, 1, -0.875, 0.25, -1, -1.125, 0.25, 1, -0.875, 0.25, 1, -1.125, 0.25, -1, -0.875, 0.25, 0.90000004, -0.875, 0.25, 1, -0.875, 0.25, -1, -0.875, 0.25, 1, -0.875, 0.25, 1, -0.875, -0.25, 0.8999999, 0.875, -0.25, 0.90000004, -0.875, -0.25, 1, -0.875, 0.25, 1, -0.875, -0.25, 0.99999994, 0.875, -0.25, 1, -0.875, -0.25, 0.8999999, 0.875, -0.25, 1, -0.875, -0.25, 0.99999994, 0.875, 0.25, 0.8999999, 0.875, -0.25, 0.90000004, -0.875, -0.25, 0.8999999, 0.875, -0.25, 0.90000004, -0.875, 0.25, 0.8999999, 0.875, 0.25, 0.90000004, -0.875, 0.25, 0.90000004, -0.875, 0.25, 0.99999994, 0.875, 0.25, 1, -0.875, 0.25, 1, -0.875, 0.25, 0.99999994, 0.875, -0.25, 0.99999994, 0.875, 0.25, 0.90000004, -0.875, 0.25, 0.8999999, 0.875, 0.25, 0.99999994, 0.875)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dgk66"]
-albedo_color = Color(0.55318403, 0.24467477, 0.006754477, 1)
+[sub_resource type="Shader" id="Shader_w64up"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.6.2.stable's StandardMaterial3D.
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_dgk66"]
-data = PackedVector3Array(-0.125, -0.95, 0.45, -0.125, -0.95, -0.45, -0.125, 0.95, -0.45, 0.125, -0.95, -0.45, -0.125, -0.95, -0.45, -0.125, -0.95, 0.45, -0.125, 0.95, -0.45, -0.125, -0.95, -0.45, 0.125, -0.95, -0.45, -0.125, 0.95, -0.45, -0.125, 0.95, 0.45, -0.125, -0.95, 0.45, -0.125, -0.95, 0.45, -0.125, 0.95, 0.45, 0.125, 0.95, 0.45, 0.125, 0.95, 0.45, -0.125, 0.95, 0.45, -0.125, 0.95, -0.45, -0.125, -0.95, 0.45, 0.125, -0.95, 0.45, 0.125, -0.95, -0.45, 0.125, 0.95, 0.45, 0.125, -0.95, 0.45, -0.125, -0.95, 0.45, 0.125, -0.95, -0.45, 0.125, -0.95, 0.45, 0.125, 0.95, 0.45, 0.125, -0.95, -0.45, 0.125, 0.95, -0.45, -0.125, 0.95, -0.45, -0.125, 0.95, -0.45, 0.125, 0.95, -0.45, 0.125, 0.95, 0.45, 0.125, 0.95, 0.45, 0.125, 0.95, -0.45, 0.125, -0.95, -0.45)
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+#include \"res://addons/portals/materials/portalclip_mesh.gdshaderinc\"
+PORTALCLIP_UNIFORMS
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+	
+	PORTALCLIP_VERTEX
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	
+	PORTALCLIP_FRAGMENT
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_gi5sw"]
+render_priority = 0
+shader = SubResource("Shader_w64up")
+shader_parameter/albedo = Color(0.9137255, 0.3764706, 0, 1)
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fd73q"]
+material = SubResource("ShaderMaterial_gi5sw")
+size = Vector3(0.11, 1.895, 0.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8bj0a"]
+size = Vector3(0.11, 1.895, 0.9)
+
+[sub_resource type="Shader" id="Shader_gi5sw"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.6.2.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fd73q"]
+render_priority = 0
+shader = SubResource("Shader_gi5sw")
+shader_parameter/albedo = Color(0.23798424, 0.45452678, 0.7965325, 1)
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_w64up"]
+material = SubResource("ShaderMaterial_fd73q")
+size = Vector3(0.11, 1.895, 0.9)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fd73q"]
+size = Vector3(0.11, 1.895, 0.9)
 
 [sub_resource type="Animation" id="Animation_7jqqt"]
 length = 0.001
@@ -39,6 +173,23 @@ tracks/0/enabled = true
 tracks/0/path = NodePath("Wing1")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, -0.707107, 0, 0.707107, 1, 1, 0, 0, 0, 1)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Wing2")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, -0.707107, 0, 0.707107, 1, 1, 0, 1, 0, 0)
+
+[sub_resource type="Animation" id="Animation_gi5sw"]
+resource_name = "doors_close_animation_reversed"
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Wing1")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
 tracks/0/keys = PackedFloat32Array(0, 1, 0, 0.707107, 0, 0.707107, 1, 1, 0, 0, 0, 1)
 tracks/1/type = "rotation_3d"
 tracks/1/imported = false
@@ -50,6 +201,23 @@ tracks/1/keys = PackedFloat32Array(0, 1, 0, 0.707107, 0, 0.707107, 1, 1, 0, 1, 0
 
 [sub_resource type="Animation" id="Animation_dgk66"]
 resource_name = "doors_open_animation"
+tracks/0/type = "rotation_3d"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Wing1")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = PackedFloat32Array(0, 1, 0, 0, 0, 1, 1, 1, 0, -0.707107, 0, 0.707107)
+tracks/1/type = "rotation_3d"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Wing2")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = PackedFloat32Array(0, 1, 0, 1, 0, 0, 1, 1, 0, -0.707107, 0, 0.707107)
+
+[sub_resource type="Animation" id="Animation_fd73q"]
+resource_name = "doors_open_animation_reversed"
 tracks/0/type = "rotation_3d"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -69,18 +237,34 @@ tracks/1/keys = PackedFloat32Array(0, 1, 0, 1, 0, 0, 1, 1, 0, 0.707107, 0, 0.707
 _data = {
 &"RESET": SubResource("Animation_7jqqt"),
 &"doors_close_animation": SubResource("Animation_w64up"),
-&"doors_open_animation": SubResource("Animation_dgk66")
+&"doors_close_animation_reversed": SubResource("Animation_gi5sw"),
+&"doors_open_animation": SubResource("Animation_dgk66"),
+&"doors_open_animation_reversed": SubResource("Animation_fd73q")
 }
 
-[node name="HouseDoors" type="StaticBody3D" unique_id=677386291]
+[sub_resource type="BoxShape3D" id="BoxShape3D_w64up"]
+size = Vector3(1.75, 1.9, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gi5sw"]
+size = Vector3(0.01, 1.91, 1.75)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fd73q"]
+albedo_color = Color(0.31395888, 0.32663587, 0.3076789, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8bj0a"]
+material = SubResource("StandardMaterial3D_fd73q")
+size = Vector3(0.01, 1.91, 1.75)
+
+[node name="HouseDoors" type="StaticBody3D" unique_id=677386291 groups=["Portals"]]
 collision_layer = 32768
-collision_mask = 32768
+collision_mask = 0
 script = ExtResource("1_dgk66")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=483306319]
 shape = SubResource("BoxShape3D_gvu4j")
 
 [node name="Frame" type="StaticBody3D" parent="." unique_id=604205274]
+collision_mask = 0
 
 [node name="CSGCombiner3D" type="CSGCombiner3D" parent="Frame" unique_id=1177655927]
 
@@ -101,27 +285,119 @@ shape = SubResource("ConcavePolygonShape3D_gvu4j")
 
 [node name="Wing1" type="AnimatableBody3D" parent="." unique_id=13879063]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
+collision_layer = 32800
+collision_mask = 49154
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Wing1" unique_id=1836689837]
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Wing1" unique_id=1395342497]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
-size = Vector3(0.25, 1.9, 0.9)
-material = SubResource("StandardMaterial3D_dgk66")
+mesh = SubResource("BoxMesh_fd73q")
 
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Wing1" unique_id=1112679099]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
-shape = SubResource("ConcavePolygonShape3D_dgk66")
+shape = SubResource("BoxShape3D_8bj0a")
 
 [node name="Wing2" type="AnimatableBody3D" parent="." unique_id=114960231]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.90610814)
+collision_layer = 32800
+collision_mask = 49154
 
-[node name="CSGBox3D" type="CSGBox3D" parent="Wing2" unique_id=3458597]
+[node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Wing2" unique_id=2058845760]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
-size = Vector3(0.25, 1.9, 0.9)
-material = SubResource("StandardMaterial3D_dgk66")
+mesh = SubResource("BoxMesh_w64up")
 
 [node name="CSGBakedCollisionShape3D" type="CollisionShape3D" parent="Wing2" unique_id=808772714]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.05, -0.45)
-shape = SubResource("ConcavePolygonShape3D_dgk66")
+shape = SubResource("BoxShape3D_fd73q")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1997843712]
 libraries/ = SubResource("AnimationLibrary_7jqqt")
+
+[node name="PortalFront" type="Node3D" parent="." unique_id=991513668]
+transform = Transform3D(-4.3711385e-08, 0, 0.9999999, 0, 1, 0, -0.9999999, 0, -4.3711385e-08, 0.20048082, 0, 0)
+script = ExtResource("2_7jqqt")
+_teleport_area_path = NodePath("TeleportArea")
+_teleport_collider_path = NodePath("TeleportArea/Collider")
+portal_size = Vector2(1.8, 2)
+portal_frame_width = 0.38
+viewport_size_mode = 1
+_viewport_size_max_width_absolute = 720
+view_direction = 1
+portal_render_layer = 524288
+is_teleport = true
+teleport_direction = 0
+rigidbody_boost = 0.0
+teleport_tolerance = 0.8
+teleport_interactions = 7
+teleport_collision_mask = 6
+start_deactivated = true
+
+[node name="TeleportArea" type="Area3D" parent="PortalFront" unique_id=108189965]
+collision_layer = 0
+
+[node name="Collider" type="CollisionShape3D" parent="PortalFront/TeleportArea" unique_id=343125823]
+transform = Transform3D(1, 0, -2.1671553e-13, 0, 1, 0, 2.1671553e-13, 0, 1, 0, -0.04699707, 0)
+shape = SubResource("BoxShape3D_w64up")
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="PortalFront" unique_id=409740232]
+aabb = AABB(-0.87, -0.996, -0.055, 1.75, 1.889, 0.1)
+
+[node name="PortalBack" type="Node3D" parent="." unique_id=1598784281]
+transform = Transform3D(-4.3711385e-08, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, -4.3711385e-08, -0.2, 0, 0)
+script = ExtResource("2_7jqqt")
+_teleport_area_path = NodePath("TeleportArea")
+_teleport_collider_path = NodePath("TeleportArea/Collider")
+portal_size = Vector2(1.8, 2)
+portal_frame_width = 0.38
+viewport_size_mode = 1
+_viewport_size_max_width_absolute = 720
+view_direction = 1
+portal_render_layer = 524288
+is_teleport = true
+teleport_direction = 0
+rigidbody_boost = 0.0
+teleport_tolerance = 0.8
+teleport_interactions = 7
+teleport_collision_mask = 6
+start_deactivated = true
+
+[node name="TeleportArea" type="Area3D" parent="PortalBack" unique_id=917422134]
+collision_layer = 0
+
+[node name="Collider" type="CollisionShape3D" parent="PortalBack/TeleportArea" unique_id=1470184711]
+transform = Transform3D(1, 0, 8.277823e-13, 0, 1, 0, -8.277823e-13, 0, 1, 0, -0.04, 0)
+shape = SubResource("BoxShape3D_w64up")
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="PortalBack" unique_id=1812302373]
+transform = Transform3D(1, 0, 3.5527137e-15, 0, 1, 0, -3.5527137e-15, 0, 1, 0, 0, 0)
+aabb = AABB(-0.87, -0.996, -0.055, 1.75, 1.889, 0.1)
+
+[node name="FrontBlocker" type="StaticBody3D" parent="." unique_id=1791523506]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20104684, -0.045, 0)
+collision_layer = 32800
+collision_mask = 49154
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="FrontBlocker" unique_id=830886772]
+shape = SubResource("BoxShape3D_gi5sw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="FrontBlocker" unique_id=2013247648]
+layers = 131072
+mesh = SubResource("BoxMesh_8bj0a")
+
+[node name="BackBlocker" type="StaticBody3D" parent="." unique_id=1253472458]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20897152, -0.045, 0)
+collision_layer = 32800
+collision_mask = 49154
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackBlocker" unique_id=665045349]
+shape = SubResource("BoxShape3D_gi5sw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BackBlocker" unique_id=1456116142]
+layers = 131072
+mesh = SubResource("BoxMesh_8bj0a")
+
+[node name="NavigationLink3D" type="NavigationLink3D" parent="." unique_id=1483982562]
+enabled = false
+start_position = Vector3(0.69, -0.445, 0)
+end_position = Vector3(-0.69, -0.445, 0)
+
+[connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

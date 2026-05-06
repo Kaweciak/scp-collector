@@ -3,11 +3,55 @@
 [ext_resource type="Script" uid="uid://nk47aikpybmy" path="res://game_objects/SCP-426/scp_426.gd" id="1_ey5d2"]
 [ext_resource type="ArrayMesh" uid="uid://bv67rn1otkthc" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Icons Dark_0.res" id="1_f81i0"]
 [ext_resource type="ArrayMesh" uid="uid://dqaifb8wlujg0" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_0.res" id="2_ey5d2"]
+[ext_resource type="Script" uid="uid://boacry20mb43k" path="res://player/SanityResourceCheckpoint.gd" id="2_gk7ay"]
 [ext_resource type="ArrayMesh" uid="uid://caoixtuypqwm6" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Metalic_02.res" id="3_gk7ay"]
 [ext_resource type="ArrayMesh" uid="uid://cmtpf0dnaffpk" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Dark_0.res" id="4_od64x"]
 [ext_resource type="ArrayMesh" uid="uid://buya7lajwsn22" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Light_0.res" id="5_x8abv"]
 [ext_resource type="ArrayMesh" uid="uid://douh8p08lnlrp" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_RED Surface_0.res" id="6_6oobr"]
 [ext_resource type="ArrayMesh" uid="uid://hsx8sdyddo1t" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Dark_0.res" id="7_ymocq"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ey5d2"]
+friction = 0.5
+
+[sub_resource type="Resource" id="Resource_od64x"]
+script = ExtResource("2_gk7ay")
+time_to_increment_sanity_checkpoint = 0.0
+metadata/_custom_type_script = "uid://boacry20mb43k"
+
+[sub_resource type="Resource" id="Resource_x8abv"]
+script = ExtResource("2_gk7ay")
+vision_sanity_drain_rate = 8.0
+touch_sanity_drain_rate = 4.0
+sanity_regeneration_rate = 0.3
+metadata/_custom_type_script = "uid://boacry20mb43k"
+
+[sub_resource type="Resource" id="Resource_6oobr"]
+script = ExtResource("2_gk7ay")
+vision_sanity_drain_rate = 12.0
+touch_sanity_drain_rate = 8.0
+proximity_sanity_drain_rate = 0.1
+sanity_regeneration_rate = 0.1
+metadata/_custom_type_script = "uid://boacry20mb43k"
+
+[sub_resource type="Resource" id="Resource_ymocq"]
+script = ExtResource("2_gk7ay")
+vision_sanity_drain_rate = 20.0
+touch_sanity_drain_rate = 10.0
+proximity_sanity_drain_rate = 1.0
+proximity_sanity_drain_radius = 5.0
+sanity_regeneration_rate = 0.0
+time_to_increment_sanity_checkpoint = 900.0
+metadata/_custom_type_script = "uid://boacry20mb43k"
+
+[sub_resource type="Resource" id="Resource_8wjwm"]
+script = ExtResource("2_gk7ay")
+vision_sanity_drain_rate = 25.0
+touch_sanity_drain_rate = 20.0
+proximity_sanity_drain_rate = 4.0
+proximity_sanity_drain_radius = 15.0
+sanity_regeneration_rate = 0.0
+time_to_increment_sanity_checkpoint = 1800.0
+metadata/_custom_type_script = "uid://boacry20mb43k"
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8wjwm"]
 albedo_color = Color(0.33333334, 0.21176471, 0.3254902, 1)
@@ -36,11 +80,30 @@ properties/2/replication_mode = 1
 properties/3/path = NodePath(".:angular_velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 1
+properties/4/path = NodePath(".:vision_sanity_drain_rate")
+properties/4/spawn = true
+properties/4/replication_mode = 1
+properties/5/path = NodePath(".:touch_sanity_drain_rate")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath(".:proximity_sanity_drain_rate")
+properties/6/spawn = true
+properties/6/replication_mode = 1
+properties/7/path = NodePath(".:proximity_sanity_drain_radius")
+properties/7/spawn = true
+properties/7/replication_mode = 1
+properties/8/path = NodePath(".:sanity_regeneration_rate")
+properties/8/spawn = true
+properties/8/replication_mode = 1
 
 [node name="Toaster" type="RigidBody3D" unique_id=843890881 groups=["Anomaly"]]
-collision_layer = 49152
-collision_mask = 16385
+collision_layer = 49156
+collision_mask = 16447
+mass = 2.0
+physics_material_override = SubResource("PhysicsMaterial_ey5d2")
+continuous_cd = true
 script = ExtResource("1_ey5d2")
+checkpoints = Array[ExtResource("2_gk7ay")]([SubResource("Resource_od64x"), SubResource("Resource_x8abv"), SubResource("Resource_6oobr"), SubResource("Resource_ymocq"), SubResource("Resource_8wjwm")])
 
 [node name="Pivot" type="Node3D" parent="." unique_id=328695925]
 transform = Transform3D(1.6739992e-07, -1, 8.660763e-08, -0.5735764, -2.507182e-08, 0.81915206, -0.81915206, -1.8680208e-07, -0.5735764, 0, 0, 0)
@@ -92,3 +155,29 @@ shape = SubResource("CylinderShape3D_gk7ay")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1388690759]
 replication_config = SubResource("SceneReplicationConfig_ey5d2")
+
+[node name="VisibilityPoints" type="Node3D" parent="." unique_id=1576379677]
+
+[node name="Edge" type="Marker3D" parent="VisibilityPoints" unique_id=1143038540]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0.505, 0.18)
+
+[node name="Edge2" type="Marker3D" parent="VisibilityPoints" unique_id=730474322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0.505, -0.18)
+
+[node name="Edge3" type="Marker3D" parent="VisibilityPoints" unique_id=1131522601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0.505, 0.18)
+
+[node name="Edge4" type="Marker3D" parent="VisibilityPoints" unique_id=1147626353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0.505, -0.18)
+
+[node name="Edge5" type="Marker3D" parent="VisibilityPoints" unique_id=1690119178]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0, 0.14)
+
+[node name="Edge6" type="Marker3D" parent="VisibilityPoints" unique_id=888702668]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0, 0.14)
+
+[node name="Edge7" type="Marker3D" parent="VisibilityPoints" unique_id=345639990]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0, -0.14)
+
+[node name="Edge8" type="Marker3D" parent="VisibilityPoints" unique_id=304364310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0, -0.14)

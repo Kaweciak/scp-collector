@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://cg5gvgtdjarup"]
+
+[ext_resource type="Shader" uid="uid://8quem7w6epon" path="res://player/model/portal_seemless_default.gdshader" id="1_q2553"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_q2553")
