@@ -15,6 +15,9 @@ code = "// NOTE: Shader automatically converted from Godot Engine 4.6.2.stable's
 shader_type spatial;
 render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
 
+#include \"res://addons/portals/materials/portalclip_mesh.gdshaderinc\"
+PORTALCLIP_UNIFORMS
+
 uniform vec4 albedo : source_color;
 uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
 uniform ivec2 albedo_texture_size;
@@ -35,6 +38,8 @@ uniform vec3 uv2_offset;
 
 void vertex() {
 	UV = UV * uv1_scale.xy + uv1_offset.xy;
+	
+	PORTALCLIP_VERTEX
 }
 
 void fragment() {
@@ -50,6 +55,8 @@ void fragment() {
 	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
 	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
 	ROUGHNESS = roughness_tex * roughness;
+	
+	PORTALCLIP_FRAGMENT
 }
 "
 
