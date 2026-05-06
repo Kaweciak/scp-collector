@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d3r8r65bgn6ms"]
 
-[ext_resource type="Script" uid="uid://bo0spnwujjijg" path="res://levels/house/house.gd" id="1_nll3y"]
+[ext_resource type="Script" uid="uid://bo0spnwujjijg" path="res://levels/level_controller.gd" id="1_nll3y"]
 [ext_resource type="PackedScene" uid="uid://b6p1tu4lsdsbg" path="res://levels/house/assests/house2.glb" id="1_uu7lh"]
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="3_3xbg0"]
 

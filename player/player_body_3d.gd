@@ -1,5 +1,7 @@
 class_name PlayerBody3D extends CharacterBody3D
 
+signal died
+
 #Movement export variables
 @export_group("Movement")
 @export_range(1, 35, 1) var speed: float = 10
@@ -111,11 +113,11 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	#Get the mouse to focus on the screen once the player spawn
 	_capture_mouse()
-	
+
 	#Assign the authority to the camera
 	camera.current = is_multiplayer_authority()
-	
-	
+
+
 	#Setup the portal clone flashlight pool
 	for i in range(max_flashlight_clones):
 		var clone = SpotLight3D.new()
@@ -123,24 +125,24 @@ func _ready() -> void:
 		clone.spot_range = flashlight.spot_range
 		clone.spot_angle = flashlight.spot_angle
 		clone.light_projector = flashlight.light_projector
-		
+
 		get_tree().root.call_deferred("add_child", clone)
 		clone.hide()
 		clone_flashlights.append(clone)
-	
+
 	if is_multiplayer_authority():
 		#If the instance owns the player make the model invisible so that the player doesn't see visual glitches
 		camera.set_cull_mask_value(2, false)
 		camera.set_cull_mask_value(19, false)
-		
+
 		#Aplly the invisibility mask to the children meshes as well
 		var all_meshes = model.find_children("*", "MeshInstance3D", true, false)
 		for m in all_meshes:
 			m.set_layer_mask_value(1, false)
 			m.set_layer_mask_value(2, true)
-		
+
 		#Inject the camera for all portals in the scene
-		var all_portals = get_tree().get_nodes_in_group("Portals") 
+		var all_portals = get_tree().get_nodes_in_group("Portals")
 		for portal in all_portals:
 			if portal.back_portal is Portal3D:
 				portal.back_portal.player_camera = camera
@@ -155,35 +157,35 @@ func _physics_process(delta: float) -> void:
 		if dead:
 			_update_spectator_camera()
 			return
-		
+
 		#Calculate coyote timer for better feeling jump mechanics
 		var on_floor: bool = is_on_floor()
 		if on_floor:
 			coyote_timer = coyote_time
 		else:
 			coyote_timer = max(coyote_timer - delta, 0.0)
-		
+
 		#Check if the player jumped
 		if Input.is_action_just_pressed("jump"):
 			jumping = true
-		
+
 		#Check for and process the player crouching
 		if tried_uncroaching:
 			_try_uncroach()
-		
+
 		#Process movement logic
 		velocity = _walk(delta) + _gravity(delta) + _jump(delta)
 		move_and_slide()
-		
+
 		#Apply force to RigidBody collision objects
 		_push_objects(delta)
-		
+
 		#Process player animation
 		_update_animation()
-		
+
 		#Process sanity drain for SCP-426
 		_process_sanity(delta)
-		
+
 		#Process blinking mechanics
 		_process_blinking(delta)
 
@@ -191,8 +193,8 @@ func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority() or multiplayer.is_server():
 		if held != null:
 			_update_held()
-			
-	
+
+
 	if not dead:
 		_update_portal_flashlight()
 
@@ -201,7 +203,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	#Only the owner instance can process input for the player
 	if not is_multiplayer_authority():
 		return
-		
+
 	#Debug logic processing
 	if event is InputEventKey:
 		if event.is_action_pressed("debug_activate"):
@@ -211,19 +213,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif debug_mode_enabled:
 			if event.is_action_pressed("debug_death"):
 				death.rpc()
-		
+
 	#Process spectator inputs
 	if dead:
 		if event is InputEventKey:
 			if event.is_action_pressed("interact"):
 				_find_next_spectate_target()
 		return
-		
+
 	#Process mouse inputs
 	if event is InputEventMouseMotion:
 		look_dir = event.relative * 0.001
 		if mouse_captured: _rotate_camera()
-		
+
 	#Process player input
 	if event is InputEventKey and not dead:
 		if event.is_action_pressed("sprint"):
@@ -240,13 +242,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			_try_uncroach()
 			if(Input.is_action_pressed("sprint")):
 				_sprint()
-				
+
 		elif event.is_action_pressed("toggle_flashlight"):
 			_toggle_flashlight.rpc(!is_flashlight_on)
-				
+
 		elif event.is_action_pressed("interact"):
 			_interact()
-		
+
 		#Helper for releaseing mouse capture -> should be replaced by the game menu
 		#TODO
 		elif event.is_action_pressed("pause"):
@@ -259,29 +261,29 @@ func _push_objects(delta: float) -> void:
 	for i in get_slide_collision_count():
 			var collision = get_slide_collision(i)
 			var collider = collision.get_collider()
-			
+
 			if collider is RigidBody3D:
 				#Get the direction of the collision
 				var push_dir = -collision.get_normal()
-				
+
 				#Get contact point relative to the center of the object
 				var contact_point = collision.get_position() - collider.global_position
-				
+
 				#Calculate velocity relative to the object
 				var velocity_diff = velocity.dot(push_dir) - collider.linear_velocity.dot(push_dir)
 				velocity_diff = max(0.0, velocity_diff)
-				
+
 				#Scale the force by mass
 				var mass_ratio = min(1.0, player_mass / collider.mass)
-				
+
 				#Base push impulse calculation
 				var impulse = push_dir * speed * push_force * mass_ratio
-				
+
 				#Weight logic for standing on objects
 				if collision.get_normal().y > 0.5:
 					var weight_impulse = Vector3.DOWN * gravity_factor * delta * mass_ratio
 					impulse += weight_impulse
-				
+
 				#Apply the final impulse
 				collider.apply_impulse(impulse, contact_point)
 
@@ -360,7 +362,7 @@ func _rotate_camera(sens_mod: float = 1.0) -> void:
 func _update_spectator_camera() -> void:
 	if spectator_target == null:
 		return
-	
+
 	if is_instance_valid(spectator_target):
 		#Adjust spectator players' visibility
 		if spectator_target != last_spectator_target:
@@ -368,7 +370,7 @@ func _update_spectator_camera() -> void:
 				last_spectator_target.model.show()
 			last_spectator_target = spectator_target
 			spectator_target.model.hide()
-		
+
 		camera.global_position = spectator_target.camera.global_position
 		camera.global_rotation = spectator_target.camera.global_rotation
 
@@ -383,44 +385,44 @@ func _walk(delta: float) -> Vector3:
 #Process gravity based on player position in world space
 func _gravity(delta: float) -> Vector3:
 	var grounded: bool = is_on_floor()
-	
+
 	if grounded: #Apply a small grounding force
 		grav_vel = Vector3.ZERO
 	else: #Apply gravity and clamp it to a terminal velocity
 		grav_vel.y = max(grav_vel.y - gravity_factor * delta, terminal_velociy)
-	
+
 	return grav_vel
 
 #Process jumping mechanics
 func _jump(delta: float) -> Vector3:
 	#Check if the player is touching the floor
 	var on_floor: bool = is_on_floor()
-	
+
 	#If the player pressed the jump button process the logic
 	if jumping:
 		#Additional check for whether the player is touchign the ground or was doing so recently
 		if coyote_timer > 0.0:
 			var base_jump = sqrt(4 * jump_height * gravity_factor)
-			
+
 			var bonus := Vector3.ZERO
 			#Add the velocity of the ground to the jump velocity
 			if on_floor:
 				var floor_velocity = get_platform_velocity()
 				if floor_velocity.y >= 0.0:
 					bonus = floor_velocity
-			
+
 			jump_vel = Vector3(0, base_jump, 0) + bonus
-			
+
 			coyote_timer = 0.0
 		jumping = false
 		return jump_vel
-	
+
 	#Add gravity to the player
 	if on_floor or is_on_ceiling_only():
 		jump_vel = Vector3.ZERO
 	else:
 		jump_vel = jump_vel.move_toward(Vector3.ZERO, gravity_factor * delta)
-		
+
 	return jump_vel
 
 #Interaction processing logic
@@ -429,10 +431,10 @@ func _interact() -> void:
 	if held != null:
 		_server_drop.rpc()
 		return
-	
+
 	#Get the initial interaction object
 	var collider = interaction_raycast.get_collider()
-	
+
 	#Check if the player is looking at any interactable entity, if so -> process it
 	if collider is Interactable:
 		collider.interact()
@@ -444,10 +446,12 @@ func _interact() -> void:
 func death() -> void:
 	if dead: return
 	dead = true
-	
+
+	emit_signal("died")
+
 	#Drop any currently held item
 	_server_drop.rpc()
-	
+
 	#Reparent model as a corpse
 	model.reparent(get_parent(), true)
 	#Hide the model for everyone but the dead player
@@ -458,12 +462,12 @@ func death() -> void:
 func _find_next_spectate_target() -> void:
 	var players = get_tree().get_nodes_in_group("Player")
 	var alive_players = players.filter(func(p): return !p.dead)
-	
+
 	#Change the perspective and the visibility of the spectated player's body
 	if alive_players.size() > 0:
 		spectator_index = (spectator_index + 1) % alive_players.size()
 		spectator_target = alive_players[spectator_index]
-		
+
 		model.visible = true
 	else:
 		spectator_target = null
@@ -487,20 +491,20 @@ func _server_pick_up(path: NodePath):
 func _server_drop():
 	if is_instance_valid(held):
 		held.gravity_scale = 1
-		
+
 	held = null
 
 #Process logic for held items regarding their velocity and rotation
 func _update_held():
 	var target: Vector3 = self.global_position - 1.75 * camera.global_transform.basis.z
 	var target_rotation = Vector3(camera.rotation.x, self.rotation.y, held.rotation.z)
-	
+
 	#Check if the held object and target are physically separated
 	if held.global_position.distance_squared_to(target) > 6.0:
 		var all_portals = get_tree().get_nodes_in_group("Portals")
 		var closest_portal_to_held = null
 		var min_dist_to_held = INF
-		
+
 		#Find the portal closest to the held object
 		for p in all_portals:
 			if p.back_portal is Portal3D and p.back_portal.exit_portal != null:
@@ -513,21 +517,21 @@ func _update_held():
 				if dist < min_dist_to_held:
 					min_dist_to_held = dist
 					closest_portal_to_held = p.front_portal
-					
+
 		#If a portal was found, verify the player is near its connected exit
 		if closest_portal_to_held != null:
 			var player_portal = closest_portal_to_held.exit_portal
 			if player_portal.global_position.distance_squared_to(target) < 25.0:
 				#Transform the target point through the portal back to the object's side
 				target = player_portal.to_exit_position(target)
-				
+
 				#Transform the target rotation to match the new space
 				var target_basis = Basis.from_euler(target_rotation)
 				var target_transform = Transform3D(target_basis, target)
 				var exit_transform = player_portal.to_exit_transform(target_transform)
 				target_rotation = exit_transform.basis.get_euler()
 				print("Target location adjusted by: ", self.global_position - 1.75 * camera.global_transform.basis.z - target)
-	
+
 	held.linear_velocity = 10 * (target - held.global_position)
 	held.angular_velocity = 1 * (target_rotation - held.global_rotation)
 
@@ -535,9 +539,9 @@ func _update_held():
 func _process_sanity(delta: float) -> void:
 	if not GameState.toaster_present or dead:
 		return
-	
+
 	var sanity_drain = 0.0
-	
+
 	#Check if the player's eyes are closed for the visual sanity drain
 	if not current_eyes_state == Eyes_state.CLOSED:
 		#Find the Toaster in the scene
@@ -550,7 +554,7 @@ func _process_sanity(delta: float) -> void:
 					printerr("Missing pointers on the Toaster model!")
 					continue
 				var points_to_check = points_container.get_children()
-				
+
 				#Cast a ray for each marker on the model
 				for marker in points_to_check:
 					var pt = marker.global_position
@@ -561,25 +565,25 @@ func _process_sanity(delta: float) -> void:
 						var query = PhysicsRayQueryParameters3D.create(camera.global_position, pt)
 						query.exclude = [self]
 						var result = space_state.intersect_ray(query)
-						
+
 						if result.is_empty() or result.collider == anomaly:
 							sanity_drain = anomaly.vision_sanity_drain_rate
 							break
-						
+
 				#Check if the player is within the proximity of the Toaster and apply drain
 				var dist_squared = global_position.distance_squared_to(anomaly.global_position)
 				var radius_squared = anomaly.proximity_sanity_drain_radius * anomaly.proximity_sanity_drain_radius
 				if dist_squared <= radius_squared:
 					sanity_drain = max(sanity_drain, anomaly.proximity_sanity_drain_rate)
-	
+
 	#Check if the player is touching the Toaster and apply drain
 	if held is Toaster:
 		sanity_drain = max(sanity_drain, held.touch_sanity_drain_rate)
-	
+
 	#Update current sanity checkpoint
 	if not GameState.sanity_drain_first_activated and sanity_drain > 0.0:
 		GameState.request_sanity_activation.rpc()
-			
+
 	#Drain or regain sanity
 	if sanity_drain > 0.0 and not dead:
 		sanity = max(0, sanity - sanity_drain * delta)
@@ -599,16 +603,16 @@ func _process_sanity(delta: float) -> void:
 #Process the player's blinking timer and input
 func _process_blinking(delta) -> void:
 	var blinking_detected: bool = false
-	
+
 	#Increment the time since last blink
 	if current_eyes_state == Eyes_state.OPEN:
 		time_since_last_blink += delta
-	
+
 	#Check if the player blinked
 	if Input.is_action_pressed("blink") or time_since_last_blink >= blink_limit:
 		time_since_last_blink = 0.0
 		blinking_detected = true
-	
+
 	#If the player blinked show a black screen
 	if blinking_detected:
 		match current_eyes_state:
@@ -638,48 +642,48 @@ func _on_blink_timer_timeout() -> void:
 		hud.update_blinking(eyes_open_duration, "open_eyes")
 		print("Eyes opening!")
 		time_since_last_blink = 0.0
-	
+
 #Run correct animation for player actions
 func _update_animation():
 	if dead:
 		return
 	var is_moving := move_dir.length() > 0.1
-	
+
 	var anim := "idle"
-	
+
 	if crouching:
 		anim = "crouch_walking" if is_moving else "crouch_idle"
 	else:
 		anim = "walking" if is_moving else "idle"
-	
+
 	if anim != current_anim_state:
 		play_animation.rpc(anim)
 		current_anim_state = anim
-	
+
 #Plays animation on both remote and local peers
 @rpc("call_local")
 func play_animation(anim_name: String) -> void:
 	if animation_player.current_animation != anim_name:
 		animation_player.play(anim_name)
-		
+
 #Returns all MeshInstance3D nodes that make up the player so the portal can clone them
 func get_teleportable_meshes() -> Array[MeshInstance3D]:
 	var meshes: Array[MeshInstance3D] = []
-	
+
 	var found_meshes = model.find_children("*", "MeshInstance3D", true, false)
 	for m in found_meshes:
 		if m is MeshInstance3D:
 			meshes.append(m)
-	
+
 	return meshes
-	
+
 #Called automatically by the Portal3D plugin when the player steps through
 func on_teleport(portal: Portal3D) -> void:
 	walk_vel = portal.to_exit_direction(walk_vel)
 	grav_vel = portal.to_exit_direction(grav_vel)
 	jump_vel = portal.to_exit_direction(jump_vel)
 	velocity = portal.to_exit_direction(velocity)
-	
+
 #Multiplayer synched flashlight toggle
 @rpc("call_local", "any_peer")
 func _toggle_flashlight(state: bool) -> void:
@@ -687,7 +691,7 @@ func _toggle_flashlight(state: bool) -> void:
 	if flashlight:
 		flashlight.visible = state
 		flashlight.light_energy = flashlight_energy
-		
+
 #Projects the flashlight through any portals within the light cone
 func _update_portal_flashlight() -> void:
 	#If the flashlight is off, hide all clones and exit
@@ -696,32 +700,32 @@ func _update_portal_flashlight() -> void:
 			if is_instance_valid(clone):
 				clone.hide()
 		return
-	
+
 	#Variable for storing how many flashlight copies are in use
 	var used_clones = 0
-	
+
 	#Get all portals in the scene
 	var all_portals = get_tree().get_nodes_in_group("Portals")
 	#Pre-calculate cone boundaries
 	var max_dist_sq = flashlight.spot_range * flashlight.spot_range
-	
+
 	for p in all_portals:
 		#Stop if the flashlight clones were exhausted
 		if used_clones >= max_flashlight_clones:
 			break
-			
+
 		#Check both the front and back of the portal system
 		var portal_nodes = p.get_portals()
 		for sub_portal in portal_nodes:
 			#Stop if the flashlight clones were exhausted
 			if used_clones >= max_flashlight_clones:
 				break
-			
+
 			#Check if the portal is active
 			if sub_portal is Portal3D and sub_portal.exit_portal != null:
 				if sub_portal.forward_distance(camera) <= 0.0:
 					continue
-				
+
 				#Check the distance between the portal and the camera
 				var dist_sq = sub_portal.global_position.distance_squared_to(camera.global_position)
 				if dist_sq < max_dist_sq:
@@ -732,10 +736,10 @@ func _update_portal_flashlight() -> void:
 					if collider and collider.shape is BoxShape3D:
 						width_modifier = collider.shape.size.x / 2.0
 						height_modifier = collider.shape.size.y / 2.0
-						
+
 					var right = sub_portal.global_transform.basis.x * width_modifier
 					var up = sub_portal.global_transform.basis.y * height_modifier
-					
+
 					#Define the center and 4 corners of the portal frame
 					var points_to_check = [
 						sub_portal.global_position, #Center
@@ -744,50 +748,50 @@ func _update_portal_flashlight() -> void:
 						sub_portal.global_position + right - up, #Bottom Right
 						sub_portal.global_position - right - up  #Bottom Left
 					]
-					
+
 					#Check if any of the portal corners are inside the player camera frustum
 					var is_visible_on_screen = false
 					for pt in points_to_check:
 						if camera.is_position_in_frustum(pt):
 							is_visible_on_screen = true
 							break
-					
+
 					#Raycast if visible to ensure no walls are blocking the portal
 					if is_visible_on_screen:
 						var space_state = get_world_3d().direct_space_state
 						var is_not_blocked = false
-						
+
 						#Grid resolution variables
 						var grid_rows = 5
 						var grid_cols = 5
-						
+
 						#Rayscast across the portal coordinates
 						for row in range(grid_rows):
 							for col in range(grid_cols):
 								#Map coordinates evenly from -1.0 to 1.0 across the surface
 								var u = lerp(-1.0, 1.0, float(col) / max(1, grid_cols - 1))
 								var v = lerp(-1.0, 1.0, float(row) / max(1, grid_rows - 1))
-								
+
 								var point = sub_portal.global_position + (right * u) + (up * v)
-								
+
 								var query = PhysicsRayQueryParameters3D.create(camera.global_position, point)
 								query.exclude = [self]
 								var result = space_state.intersect_ray(query)
-								
+
 								if result.is_empty() or sub_portal.is_ancestor_of(result.collider):
 									is_not_blocked = true
 									break
-									
+
 							if is_not_blocked:
 								break;
-						
+
 						if is_not_blocked:
 							var clone = clone_flashlights[used_clones]
 							var exit_transform = sub_portal.to_exit_transform(flashlight.global_transform)
 							clone.global_transform = exit_transform
 							clone.show()
 							used_clones += 1
-							
+
 	#Hide any remaining clones in the pool that weren't used this frame
 	for i in range(used_clones, max_flashlight_clones):
 		if is_instance_valid(clone_flashlights[i]):
