@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b050fa42bm88j" path="res://levels/lobby/level_selector/level_selector.tscn" id="4_4ks1f"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_sxh6j"]
-size = Vector3(0.5317627, 0.2, 0.11953125)
+size = Vector3(0.5317627, 0.612439, 0.11953125)
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_4ks1f"]
 viewport_path = NodePath("LevelSelectorScreen/Screen/SelectorViewport")
@@ -25,6 +25,12 @@ emission_texture = SubResource("ViewportTexture_jl2pe")
 resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_sse2f")
 size = Vector2(4, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sse2f"]
+size = Vector3(0.5317627, 0.18783875, 0.11953125)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u3vl7"]
+size = Vector3(0.5317627, 0.20413513, 0.11953125)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_jl2pe"]
 size = Vector3(8, 1, 8)
@@ -77,8 +83,8 @@ collision_mask = 32768
 script = ExtResource("2_7viv4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LevelSelectorScreen/ReadyButton" unique_id=139676347]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965174, -0.016914785, -0.010869622)
-shape = SubResource("BoxShape3D_sxh6j")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965174, -0.024774611, -0.010869741)
+shape = SubResource("BoxShape3D_sse2f")
 
 [node name="StartButton" type="StaticBody3D" parent="LevelSelectorScreen" unique_id=1008175123]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -0.7344034, 1.3664598, -4.4208636)
@@ -87,7 +93,39 @@ collision_mask = 32768
 script = ExtResource("2_7viv4")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="LevelSelectorScreen/StartButton" unique_id=2016088406]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965174, -0.016914785, -0.010869622)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965159, -0.005179167, -0.010869622)
+shape = SubResource("BoxShape3D_u3vl7")
+
+[node name="MapVoteButtons" type="Node3D" parent="LevelSelectorScreen" unique_id=401144750]
+
+[node name="MapVote1" type="StaticBody3D" parent="LevelSelectorScreen/MapVoteButtons" unique_id=1283996853]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -3.0172956, 2.1611469, -4.4614253)
+collision_layer = 32768
+collision_mask = 32768
+script = ExtResource("2_7viv4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelSelectorScreen/MapVoteButtons/MapVote1" unique_id=1983292009]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965159, -0.07520962, -0.010869741)
+shape = SubResource("BoxShape3D_sxh6j")
+
+[node name="MapVote2" type="StaticBody3D" parent="LevelSelectorScreen/MapVoteButtons" unique_id=486280233]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, -1.4302186, 2.1611469, -4.4614253)
+collision_layer = 32768
+collision_mask = 32768
+script = ExtResource("2_7viv4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelSelectorScreen/MapVoteButtons/MapVote2" unique_id=1152426657]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965159, -0.07520962, -0.010869741)
+shape = SubResource("BoxShape3D_sxh6j")
+
+[node name="MapVote3" type="StaticBody3D" parent="LevelSelectorScreen/MapVoteButtons" unique_id=677874977]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0.038075686, 2.1611469, -4.4614253)
+collision_layer = 32768
+collision_mask = 32768
+script = ExtResource("2_7viv4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="LevelSelectorScreen/MapVoteButtons/MapVote3" unique_id=1829200181]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.020965159, -0.07520962, -0.010869741)
 shape = SubResource("BoxShape3D_sxh6j")
 
 [node name="PlayerContainer" type="Node3D" parent="." unique_id=1083528122]
@@ -122,3 +160,6 @@ shape = SubResource("BoxShape3D_803di")
 [connection signal="pressed" from="LightSwitch" to="Light" method="toggle"]
 [connection signal="pressed" from="LevelSelectorScreen/ReadyButton" to="LevelSelectorScreen/Screen/SelectorViewport/LevelSelector" method="_on_ready_button_pressed"]
 [connection signal="pressed" from="LevelSelectorScreen/StartButton" to="LevelSelectorScreen/Screen/SelectorViewport/LevelSelector" method="_on_start_button_pressed"]
+[connection signal="pressed" from="LevelSelectorScreen/MapVoteButtons/MapVote1" to="LevelSelectorScreen/Screen/SelectorViewport/LevelSelector" method="_on_map_vote" binds= ["House"]]
+[connection signal="pressed" from="LevelSelectorScreen/MapVoteButtons/MapVote2" to="LevelSelectorScreen/Screen/SelectorViewport/LevelSelector" method="_on_map_vote" binds= ["Factory"]]
+[connection signal="pressed" from="LevelSelectorScreen/MapVoteButtons/MapVote3" to="LevelSelectorScreen/Screen/SelectorViewport/LevelSelector" method="_on_map_vote" binds= ["Lab"]]

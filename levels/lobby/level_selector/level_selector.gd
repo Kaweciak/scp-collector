@@ -10,8 +10,22 @@ extends Control
 @onready var ready_button = $MenusContainer/ButtonsContainer/ReadyButton
 @onready var start_button = $MenusContainer/ButtonsContainer/StartButton
 
+@onready var map_panels = [
+	$MenusContainer/MapsContainer/MapPanel1,
+	$MenusContainer/MapsContainer/MapPanel2,
+	$MenusContainer/MapsContainer/MapPanel3
+]
+
 var is_ready := false
 var ready_state := {}
+
+var map_votes := {}
+
+var maps := {
+	"House": "TBA",
+	"Factory": "TBA",
+	"Lab": "TBA"
+}
 
 func _ready():
 	for p in panels:
@@ -38,6 +52,10 @@ func _update_ready_button_text():
 	ready_button.text = "Not Ready" if is_ready else "Ready Up"
 
 
+func _on_map_vote(map_name: String):
+	rpc_id(1, "set_map_vote", map_name)
+
+
 @rpc("any_peer", "reliable", "call_local")
 func set_ready_state(state: bool):
 	var id = multiplayer.get_remote_sender_id()
@@ -53,9 +71,27 @@ func sync_ready_state(state_dict: Dictionary):
 	_update_ui()
 
 
+@rpc("any_peer", "reliable", "call_local")
+func set_map_vote(map_name: String):
+	var id = multiplayer.get_remote_sender_id()
+	map_votes[id] = map_name
+
+	if multiplayer.is_server():
+		rpc("sync_map_votes", map_votes)
+
+	_update_ui()
+
+
+@rpc("authority", "reliable")
+func sync_map_votes(votes: Dictionary):
+	map_votes = votes
+	_update_ui()
+
+
 func _update_ui():
 	if multiplayer.is_server():
 		rpc("sync_ready_state", ready_state)
+		rpc("sync_map_votes", map_votes)
 
 	var ids = MultiplayerController.connected_peer_ids
 	var names = MultiplayerController.player_names
@@ -76,6 +112,24 @@ func _update_ui():
 		checkbox.button_pressed = ready_state.get(id, false)
 
 	_check_all_ready()
+	_update_map_votes(ids)
+
+
+func _update_map_votes(ids: Array):
+	for i in range(map_panels.size()):
+		var map_name = maps.keys()[i]
+		var votes_container = map_panels[i].get_node("MapContainer/VotesContainer")
+
+		for j in range(4):
+			var vote = votes_container.get_node("VotePlayer" + str(j + 1))
+			vote.modulate.a = 0.2
+
+		for j in range(min(ids.size(), 4)):
+			var id = ids[j]
+
+			if map_votes.get(id, "") == map_name:
+				var vote = votes_container.get_node("VotePlayer" + str(j + 1))
+				vote.modulate.a = 1.0
 
 
 func _check_all_ready():
@@ -100,9 +154,42 @@ func _on_start_button_pressed():
 	if start_button.disabled:
 		return
 
-	rpc("start_game")
+	var selected_map = _get_winning_map()
+
+	rpc("start_game", selected_map)
+
+
+func _get_winning_map() -> String:
+	var counts = {}
+
+	for map_name in maps.keys():
+		counts[map_name] = 0
+
+	for id in map_votes.keys():
+		var vote = map_votes[id]
+		if counts.has(vote):
+			counts[vote] += 1
+
+	var host_id = multiplayer.get_unique_id()
+	var host_vote = map_votes.get(host_id, "")
+
+	var best_map = maps.keys()[0]
+	var best_score = -1
+
+	for map_name in counts.keys():
+		var score = counts[map_name]
+
+		if map_name == host_vote:
+			score += 0.5
+
+		if score > best_score:
+			best_score = score
+			best_map = map_name
+
+	return best_map
 
 
 @rpc("authority", "reliable", "call_local")
-func start_game():
-	print("Game starting")
+func start_game(map_name: String):
+	print("Loading map: ", map_name)
+	get_tree().change_scene_to_file(maps[map_name])
