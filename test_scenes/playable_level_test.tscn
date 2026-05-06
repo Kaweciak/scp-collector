@@ -2,8 +2,9 @@
 
 [ext_resource type="Script" uid="uid://dlyigf4pperl2" path="res://test_scenes/playable_level_test.gd" id="1_ej0qp"]
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="2_1aoms"]
-[ext_resource type="PackedScene" uid="uid://dx84qligg4usn" path="res://game_objects/doors/house_doors.tscn" id="3_yc33k"]
+[ext_resource type="PackedScene" uid="uid://dx84qligg4usn" path="res://game_objects/doors/doors.tscn" id="3_yc33k"]
 [ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="4_ej0qp"]
+
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1aoms"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
