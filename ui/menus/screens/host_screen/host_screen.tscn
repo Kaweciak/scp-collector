@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bctf3wfpgtdgx"]
 
-[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/themes/main_menu_theme.tres" id="1_58oda"]
+[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/menus/main_menu/main_menu_theme.tres" id="1_58oda"]
 [ext_resource type="Script" uid="uid://l4j5giweas1u" path="res://ui/menus/screens/host_screen/host_screen.gd" id="2_3ov56"]
 [ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="2_xus57"]
 
@@ -24,7 +24,7 @@ expand_mode = 5
 
 [node name="NameInput" type="LineEdit" parent="VBoxContainer" unique_id=1945926711]
 layout_mode = 2
-placeholder_text = "Enter your nickname"
+placeholder_text = "Enter nickname"
 alignment = 1
 max_length = 15
 

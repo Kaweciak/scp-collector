@@ -1,0 +1,185 @@
+[gd_scene format=3 uid="uid://cb7eyfa8i7nlo"]
+
+[ext_resource type="Theme" uid="uid://cqruciomkq3xh" path="res://ui/menus/pause_menu/pause_menu_theme.tres" id="1_3a2ww"]
+[ext_resource type="Script" uid="uid://peta35ggm2cn" path="res://ui/menus/pause_menu/pause_menu.gd" id="2_2gx4h"]
+[ext_resource type="Texture2D" uid="uid://gnjbg1shvpa3" path="res://ui/menus/pause_menu/icons/cross.png" id="2_57ky2"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3a2ww"]
+load_path = "res://.godot/imported/scp173.png-299e567dfe48a99d14404b6e78ab2ccb.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_57ky2"]
+load_path = "res://.godot/imported/scp184.png-ed3ee5ea29b764ee9ca174ba3cb38305.ctex"
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2gx4h"]
+load_path = "res://.godot/imported/scp428.png-ca8457099691ee0de02c53296743b8e0.ctex"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2gx4h"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="PauseMenu" type="MarginContainer" unique_id=83991203]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_3a2ww")
+script = ExtResource("2_2gx4h")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=1448865879]
+layout_mode = 2
+
+[node name="MenuSelectorPanel" type="PanelContainer" parent="HBoxContainer" unique_id=930946569]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="MenuSelectorVBox" type="VBoxContainer" parent="HBoxContainer/MenuSelectorPanel" unique_id=1208830548]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/MenuSelectorPanel/MenuSelectorVBox" unique_id=139293162]
+layout_mode = 2
+
+[node name="PauseButton" type="Button" parent="HBoxContainer/MenuSelectorPanel/MenuSelectorVBox" unique_id=226664475]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Home"
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/MenuSelectorPanel/MenuSelectorVBox" unique_id=1995828446]
+layout_mode = 2
+
+[node name="AnomaliesButton" type="Button" parent="HBoxContainer/MenuSelectorPanel/MenuSelectorVBox" unique_id=568560819]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Anomalies"
+
+[node name="PauseMenuContainer" type="PanelContainer" parent="HBoxContainer" unique_id=274445802]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/PauseMenuContainer" unique_id=1306542764]
+layout_mode = 2
+theme_override_constants/margin_left = 96
+theme_override_constants/margin_top = 96
+theme_override_constants/margin_right = 96
+theme_override_constants/margin_bottom = 96
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer/PauseMenuContainer/MarginContainer" unique_id=1539347608]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="ResumeButton" type="Button" parent="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer" unique_id=963543503]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+text = "RESUME"
+
+[node name="HSeparator" type="HSeparator" parent="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer" unique_id=2142399765]
+layout_mode = 2
+
+[node name="QuitMenuButton" type="Button" parent="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer" unique_id=361233498]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+text = "QUIT TO MENU"
+
+[node name="HSeparator2" type="HSeparator" parent="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer" unique_id=1685607959]
+layout_mode = 2
+
+[node name="QuitDekstopButton" type="Button" parent="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer" unique_id=2076961034]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+text = "QUIT TO DESKTOP"
+
+[node name="AnomaliesMenuContainer" type="VBoxContainer" parent="HBoxContainer" unique_id=2042799374]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/AnomaliesMenuContainer" unique_id=879414023]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="173Button" type="Button" parent="HBoxContainer/AnomaliesMenuContainer/HBoxContainer" unique_id=980013288]
+custom_minimum_size = Vector2(128, 48)
+layout_mode = 2
+text = "SCP-173"
+
+[node name="184Button" type="Button" parent="HBoxContainer/AnomaliesMenuContainer/HBoxContainer" unique_id=691503995]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "SCP-184"
+
+[node name="482Button" type="Button" parent="HBoxContainer/AnomaliesMenuContainer/HBoxContainer" unique_id=1312882947]
+custom_minimum_size = Vector2(128, 0)
+layout_mode = 2
+text = "SCP-482
+"
+
+[node name="InfoContainer173" type="PanelContainer" parent="HBoxContainer/AnomaliesMenuContainer" unique_id=180578672]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer173" unique_id=626566782]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer173/HBoxContainer" unique_id=774508990]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer173/HBoxContainer" unique_id=382431503]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("CompressedTexture2D_3a2ww")
+expand_mode = 4
+stretch_mode = 6
+
+[node name="InfoContainer184" type="PanelContainer" parent="HBoxContainer/AnomaliesMenuContainer" unique_id=755592360]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer184" unique_id=381403833]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer184/HBoxContainer" unique_id=827721566]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer184/HBoxContainer" unique_id=525072569]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("CompressedTexture2D_57ky2")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="InfoContainer428" type="PanelContainer" parent="HBoxContainer/AnomaliesMenuContainer" unique_id=944739249]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer428" unique_id=1241894723]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer428/HBoxContainer" unique_id=1656124781]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer428/HBoxContainer" unique_id=106227739]
+layout_mode = 2
+size_flags_horizontal = 3
+texture = SubResource("CompressedTexture2D_2gx4h")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="ResumeButton" type="Button" parent="HBoxContainer" unique_id=1141627250]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_2gx4h")
+icon = ExtResource("2_57ky2")
+
+[connection signal="pressed" from="HBoxContainer/MenuSelectorPanel/MenuSelectorVBox/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/MenuSelectorPanel/MenuSelectorVBox/AnomaliesButton" to="." method="_on_anomalies_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer/QuitMenuButton" to="." method="_on_quit_menu_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/PauseMenuContainer/MarginContainer/VBoxContainer/QuitDekstopButton" to="." method="_on_quit_dekstop_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/AnomaliesMenuContainer/HBoxContainer/173Button" to="." method="_on_scp_button_pressed" binds= [173]]
+[connection signal="pressed" from="HBoxContainer/AnomaliesMenuContainer/HBoxContainer/184Button" to="." method="_on_scp_button_pressed" binds= [184]]
+[connection signal="pressed" from="HBoxContainer/AnomaliesMenuContainer/HBoxContainer/482Button" to="." method="_on_scp_button_pressed" binds= [428]]
+[connection signal="pressed" from="HBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]

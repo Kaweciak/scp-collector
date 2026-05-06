@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dxynsrgu67x7y" path="res://player/hud.gd" id="2_rjoga"]
 [ext_resource type="Shader" uid="uid://brlqm58kcl17r" path="res://player/sanity_distortion.gdshader" id="2_ryni8"]
 [ext_resource type="PackedScene" uid="uid://blux03ijdura0" path="res://player/model/remade.tscn" id="3_model"]
+[ext_resource type="PackedScene" uid="uid://cb7eyfa8i7nlo" path="res://ui/menus/pause_menu/pause_menu.tscn" id="4_qh2r7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
 radius = 0.3
@@ -72,6 +73,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
+[node name="PauseMenu" parent="MainCamera" unique_id=83991203 instance=ExtResource("4_qh2r7")]
+visible = false
+
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")
 
@@ -79,3 +83,5 @@ replication_config = SubResource("SceneReplicationConfig_ied1u")
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0.0172019, -0.65, 0.12842727)
 
 [node name="Model" parent="ModelHolder" unique_id=1737684792 instance=ExtResource("3_model")]
+
+[connection signal="unpause" from="MainCamera/PauseMenu" to="." method="_unpause"]
