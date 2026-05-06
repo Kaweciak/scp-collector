@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://duuypebhqhmq8"]
+
+[ext_resource type="Script" uid="uid://bqep36sn4yyop" path="res://portal_manager.gd" id="1_hh3pb"]
+[ext_resource type="Script" uid="uid://baoqeasrylh61" path="res://game_objects/SCP-184/portal_resource_checkpoint.gd" id="2_iv6qk"]
+
+[sub_resource type="Resource" id="Resource_b38lc"]
+script = ExtResource("2_iv6qk")
+time_to_increment_portal_checkpoint = 0.0
+portal_creation_cooldown = 20.0
+metadata/_custom_type_script = "uid://baoqeasrylh61"
+
+[sub_resource type="Resource" id="Resource_50r7t"]
+script = ExtResource("2_iv6qk")
+portal_creation_cooldown = 20.0
+room_creation_cooldown = 100.0
+item_duplication_cooldown = 30.0
+metadata/_custom_type_script = "uid://baoqeasrylh61"
+
+[sub_resource type="Resource" id="Resource_bavc0"]
+script = ExtResource("2_iv6qk")
+time_to_increment_portal_checkpoint = 600.0
+portal_creation_cooldown = 20.0
+room_creation_cooldown = 80.0
+item_duplication_cooldown = 20.0
+metadata/_custom_type_script = "uid://baoqeasrylh61"
+
+[sub_resource type="Resource" id="Resource_2dp14"]
+script = ExtResource("2_iv6qk")
+time_to_increment_portal_checkpoint = 900.0
+portal_creation_cooldown = 10.0
+room_creation_cooldown = 50.0
+item_duplication_cooldown = 15.0
+metadata/_custom_type_script = "uid://baoqeasrylh61"
+
+[sub_resource type="Resource" id="Resource_c5dxf"]
+script = ExtResource("2_iv6qk")
+time_to_increment_portal_checkpoint = 1800.0
+portal_creation_cooldown = 5.0
+room_creation_cooldown = 30.0
+item_duplication_cooldown = 6.0
+metadata/_custom_type_script = "uid://baoqeasrylh61"
+
+[node name="PortalManagerCheckpoint" type="Node3D" unique_id=1646356192]
+script = ExtResource("1_hh3pb")
+time_since_last_portal_creation = 100.0
+portal_creation_cooldown = 100.0
+checkpoints = Array[ExtResource("2_iv6qk")]([SubResource("Resource_b38lc"), SubResource("Resource_50r7t"), SubResource("Resource_bavc0"), SubResource("Resource_2dp14"), SubResource("Resource_c5dxf")])

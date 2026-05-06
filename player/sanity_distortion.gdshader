@@ -7,12 +7,12 @@ void fragment() {
     vec2 p = SCREEN_UV - 0.5;
     float r = length(p);;
     
-	float k = distortion_strength * 1.2; 
+	float k = distortion_strength * 1.5;
     vec2 fisheye_uv = p * (1.0 + k * r * r * r) + 0.5;
 	
     //Wave Distortion
-    fisheye_uv.x += sin(fisheye_uv.y * 10.0 + TIME) * 0.02 * distortion_strength;
-    fisheye_uv.y += cos(fisheye_uv.x * 10.0 + TIME) * 0.02 * distortion_strength;
+    fisheye_uv.x += sin(fisheye_uv.y * 10.0 + TIME) * 0.01 * distortion_strength;
+    fisheye_uv.y += cos(fisheye_uv.x * 10.0 + TIME) * 0.01 * distortion_strength;
     
     //Fetch texture
     vec4 tex = texture(screen_texture, fisheye_uv);
