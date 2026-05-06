@@ -1,0 +1,315 @@
+[gd_scene format=3 uid="uid://b050fa42bm88j"]
+
+[ext_resource type="Theme" uid="uid://djigfo8k4diud" path="res://levels/lobby/level_selector/selector_theme.tres" id="1_4yyyh"]
+[ext_resource type="Texture2D" uid="uid://yu1krbe7f4h5" path="res://levels/lobby/level_selector/icon_house.png" id="1_eqlup"]
+[ext_resource type="Texture2D" uid="uid://b2xiobtqtxfv4" path="res://levels/lobby/level_selector/icon_factory.png" id="2_4yyyh"]
+[ext_resource type="Script" uid="uid://ffjkufh8vc2" path="res://levels/lobby/level_selector/level_selector.gd" id="2_tauot"]
+[ext_resource type="Texture2D" uid="uid://crddhj3rd1jds" path="res://levels/lobby/level_selector/icon_lab.png" id="3_qu054"]
+[ext_resource type="Texture2D" uid="uid://cnb2bi2br7wnb" path="res://levels/lobby/level_selector/scientist.png" id="5_qu054"]
+
+[node name="LevelSelector" type="MarginContainer" unique_id=1573150728]
+offset_right = 2048.0
+offset_bottom = 1024.0
+theme = ExtResource("1_4yyyh")
+script = ExtResource("2_tauot")
+
+[node name="Panel" type="Panel" parent="." unique_id=1436574730]
+layout_mode = 2
+
+[node name="MenusContainer" type="VBoxContainer" parent="." unique_id=327139013]
+layout_mode = 2
+
+[node name="MapsContainer" type="HBoxContainer" parent="MenusContainer" unique_id=2051543168]
+layout_mode = 2
+
+[node name="MapPanel1" type="PanelContainer" parent="MenusContainer/MapsContainer" unique_id=1954289362]
+layout_mode = 2
+
+[node name="MapContainer" type="VBoxContainer" parent="MenusContainer/MapsContainer/MapPanel1" unique_id=657488086]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="MenusContainer/MapsContainer/MapPanel1/MapContainer" unique_id=1944863391]
+custom_minimum_size = Vector2(384, 384)
+layout_mode = 2
+texture = ExtResource("1_eqlup")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="VotesContainer" type="HBoxContainer" parent="MenusContainer/MapsContainer/MapPanel1/MapContainer" unique_id=297710502]
+layout_mode = 2
+
+[node name="VotePlayer1" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel1/MapContainer/VotesContainer" unique_id=887051595]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.88, 0, 0.17600025, 1)
+
+[node name="VotePlayer2" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel1/MapContainer/VotesContainer" unique_id=1823718921]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.3350658, 0.38829848, 0.9556659, 1)
+
+[node name="VotePlayer3" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel1/MapContainer/VotesContainer" unique_id=731362485]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.24295452, 0.557506, 5.7756904e-07, 1)
+
+[node name="VotePlayer4" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel1/MapContainer/VotesContainer" unique_id=1347149140]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.92976016, 0.70772594, 0, 1)
+
+[node name="VSeparator" type="VSeparator" parent="MenusContainer/MapsContainer" unique_id=1293432129]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MapPanel2" type="PanelContainer" parent="MenusContainer/MapsContainer" unique_id=57330175]
+layout_mode = 2
+
+[node name="MapContainer" type="VBoxContainer" parent="MenusContainer/MapsContainer/MapPanel2" unique_id=1122480198]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="MenusContainer/MapsContainer/MapPanel2/MapContainer" unique_id=1002307789]
+custom_minimum_size = Vector2(384, 384)
+layout_mode = 2
+texture = ExtResource("2_4yyyh")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="VotesContainer" type="HBoxContainer" parent="MenusContainer/MapsContainer/MapPanel2/MapContainer" unique_id=1432710955]
+layout_mode = 2
+
+[node name="VotePlayer1" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel2/MapContainer/VotesContainer" unique_id=1210649434]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.88355106, 0, 0.17141232, 1)
+
+[node name="VotePlayer2" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel2/MapContainer/VotesContainer" unique_id=94949639]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.3350658, 0.38829848, 0.9556659, 1)
+
+[node name="VotePlayer3" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel2/MapContainer/VotesContainer" unique_id=939921672]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.24295452, 0.557506, 5.7756904e-07, 1)
+
+[node name="VotePlayer4" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel2/MapContainer/VotesContainer" unique_id=1369792718]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.92976016, 0.70772594, 0, 1)
+
+[node name="VSeparator2" type="VSeparator" parent="MenusContainer/MapsContainer" unique_id=986402282]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MapPanel3" type="PanelContainer" parent="MenusContainer/MapsContainer" unique_id=1455343383]
+layout_mode = 2
+
+[node name="MapContainer" type="VBoxContainer" parent="MenusContainer/MapsContainer/MapPanel3" unique_id=1037070029]
+layout_mode = 2
+
+[node name="Icon" type="TextureRect" parent="MenusContainer/MapsContainer/MapPanel3/MapContainer" unique_id=1044977525]
+custom_minimum_size = Vector2(384, 384)
+layout_mode = 2
+texture = ExtResource("3_qu054")
+expand_mode = 2
+stretch_mode = 6
+
+[node name="VotesContainer" type="HBoxContainer" parent="MenusContainer/MapsContainer/MapPanel3/MapContainer" unique_id=1054520783]
+layout_mode = 2
+
+[node name="VotePlayer1" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel3/MapContainer/VotesContainer" unique_id=626147286]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.88355106, 0, 0.17141232, 1)
+
+[node name="VotePlayer2" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel3/MapContainer/VotesContainer" unique_id=491670330]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.3350658, 0.38829848, 0.9556659, 1)
+
+[node name="VotePlayer3" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel3/MapContainer/VotesContainer" unique_id=657997922]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.24295452, 0.557506, 5.7756904e-07, 1)
+
+[node name="VotePlayer4" type="ColorRect" parent="MenusContainer/MapsContainer/MapPanel3/MapContainer/VotesContainer" unique_id=42793549]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+color = Color(0.92976016, 0.70772594, 0, 1)
+
+[node name="HSeparator" type="HSeparator" parent="MenusContainer" unique_id=1855261290]
+layout_mode = 2
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="MenusContainer" unique_id=352543953]
+layout_mode = 2
+
+[node name="VSeparator" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=1070524528]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ReadyButton" type="Button" parent="MenusContainer/ButtonsContainer" unique_id=1415190560]
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 2
+text = "Ready up"
+
+[node name="VSeparator2" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=461148279]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StartButton" type="Button" parent="MenusContainer/ButtonsContainer" unique_id=1296626611]
+custom_minimum_size = Vector2(256, 64)
+layout_mode = 2
+disabled = true
+text = "Start"
+
+[node name="VSeparator3" type="VSeparator" parent="MenusContainer/ButtonsContainer" unique_id=121580733]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HSeparator2" type="HSeparator" parent="MenusContainer" unique_id=954425875]
+layout_mode = 2
+
+[node name="PlayersContainer" type="HBoxContainer" parent="MenusContainer" unique_id=2086930096]
+layout_mode = 2
+
+[node name="PlayerPanel1" type="PanelContainer" parent="MenusContainer/PlayersContainer" unique_id=424743480]
+layout_mode = 2
+
+[node name="PlayerVBox" type="HBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel1" unique_id=757406535]
+layout_mode = 2
+
+[node name="PlayerIcon" type="TextureRect" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox" unique_id=1865350084]
+custom_minimum_size = Vector2(186, 0)
+layout_mode = 2
+texture = ExtResource("5_qu054")
+expand_mode = 4
+stretch_mode = 6
+
+[node name="PlayerStatusMargin" type="MarginContainer" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox" unique_id=602111757]
+layout_mode = 2
+
+[node name="PlayerStatus" type="VBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox/PlayerStatusMargin" unique_id=828089721]
+layout_mode = 2
+
+[node name="PlayerName" type="Label" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=933499496]
+layout_mode = 2
+text = "Player1"
+clip_text = true
+
+[node name="HSeparator" type="HSeparator" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=869299547]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel1/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1106224859]
+layout_mode = 2
+button_mask = 0
+text = "Ready?"
+
+[node name="VSeparator" type="VSeparator" parent="MenusContainer/PlayersContainer" unique_id=356914]
+layout_mode = 2
+
+[node name="PlayerPanel2" type="PanelContainer" parent="MenusContainer/PlayersContainer" unique_id=273185949]
+layout_mode = 2
+
+[node name="PlayerVBox" type="HBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel2" unique_id=671025274]
+layout_mode = 2
+
+[node name="PlayerIcon" type="TextureRect" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox" unique_id=1384380418]
+custom_minimum_size = Vector2(186, 0)
+layout_mode = 2
+texture = ExtResource("5_qu054")
+expand_mode = 4
+stretch_mode = 6
+
+[node name="PlayerStatusMargin" type="MarginContainer" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox" unique_id=2000457050]
+layout_mode = 2
+
+[node name="PlayerStatus" type="VBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox/PlayerStatusMargin" unique_id=1724139984]
+layout_mode = 2
+
+[node name="PlayerName" type="Label" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1448657022]
+layout_mode = 2
+text = "Player2"
+clip_text = true
+
+[node name="HSeparator" type="HSeparator" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1360720476]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel2/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1982312178]
+layout_mode = 2
+button_mask = 0
+text = "Ready?"
+
+[node name="VSeparator2" type="VSeparator" parent="MenusContainer/PlayersContainer" unique_id=112785214]
+layout_mode = 2
+
+[node name="PlayerPanel3" type="PanelContainer" parent="MenusContainer/PlayersContainer" unique_id=348991653]
+layout_mode = 2
+
+[node name="PlayerVBox" type="HBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel3" unique_id=1071214475]
+layout_mode = 2
+
+[node name="PlayerIcon" type="TextureRect" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox" unique_id=1658046485]
+custom_minimum_size = Vector2(186, 0)
+layout_mode = 2
+texture = ExtResource("5_qu054")
+expand_mode = 4
+stretch_mode = 6
+
+[node name="PlayerStatusMargin" type="MarginContainer" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox" unique_id=388768783]
+layout_mode = 2
+
+[node name="PlayerStatus" type="VBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox/PlayerStatusMargin" unique_id=1203379791]
+layout_mode = 2
+
+[node name="PlayerName" type="Label" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1163760651]
+layout_mode = 2
+text = "Player3"
+clip_text = true
+
+[node name="HSeparator" type="HSeparator" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=361605296]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel3/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=16683270]
+layout_mode = 2
+button_mask = 0
+text = "Ready?"
+
+[node name="VSeparator3" type="VSeparator" parent="MenusContainer/PlayersContainer" unique_id=2146052588]
+layout_mode = 2
+
+[node name="PlayerPanel4" type="PanelContainer" parent="MenusContainer/PlayersContainer" unique_id=427042457]
+layout_mode = 2
+
+[node name="PlayerVBox" type="HBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel4" unique_id=1931896554]
+layout_mode = 2
+
+[node name="PlayerIcon" type="TextureRect" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox" unique_id=134740435]
+custom_minimum_size = Vector2(186, 0)
+layout_mode = 2
+texture = ExtResource("5_qu054")
+expand_mode = 4
+stretch_mode = 6
+
+[node name="PlayerStatusMargin" type="MarginContainer" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox" unique_id=293683771]
+layout_mode = 2
+
+[node name="PlayerStatus" type="VBoxContainer" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox/PlayerStatusMargin" unique_id=1862400522]
+layout_mode = 2
+
+[node name="PlayerName" type="Label" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=537230809]
+layout_mode = 2
+text = "Player4"
+clip_text = true
+
+[node name="HSeparator" type="HSeparator" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1085460497]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="IsReadyCheckbox" type="CheckBox" parent="MenusContainer/PlayersContainer/PlayerPanel4/PlayerVBox/PlayerStatusMargin/PlayerStatus" unique_id=1234699579]
+layout_mode = 2
+button_mask = 0
+text = "Ready?"
