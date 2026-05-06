@@ -1,0 +1,29 @@
+[gd_resource type="Theme" format=3 uid="uid://cqruciomkq3xh"]
+
+[ext_resource type="FontFile" uid="uid://buyckl5t2s0ic" path="res://ui/fonts/JosefinSans-BoldItalic.ttf" id="1_usuwk"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_usuwk"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o5w48"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o5w48"]
+bg_color = Color(0.27899078, 0.27899086, 0.27899072, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_color = Color(0.10822461, 0.10822462, 0.1082245, 1)
+
+[resource]
+default_font = ExtResource("1_usuwk")
+default_font_size = 32
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/colors/font_focus_color = Color(0, 0, 0, 1)
+Button/colors/font_hover_color = Color(0, 0, 0, 1)
+Button/colors/font_hover_pressed_color = Color(0, 0, 0, 1)
+Button/colors/font_pressed_color = Color(0, 0, 0, 1)
+Button/styles/normal = SubResource("StyleBoxFlat_usuwk")
+HSeparator/constants/separation = 4
+HSeparator/styles/separator = SubResource("StyleBoxEmpty_o5w48")
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_o5w48")
+VBoxContainer/constants/separation = 16

@@ -5,6 +5,8 @@
 [ext_resource type="Shader" uid="uid://brlqm58kcl17r" path="res://player/sanity_distortion.gdshader" id="2_ryni8"]
 [ext_resource type="Shader" uid="uid://bss1vsl4apqyh" path="res://player/BlinkingShader.gdshader" id="4_qh2r7"]
 [ext_resource type="PackedScene" uid="uid://dst2bsilth5mb" path="res://player/model/player_model.res" id="5_qh2r7"]
+[ext_resource type="PackedScene" uid="uid://blux03ijdura0" path="res://player/model/remade.tscn" id="3_model"]
+[ext_resource type="PackedScene" uid="uid://cb7eyfa8i7nlo" path="res://ui/menus/pause_menu/pause_menu.tscn" id="4_qh2r7"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
 radius = 0.3
@@ -157,6 +159,8 @@ libraries/ = SubResource("AnimationLibrary_pyi6a")
 visible = false
 spot_range = 15.0
 spot_angle = 30.0
+[node name="PauseMenu" parent="MainCamera" unique_id=83991203 instance=ExtResource("4_qh2r7")]
+visible = false
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")
@@ -174,3 +178,5 @@ one_shot = true
 [connection signal="blink_opened" from="MainCamera/HUD" to="." method="_on_hud_blink_opened"]
 [connection signal="animation_finished" from="MainCamera/HUD/AnimationPlayer" to="MainCamera/HUD" method="_on_animation_player_animation_finished"]
 [connection signal="timeout" from="BlinkTimer" to="." method="_on_blink_timer_timeout"]
+
+[connection signal="unpause" from="MainCamera/PauseMenu" to="." method="_unpause"]

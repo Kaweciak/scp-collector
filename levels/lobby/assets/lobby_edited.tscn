@@ -1,0 +1,66 @@
+[gd_scene format=3 uid="uid://dhggd4ek8ipxb"]
+
+[ext_resource type="PackedScene" uid="uid://jqwjosxt6gpo" path="res://levels/lobby/assets/lobby_base.glb" id="1_kg1dp"]
+[ext_resource type="Shader" uid="uid://biy5s77uuyx82" path="res://levels/lobby/assets/wall_shader.gdshader" id="2_fducr"]
+[ext_resource type="Texture2D" uid="uid://hh3divrlled" path="res://levels/lobby/assets/clipboard_WoodChips003_1K-JPG_Color.jpg" id="2_o11rd"]
+[ext_resource type="Texture2D" uid="uid://cgwrflcd1xl8d" path="res://levels/lobby/assets/Concrete031_1K-JPG_Color.jpg" id="3_0bw3m"]
+[ext_resource type="Texture2D" uid="uid://241mo1rlnr6l" path="res://levels/lobby/assets/clipboard_WoodChips003_1K-JPG_Roughness.png" id="3_fducr"]
+[ext_resource type="Texture2D" uid="uid://dlkog6fau0bfy" path="res://levels/lobby/assets/Concrete031_1K-JPG_NormalDX.jpg" id="4_vkb1r"]
+[ext_resource type="Texture2D" uid="uid://c25bl44lmjw5n" path="res://levels/lobby/assets/Concrete031_1K-JPG_Roughness.jpg" id="5_2fgws"]
+[ext_resource type="Texture2D" uid="uid://bblex0h6keld2" path="res://levels/lobby/assets/Tiles107_1K-JPG_Color.jpg" id="5_7guls"]
+[ext_resource type="Texture2D" uid="uid://cs5q3jvt2tvhk" path="res://levels/lobby/assets/Tiles107_1K-JPG_NormalDX.jpg" id="6_5ivyt"]
+[ext_resource type="Texture2D" uid="uid://de7px2vpomn2k" path="res://levels/lobby/assets/Tiles107_1K-JPG_Roughness.jpg" id="7_0nvfp"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ny2ew"]
+noise_type = 3
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_stt84"]
+noise = SubResource("FastNoiseLite_ny2ew")
+seamless = true
+as_normal_map = true
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wsyin"]
+render_priority = 0
+shader = ExtResource("2_fducr")
+shader_parameter/albedo_lower = Color(1, 1, 1, 1)
+shader_parameter/albedo_higher = Color(0.99607843, 0.4392157, 0, 1)
+shader_parameter/albedo_change_height = 0.530000025175
+shader_parameter/texture_normal = SubResource("NoiseTexture2D_stt84")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vwy8i"]
+albedo_texture = ExtResource("3_0bw3m")
+roughness_texture = ExtResource("5_2fgws")
+normal_enabled = true
+normal_texture = ExtResource("4_vkb1r")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cj68o"]
+albedo_texture = ExtResource("2_o11rd")
+roughness_texture = ExtResource("3_fducr")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bw3m"]
+albedo_texture = ExtResource("5_7guls")
+roughness_texture = ExtResource("7_0nvfp")
+normal_enabled = true
+normal_texture = ExtResource("6_5ivyt")
+uv1_scale = Vector3(2, 2, 2)
+
+[node name="lobby" unique_id=1245646185 instance=ExtResource("1_kg1dp")]
+
+[node name="Plane_001" parent="." index="0" unique_id=1089629418]
+surface_material_override/0 = SubResource("ShaderMaterial_wsyin")
+
+[node name="Plane_003" parent="." index="1" unique_id=1801027029]
+surface_material_override/0 = SubResource("StandardMaterial3D_vwy8i")
+
+[node name="Plane_005" parent="." index="9" unique_id=1629001876]
+transform = Transform3D(-5.4573704e-08, -0.4352311, 3.804911e-08, -0.3051982, 7.782538e-08, 0, -4.7709842e-15, -3.804911e-08, -0.4352311, 0.99044955, 0.98572844, -1.9192655)
+surface_material_override/0 = SubResource("StandardMaterial3D_cj68o")
+
+[node name="Plane_006" parent="." index="11" unique_id=1826824228]
+transform = Transform3D(2.646006e-09, -0.12427741, 9.7893595e-09, -0.17259745, -1.5752892e-10, 0.021465806, -0.03026678, -9.966362e-09, -0.12240954, 0.9890449, 1.0659759, -2.1546419)
+
+[node name="Plane_007" parent="." index="12" unique_id=458327923]
+transform = Transform3D(-1.36723575e-08, -0.12427741, 2.6913508e-08, -0.1712973, 3.808321e-09, -0.026185367, 0.03692137, -2.835242e-08, -0.121487476, 0.98457533, 0.928825, -1.6825264)
+
+[node name="Plane_011" parent="." index="22" unique_id=315323610]
+surface_material_override/0 = SubResource("StandardMaterial3D_0bw3m")

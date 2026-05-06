@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://bpkyy0wa18fxg"]
+
+[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/menus/main_menu/main_menu_theme.tres" id="1_b8lgq"]
+[ext_resource type="Script" uid="uid://m4f2iokggujl" path="res://ui/menus/screens/join_screen/join_screen.gd" id="2_aei8r"]
+[ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="3_mp2dg"]
+
+[node name="JoinScreen" type="MarginContainer" unique_id=1072418236]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_b8lgq")
+script = ExtResource("2_aei8r")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1795447660]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="VBoxContainer" unique_id=1070641507]
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("3_mp2dg")
+expand_mode = 5
+
+[node name="IPInput" type="LineEdit" parent="VBoxContainer" unique_id=1155010334]
+layout_mode = 2
+placeholder_text = "Enter host IP"
+alignment = 1
+max_length = 15
+
+[node name="NameInput" type="LineEdit" parent="VBoxContainer" unique_id=1945926711]
+layout_mode = 2
+placeholder_text = "Enter nickname"
+alignment = 1
+max_length = 15
+
+[node name="JoinButton" type="Button" parent="VBoxContainer" unique_id=526800381]
+layout_mode = 2
+text = "JOIN"
+flat = true
+
+[node name="ReturnButton" type="Button" parent="VBoxContainer" unique_id=743723702]
+layout_mode = 2
+text = "RETURN"
+flat = true
+
+[connection signal="pressed" from="VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

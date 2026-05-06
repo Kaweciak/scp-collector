@@ -99,6 +99,8 @@ var clone_flashlights: Array[SpotLight3D] = []
 @onready var hud: CanvasLayer = $MainCamera/HUD
 @onready var blink_timer: Timer = $BlinkTimer
 
+@onready var pause_menu: Control = $MainCamera/PauseMenu
+# @onready var hud: Hud = $MainCamera/Hud
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -248,10 +250,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		#Helper for releaseing mouse capture -> should be replaced by the game menu
 		#TODO
 		elif event.is_action_pressed("pause"):
-			if mouse_captured:
-				_release_mouse()
+			if !pause_menu.visible:
+				_pause()
 			else:
-				_capture_mouse()
+				_unpause()
 
 func _push_objects(delta: float) -> void:
 	for i in get_slide_collision_count():
@@ -283,8 +285,16 @@ func _push_objects(delta: float) -> void:
 				#Apply the final impulse
 				collider.apply_impulse(impulse, contact_point)
 
-#Crouch mechanic processing -> should be adjusted to play an animation
-#TODO
+func _pause() -> void:
+	pause_menu.visible = true
+	_release_mouse()
+	pause_menu.set_process_unhandled_input(true)
+
+func _unpause() -> void:
+	pause_menu.visible = false
+	_capture_mouse()
+	pause_menu.set_process_unhandled_input(false)
+
 func _crouch() -> void:
 	tried_uncroaching = false
 	crouching = true
@@ -463,12 +473,6 @@ func _find_next_spectate_target() -> void:
 #
 #func remove_dialog_image() -> void:
 	#hud.remove_dialog_image()
-#
-#func _bus_enabled(idx: int) -> void:
-	#hud.bus_enabled(idx)
-#
-#func _bus_disabled(idx: int) -> void:
-	#hud.bus_disabled(idx)
 
 #Multiplayer synched entity pickup processing logic
 @rpc("any_peer", "call_local")

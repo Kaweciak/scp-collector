@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://bqioyx4wpp0j0"]
+
+[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/menus/main_menu/main_menu_theme.tres" id="1_mylp5"]
+[ext_resource type="Script" uid="uid://dgyif7kahddsg" path="res://ui/menus/screens/extras_screen/extras_screen.gd" id="2_45t6i"]
+[ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="3_vd8ih"]
+
+[node name="ExtrasScreen" type="MarginContainer" unique_id=1072418236]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_mylp5")
+script = ExtResource("2_45t6i")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1795447660]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="VBoxContainer" unique_id=1070641507]
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("3_vd8ih")
+expand_mode = 5
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=389963471]
+layout_mode = 2
+text = "Game created by:
+
+Kacper Kawecki
+
+Kacper Kubiak
+"
+horizontal_alignment = 1
+
+[node name="ReturnButton" type="Button" parent="VBoxContainer" unique_id=482511099]
+layout_mode = 2
+text = "RETURN"
+flat = true
+
+[connection signal="pressed" from="VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

@@ -1,0 +1,23 @@
+[gd_resource type="Theme" format=3 uid="uid://bxvf2f7vgqd4h"]
+
+[ext_resource type="FontFile" uid="uid://buyckl5t2s0ic" path="res://ui/fonts/JosefinSans-BoldItalic.ttf" id="1_bflbr"]
+
+[resource]
+default_font = ExtResource("1_bflbr")
+default_font_size = 44
+Button/colors/font_color = Color(0, 0, 0, 1)
+Button/colors/font_disabled_color = Color(0, 0, 0, 1)
+Button/colors/font_focus_color = Color(0.9490196, 0.9490196, 0.9490196, 0)
+Button/colors/font_hover_color = Color(0.22382358, 0.22382358, 0.22382355, 1)
+Button/colors/font_hover_pressed_color = Color(0.46929657, 0.46929651, 0.46929651, 1)
+Button/colors/font_outline_color = Color(0, 0, 0, 0)
+Button/colors/font_pressed_color = Color(0, 0, 0, 1)
+Label/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/caret_color = Color(0.043951854, 0.04395192, 0.043952137, 1)
+LineEdit/colors/font_color = Color(0, 0, 0, 1)
+LineEdit/colors/font_placeholder_color = Color(0.29954708, 0.29954764, 0.2995472, 0.6)
+MarginContainer/constants/margin_bottom = 20
+MarginContainer/constants/margin_left = 20
+MarginContainer/constants/margin_right = 20
+MarginContainer/constants/margin_top = 20
+VBoxContainer/constants/separation = 10

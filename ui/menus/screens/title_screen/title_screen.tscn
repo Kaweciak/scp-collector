@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://dbsd108b657cb"]
+
+[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/menus/main_menu/main_menu_theme.tres" id="1_57dp6"]
+[ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="2_4fywo"]
+[ext_resource type="Script" uid="uid://cpkq0l3fqkm3a" path="res://ui/menus/screens/title_screen/title_screen.gd" id="2_lsymw"]
+
+
+[node name="TitleScreen" type="MarginContainer" unique_id=1072418236]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_57dp6")
+script = ExtResource("2_lsymw")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1795447660]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="VBoxContainer" unique_id=1070641507]
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("2_4fywo")
+expand_mode = 5
+
+[node name="PlayButton" type="Button" parent="VBoxContainer" unique_id=526800381]
+layout_mode = 2
+text = "PLAY"
+flat = true
+
+[node name="SettingsButton" type="Button" parent="VBoxContainer" unique_id=1642760274]
+layout_mode = 2
+text = "SETTINGS"
+flat = true
+
+[node name="ExtrasButton" type="Button" parent="VBoxContainer" unique_id=482511099]
+layout_mode = 2
+text = "EXTRAS"
+flat = true
+
+[node name="QuitButton" type="Button" parent="VBoxContainer" unique_id=743723702]
+layout_mode = 2
+text = "QUIT"
+flat = true
+
+[connection signal="pressed" from="VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/SettingsButton" to="." method="_on_settings_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/ExtrasButton" to="." method="_on_extras_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
