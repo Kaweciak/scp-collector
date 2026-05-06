@@ -25,7 +25,8 @@ func _on_resume_button_pressed() -> void:
 	emit_signal("unpause")
 
 func _on_quit_menu_button_pressed() -> void:
-	pass
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	MultiplayerController.go_to_main_menu()
 
 func _on_quit_dekstop_button_pressed() -> void:
 	get_tree().quit()

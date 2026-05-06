@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://m4f2iokggujl" path="res://ui/menus/screens/join_screen/join_screen.gd" id="2_aei8r"]
 [ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="3_mp2dg"]
 
-
 [node name="JoinScreen" type="MarginContainer" unique_id=1072418236]
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,7 +30,7 @@ max_length = 15
 
 [node name="NameInput" type="LineEdit" parent="VBoxContainer" unique_id=1945926711]
 layout_mode = 2
-placeholder_text = "Enter your nickname"
+placeholder_text = "Enter nickname"
 alignment = 1
 max_length = 15
 

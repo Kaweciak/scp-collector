@@ -39,6 +39,7 @@ func join(ip_address: String = "127.0.0.1", nickname: String = "Player") -> void
 		multiplayer.connected_to_server.connect(func():
 			rpc_id(1, "register_player", nickname)
 		)
+	multiplayer.server_disconnected.connect(_on_server_disconnected)
 
 
 @rpc("any_peer")
@@ -115,3 +116,17 @@ func del_player(id: int) -> void:
 
 	if player_node:
 		player_node.queue_free()
+
+func _on_server_disconnected() -> void:
+	print("Lost connection to the host")
+	go_to_main_menu()
+
+func go_to_main_menu() -> void:
+	if multiplayer.multiplayer_peer:
+		multiplayer.multiplayer_peer.close()
+		multiplayer.multiplayer_peer = null
+
+	connected_peer_ids.clear()
+	player_names.clear()
+
+	get_tree().change_scene_to_file("res://ui/menus/main_menu/main_menu.tscn")
