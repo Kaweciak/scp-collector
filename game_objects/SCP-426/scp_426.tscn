@@ -98,7 +98,7 @@ properties/8/replication_mode = 1
 
 [node name="Toaster" type="RigidBody3D" unique_id=843890881 groups=["Anomaly"]]
 collision_layer = 49156
-collision_mask = 16399
+collision_mask = 16447
 mass = 2.0
 physics_material_override = SubResource("PhysicsMaterial_ey5d2")
 continuous_cd = true
@@ -155,3 +155,29 @@ shape = SubResource("CylinderShape3D_gk7ay")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1388690759]
 replication_config = SubResource("SceneReplicationConfig_ey5d2")
+
+[node name="VisibilityPoints" type="Node3D" parent="." unique_id=1576379677]
+
+[node name="Edge" type="Marker3D" parent="VisibilityPoints" unique_id=1143038540]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0.505, 0.18)
+
+[node name="Edge2" type="Marker3D" parent="VisibilityPoints" unique_id=730474322]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0.505, -0.18)
+
+[node name="Edge3" type="Marker3D" parent="VisibilityPoints" unique_id=1131522601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0.505, 0.18)
+
+[node name="Edge4" type="Marker3D" parent="VisibilityPoints" unique_id=1147626353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0.505, -0.18)
+
+[node name="Edge5" type="Marker3D" parent="VisibilityPoints" unique_id=1690119178]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0, 0.14)
+
+[node name="Edge6" type="Marker3D" parent="VisibilityPoints" unique_id=888702668]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0, 0.14)
+
+[node name="Edge7" type="Marker3D" parent="VisibilityPoints" unique_id=345639990]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.325, 0, -0.14)
+
+[node name="Edge8" type="Marker3D" parent="VisibilityPoints" unique_id=304364310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.325, 0, -0.14)

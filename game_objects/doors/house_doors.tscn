@@ -243,7 +243,7 @@ _data = {
 }
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_w64up"]
-size = Vector3(1.8, 2, 0.1)
+size = Vector3(1.75, 1.9, 0.1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gi5sw"]
 size = Vector3(0.01, 1.91, 1.75)
@@ -285,7 +285,7 @@ shape = SubResource("ConcavePolygonShape3D_gvu4j")
 
 [node name="Wing1" type="AnimatableBody3D" parent="." unique_id=13879063]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.9)
-collision_layer = 32769
+collision_layer = 32800
 collision_mask = 49154
 
 [node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Wing1" unique_id=1395342497]
@@ -298,7 +298,7 @@ shape = SubResource("BoxShape3D_8bj0a")
 
 [node name="Wing2" type="AnimatableBody3D" parent="." unique_id=114960231]
 transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, -0.90610814)
-collision_layer = 32769
+collision_layer = 32800
 collision_mask = 49154
 
 [node name="CSGBakedMeshInstance3D" type="MeshInstance3D" parent="Wing2" unique_id=2058845760]
@@ -335,7 +335,11 @@ start_deactivated = true
 collision_layer = 0
 
 [node name="Collider" type="CollisionShape3D" parent="PortalFront/TeleportArea" unique_id=343125823]
+transform = Transform3D(1, 0, -2.1671553e-13, 0, 1, 0, 2.1671553e-13, 0, 1, 0, -0.04699707, 0)
 shape = SubResource("BoxShape3D_w64up")
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="PortalFront" unique_id=409740232]
+aabb = AABB(-0.87, -0.996, -0.055, 1.75, 1.889, 0.1)
 
 [node name="PortalBack" type="Node3D" parent="." unique_id=1598784281]
 transform = Transform3D(-4.3711385e-08, 0, -0.9999999, 0, 1, 0, 0.9999999, 0, -4.3711385e-08, -0.2, 0, 0)
@@ -360,11 +364,16 @@ start_deactivated = true
 collision_layer = 0
 
 [node name="Collider" type="CollisionShape3D" parent="PortalBack/TeleportArea" unique_id=1470184711]
+transform = Transform3D(1, 0, 8.277823e-13, 0, 1, 0, -8.277823e-13, 0, 1, 0, -0.04, 0)
 shape = SubResource("BoxShape3D_w64up")
 
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="PortalBack" unique_id=1812302373]
+transform = Transform3D(1, 0, 3.5527137e-15, 0, 1, 0, -3.5527137e-15, 0, 1, 0, 0, 0)
+aabb = AABB(-0.87, -0.996, -0.055, 1.75, 1.889, 0.1)
+
 [node name="FrontBlocker" type="StaticBody3D" parent="." unique_id=1791523506]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15832217, -0.045, 0)
-collision_layer = 32769
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.20104684, -0.045, 0)
+collision_layer = 32800
 collision_mask = 49154
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="FrontBlocker" unique_id=830886772]
@@ -375,8 +384,8 @@ layers = 131072
 mesh = SubResource("BoxMesh_8bj0a")
 
 [node name="BackBlocker" type="StaticBody3D" parent="." unique_id=1253472458]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1657369, -0.045, 0)
-collision_layer = 32769
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.20897152, -0.045, 0)
+collision_layer = 32800
 collision_mask = 49154
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="BackBlocker" unique_id=665045349]
@@ -385,5 +394,10 @@ shape = SubResource("BoxShape3D_gi5sw")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BackBlocker" unique_id=1456116142]
 layers = 131072
 mesh = SubResource("BoxMesh_8bj0a")
+
+[node name="NavigationLink3D" type="NavigationLink3D" parent="." unique_id=1483982562]
+enabled = false
+start_position = Vector3(0.69, -0.445, 0)
+end_position = Vector3(-0.69, -0.445, 0)
 
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]

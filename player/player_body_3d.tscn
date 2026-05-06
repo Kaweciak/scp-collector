@@ -101,8 +101,8 @@ properties/6/replication_mode = 1
 
 [node name="PlayerBody3D" type="CharacterBody3D" unique_id=1605310021 groups=["Player"]]
 collision_layer = 2
-collision_mask = 15
-platform_floor_layers = 4294918129
+collision_mask = 63
+platform_floor_layers = 4294901761
 safe_margin = 0.02
 script = ExtResource("1_4qwy5")
 speed = 3.0
@@ -152,6 +152,11 @@ color = Color(0, 0, 0, 1)
 [node name="AnimationPlayer" type="AnimationPlayer" parent="MainCamera/HUD" unique_id=266477069]
 root_node = NodePath("../../..")
 libraries/ = SubResource("AnimationLibrary_pyi6a")
+
+[node name="Flashlight" type="SpotLight3D" parent="MainCamera" unique_id=1871008492]
+visible = false
+spot_range = 15.0
+spot_angle = 30.0
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")

@@ -80,6 +80,14 @@ var admin_blinking_enabled: bool = false
 var admin_noclip_enabled: bool = false
 var admin_immortality_enabled: bool = false
 
+#Flashlight variables
+@export_group("Flashlight")
+@export var flashlight_energy: float = 2.0
+var is_flashlight_on: bool = false
+@onready var flashlight: SpotLight3D = $MainCamera/Flashlight
+var max_flashlight_clones: int = 3
+var clone_flashlights: Array[SpotLight3D] = []
+
 @onready var camera: Camera3D = $MainCamera
 @onready var base_collision: CollisionShape3D = $BaseCollision
 @onready var crouch_collision: CollisionShape3D = $CrouchCollision
@@ -104,6 +112,19 @@ func _ready() -> void:
 	
 	#Assign the authority to the camera
 	camera.current = is_multiplayer_authority()
+	
+	
+	#Setup the portal clone flashlight pool
+	for i in range(max_flashlight_clones):
+		var clone = SpotLight3D.new()
+		clone.light_energy = flashlight_energy
+		clone.spot_range = flashlight.spot_range
+		clone.spot_angle = flashlight.spot_angle
+		clone.light_projector = flashlight.light_projector
+		
+		get_tree().root.call_deferred("add_child", clone)
+		clone.hide()
+		clone_flashlights.append(clone)
 	
 	if is_multiplayer_authority():
 		#If the instance owns the player make the model invisible so that the player doesn't see visual glitches
@@ -168,6 +189,10 @@ func _physics_process(delta: float) -> void:
 	if is_multiplayer_authority() or multiplayer.is_server():
 		if held != null:
 			_update_held()
+			
+	
+	if not dead:
+		_update_portal_flashlight()
 
 #Process unhandled input
 func _unhandled_input(event: InputEvent) -> void:
@@ -198,7 +223,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		if mouse_captured: _rotate_camera()
 		
 	#Process player input
-	if event is InputEventKey:
+	if event is InputEventKey and not dead:
 		if event.is_action_pressed("sprint"):
 			if(!Input.is_action_pressed("crouch")):
 				_sprint()
@@ -214,7 +239,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			if(Input.is_action_pressed("sprint")):
 				_sprint()
 				
-		elif event.is_action_pressed("interact") and not dead:
+		elif event.is_action_pressed("toggle_flashlight"):
+			_toggle_flashlight.rpc(!is_flashlight_on)
+				
+		elif event.is_action_pressed("interact"):
 			_interact()
 		
 		#Helper for releaseing mouse capture -> should be replaced by the game menu
@@ -512,17 +540,27 @@ func _process_sanity(delta: float) -> void:
 		var anomalies = get_tree().get_nodes_in_group("Anomaly")
 		for anomaly in anomalies:
 			if anomaly is Toaster:
-				#Check if the Toaster is visible on the screen
-				if camera.is_position_in_frustum(anomaly.global_position):
-					#Raycast for walls to block the effect
-					var space_state = get_world_3d().direct_space_state
-					var query = PhysicsRayQueryParameters3D.create(camera.global_position, anomaly.global_position)
-					query.exclude = [self]
-					var result = space_state.intersect_ray(query)
-					
-					if result.is_empty() or result.collider == anomaly:
-						sanity_drain = anomaly.vision_sanity_drain_rate
-						break
+				#Get the corners of the model
+				var points_container = anomaly.get_node_or_null("VisibilityPoints")
+				if not points_container:
+					printerr("Missing pointers on the Toaster model!")
+					continue
+				var points_to_check = points_container.get_children()
+				
+				#Cast a ray for each marker on the model
+				for marker in points_to_check:
+					var pt = marker.global_position
+					#Check if the Toaster is visible on the screen
+					if camera.is_position_in_frustum(pt):
+						#Raycast for walls to block the effect
+						var space_state = get_world_3d().direct_space_state
+						var query = PhysicsRayQueryParameters3D.create(camera.global_position, pt)
+						query.exclude = [self]
+						var result = space_state.intersect_ray(query)
+						
+						if result.is_empty() or result.collider == anomaly:
+							sanity_drain = anomaly.vision_sanity_drain_rate
+							break
 						
 				#Check if the player is within the proximity of the Toaster and apply drain
 				var dist_squared = global_position.distance_squared_to(anomaly.global_position)
@@ -637,3 +675,116 @@ func on_teleport(portal: Portal3D) -> void:
 	grav_vel = portal.to_exit_direction(grav_vel)
 	jump_vel = portal.to_exit_direction(jump_vel)
 	velocity = portal.to_exit_direction(velocity)
+	
+#Multiplayer synched flashlight toggle
+@rpc("call_local", "any_peer")
+func _toggle_flashlight(state: bool) -> void:
+	is_flashlight_on = state
+	if flashlight:
+		flashlight.visible = state
+		flashlight.light_energy = flashlight_energy
+		
+#Projects the flashlight through any portals within the light cone
+func _update_portal_flashlight() -> void:
+	#If the flashlight is off, hide all clones and exit
+	if not is_flashlight_on:
+		for clone in clone_flashlights:
+			if is_instance_valid(clone):
+				clone.hide()
+		return
+	
+	#Variable for storing how many flashlight copies are in use
+	var used_clones = 0
+	
+	#Get all portals in the scene
+	var all_portals = get_tree().get_nodes_in_group("Portals")
+	#Pre-calculate cone boundaries
+	var max_dist_sq = flashlight.spot_range * flashlight.spot_range
+	
+	for p in all_portals:
+		#Stop if the flashlight clones were exhausted
+		if used_clones >= max_flashlight_clones:
+			break
+			
+		#Check both the front and back of the portal system
+		var portal_nodes = p.get_portals()
+		for sub_portal in portal_nodes:
+			#Stop if the flashlight clones were exhausted
+			if used_clones >= max_flashlight_clones:
+				break
+			
+			#Check if the portal is active
+			if sub_portal is Portal3D and sub_portal.exit_portal != null:
+				if sub_portal.forward_distance(camera) <= 0.0:
+					continue
+				
+				#Check the distance between the portal and the camera
+				var dist_sq = sub_portal.global_position.distance_squared_to(camera.global_position)
+				if dist_sq < max_dist_sq:
+					#Fetch physical dimensions to calculate the boundary corners
+					var width_modifier = 0.8
+					var height_modifier = 1.5
+					var collider = sub_portal.get_node_or_null("TeleportArea/Collider")
+					if collider and collider.shape is BoxShape3D:
+						width_modifier = collider.shape.size.x / 2.0
+						height_modifier = collider.shape.size.y / 2.0
+						
+					var right = sub_portal.global_transform.basis.x * width_modifier
+					var up = sub_portal.global_transform.basis.y * height_modifier
+					
+					#Define the center and 4 corners of the portal frame
+					var points_to_check = [
+						sub_portal.global_position, #Center
+						sub_portal.global_position + right + up, #Top Right
+						sub_portal.global_position - right + up, #Top Left
+						sub_portal.global_position + right - up, #Bottom Right
+						sub_portal.global_position - right - up  #Bottom Left
+					]
+					
+					#Check if any of the portal corners are inside the player camera frustum
+					var is_visible_on_screen = false
+					for pt in points_to_check:
+						if camera.is_position_in_frustum(pt):
+							is_visible_on_screen = true
+							break
+					
+					#Raycast if visible to ensure no walls are blocking the portal
+					if is_visible_on_screen:
+						var space_state = get_world_3d().direct_space_state
+						var is_not_blocked = false
+						
+						#Grid resolution variables
+						var grid_rows = 5
+						var grid_cols = 5
+						
+						#Rayscast across the portal coordinates
+						for row in range(grid_rows):
+							for col in range(grid_cols):
+								#Map coordinates evenly from -1.0 to 1.0 across the surface
+								var u = lerp(-1.0, 1.0, float(col) / max(1, grid_cols - 1))
+								var v = lerp(-1.0, 1.0, float(row) / max(1, grid_rows - 1))
+								
+								var point = sub_portal.global_position + (right * u) + (up * v)
+								
+								var query = PhysicsRayQueryParameters3D.create(camera.global_position, point)
+								query.exclude = [self]
+								var result = space_state.intersect_ray(query)
+								
+								if result.is_empty() or sub_portal.is_ancestor_of(result.collider):
+									is_not_blocked = true
+									break
+									
+							if is_not_blocked:
+								break;
+						
+						if is_not_blocked:
+							var clone = clone_flashlights[used_clones]
+							var exit_transform = sub_portal.to_exit_transform(flashlight.global_transform)
+							clone.global_transform = exit_transform
+							clone.show()
+							used_clones += 1
+							
+	#Hide any remaining clones in the pool that weren't used this frame
+	for i in range(used_clones, max_flashlight_clones):
+		if is_instance_valid(clone_flashlights[i]):
+			clone_flashlights[i].hide()

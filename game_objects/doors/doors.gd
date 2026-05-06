@@ -3,6 +3,8 @@ extends PortalInteractable
 @onready var animation_player: AnimationPlayer = $AnimationPlayer
 
 @export var opened: bool = false
+#Navigation link that allows enemies to walk through the open door
+@onready var nav_link: NavigationLink3D = $NavigationLink3D
 
 @onready var main_collision: CollisionShape3D = $CollisionShape3D
 
@@ -77,6 +79,9 @@ func _open(is_partner: bool = false) -> void:
 			if not is_partner:
 				var partner_door = back_portal.exit_portal.get_parent()
 				partner_door.rpc("_open", true)
+				
+	#Update the navigation link
+	nav_link.enabled = true
 		
 #Closes the door for all players
 @rpc("call_local", "any_peer")
@@ -104,6 +109,9 @@ func _close(is_partner: bool = false) -> void:
 		animation_player.play("doors_close_animation_reversed", 0.5)
 	else:
 		animation_player.play("doors_close_animation", 0.5)
+		
+	#Update the navigation link
+	nav_link.enabled = false
 
 #Connect to the animation player to deactivate the portal upon closing
 func _on_animation_player_animation_finished(anim_name: StringName) -> void:

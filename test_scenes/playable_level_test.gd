@@ -7,7 +7,7 @@ func _ready() -> void:
 	MultiplayerController.spawn_players_in_new_scene()
 	
 	#Attach check for the win condition
-	$Van/AnomalyDetactionArea3D.body_entered.connect(_on_van_area_body_entered)
+	$NavigationRegion3D/Van/AnomalyDetactionArea3D.body_entered.connect(_on_van_area_body_entered)
 
 
 func _process(_delta: float) -> void:
@@ -17,8 +17,8 @@ func _process(_delta: float) -> void:
 
 #Reload the level if the Anomaly has been captured
 func _on_van_area_body_entered(body: Node3D) -> void:
-	if body.is_in_group("Anomaly"):
-		if multiplayer.is_server():
+	if multiplayer.is_server():
+		if body.is_in_group("Anomaly"):
 			sync_reload.rpc()
 
 #Multiplayer synchronized call for reloading the level
