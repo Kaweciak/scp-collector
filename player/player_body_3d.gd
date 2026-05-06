@@ -50,7 +50,7 @@ var current_anim_state: String = ""
 @onready var animation_player: AnimationPlayer = $ModelHolder/Model/AnimationPlayer
 @onready var model: Node3D = $ModelHolder/Model
 
-# @onready var pause_menu: PauseMenu = $MainCamera/PauseMenu
+@onready var pause_menu: Control = $MainCamera/PauseMenu
 # @onready var hud: Hud = $MainCamera/Hud
 
 func _enter_tree() -> void:
@@ -122,21 +122,24 @@ func _unhandled_input(event: InputEvent) -> void:
 			debug_mode_enabled = false
 
 		elif event.is_action_pressed("pause"):
-			if mouse_captured:
-				_release_mouse()
+			if !pause_menu.visible:
+				_pause()
 			else:
-				_capture_mouse()
+				_unpause()
 
 		if debug_mode_enabled:
 			if event.is_action_pressed("debug_death"):
 				death.rpc()
 
-#func _pause() -> void:
-	#pause_menu.show()
-	#Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	#set_process_unhandled_input(false)
-	#pause_menu.set_process_unhandled_input(true)
-	#set_physics_process(false)
+func _pause() -> void:
+	pause_menu.visible = true
+	_release_mouse()
+	pause_menu.set_process_unhandled_input(true)
+
+func _unpause() -> void:
+	pause_menu.visible = false
+	_capture_mouse()
+	pause_menu.set_process_unhandled_input(false)
 
 func _crouch() -> void:
 	tried_uncroaching = false
@@ -252,12 +255,6 @@ func death() -> void:
 #
 #func remove_dialog_image() -> void:
 	#hud.remove_dialog_image()
-#
-#func _bus_enabled(idx: int) -> void:
-	#hud.bus_enabled(idx)
-#
-#func _bus_disabled(idx: int) -> void:
-	#hud.bus_disabled(idx)
 
 @rpc("any_peer", "call_local")
 func _server_pick_up(path: NodePath):

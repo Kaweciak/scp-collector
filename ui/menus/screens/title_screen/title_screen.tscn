@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://dbsd108b657cb"]
 
-[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/themes/main_menu_theme.tres" id="1_57dp6"]
+[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/menus/main_menu/main_menu_theme.tres" id="1_57dp6"]
 [ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="2_4fywo"]
 [ext_resource type="Script" uid="uid://cpkq0l3fqkm3a" path="res://ui/menus/screens/title_screen/title_screen.gd" id="2_lsymw"]
+
 
 [node name="TitleScreen" type="MarginContainer" unique_id=1072418236]
 anchors_preset = 15
