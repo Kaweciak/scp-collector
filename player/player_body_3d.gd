@@ -22,7 +22,7 @@ var coyote_timer: float = 0.0
 @export_group("Physics Interaction")
 @export var push_force: float = 0.1
 @export var player_mass: float = 80.0
-@export var terminal_velociy: float = -30.0
+@export var terminal_velocity: float = -30.0
 
 #Movement variables
 var sprinting: bool = false
@@ -102,7 +102,6 @@ var clone_flashlights: Array[SpotLight3D] = []
 @onready var blink_timer: Timer = $BlinkTimer
 
 @onready var pause_menu: Control = $MainCamera/PauseMenu
-# @onready var hud: Hud = $MainCamera/Hud
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -207,9 +206,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	#Debug logic processing
 	if event is InputEventKey:
 		if event.is_action_pressed("debug_activate"):
-			debug_mode_enabled = true
-		elif event.is_action_released("debug_activate"):
-			debug_mode_enabled = false
+			debug_mode_enabled = !debug_mode_enabled
+			DebugOverlay._toggle_debug_mode(debug_mode_enabled)
 		elif debug_mode_enabled:
 			if event.is_action_pressed("debug_death"):
 				death.rpc()
@@ -259,33 +257,33 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _push_objects(delta: float) -> void:
 	for i in get_slide_collision_count():
-			var collision = get_slide_collision(i)
-			var collider = collision.get_collider()
-
-			if collider is RigidBody3D:
-				#Get the direction of the collision
-				var push_dir = -collision.get_normal()
-
-				#Get contact point relative to the center of the object
-				var contact_point = collision.get_position() - collider.global_position
-
-				#Calculate velocity relative to the object
-				var velocity_diff = velocity.dot(push_dir) - collider.linear_velocity.dot(push_dir)
-				velocity_diff = max(0.0, velocity_diff)
-
-				#Scale the force by mass
-				var mass_ratio = min(1.0, player_mass / collider.mass)
-
-				#Base push impulse calculation
-				var impulse = push_dir * speed * push_force * mass_ratio
-
-				#Weight logic for standing on objects
-				if collision.get_normal().y > 0.5:
-					var weight_impulse = Vector3.DOWN * gravity_factor * delta * mass_ratio
-					impulse += weight_impulse
-
-				#Apply the final impulse
-				collider.apply_impulse(impulse, contact_point)
+		var collision = get_slide_collision(i)
+		var collider = collision.get_collider()
+	
+		if collider is RigidBody3D:
+			#Get the direction of the collision
+			var push_dir = -collision.get_normal()
+			
+			#Get contact point relative to the center of the object
+			var contact_point = collision.get_position() - collider.global_position
+			
+			#Calculate velocity relative to the object
+			var velocity_diff = velocity.dot(push_dir) - collider.linear_velocity.dot(push_dir)
+			velocity_diff = max(0.0, velocity_diff)
+			
+			#Scale the force by mass
+			var mass_ratio = min(1.0, player_mass / collider.mass)
+			
+			#Base push impulse calculation
+			var impulse = push_dir * speed * push_force * mass_ratio
+			
+			#Weight logic for standing on objects
+			if collision.get_normal().y > 0.5:
+				var weight_impulse = Vector3.DOWN * gravity_factor * delta * mass_ratio
+				impulse += weight_impulse
+			
+			#Apply the final impulse
+			collider.apply_impulse(impulse, contact_point)
 
 func _pause() -> void:
 	pause_menu.visible = true
@@ -389,8 +387,8 @@ func _gravity(delta: float) -> Vector3:
 	if grounded: #Apply a small grounding force
 		grav_vel = Vector3.ZERO
 	else: #Apply gravity and clamp it to a terminal velocity
-		grav_vel.y = max(grav_vel.y - gravity_factor * delta, terminal_velociy)
-
+		grav_vel.y = max(grav_vel.y - gravity_factor * delta, terminal_velocity)
+	
 	return grav_vel
 
 #Process jumping mechanics
@@ -530,8 +528,7 @@ func _update_held():
 				var target_transform = Transform3D(target_basis, target)
 				var exit_transform = player_portal.to_exit_transform(target_transform)
 				target_rotation = exit_transform.basis.get_euler()
-				print("Target location adjusted by: ", self.global_position - 1.75 * camera.global_transform.basis.z - target)
-
+	
 	held.linear_velocity = 10 * (target - held.global_position)
 	held.angular_velocity = 1 * (target_rotation - held.global_rotation)
 

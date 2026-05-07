@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 MultiplayerController="*uid://1fpd6w0diisb"
 GameState="*uid://cdfgc14qs4q5a"
 PortalManager="*uid://duuypebhqhmq8"
+DebugOverlay="*uid://bxjb5xya0ei2y"
 
 [display]
 

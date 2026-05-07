@@ -19,11 +19,14 @@ func _ready() -> void:
 		
 	if multiplayer.is_server():
 		GameState.request_toaster_activation(sanity_regeneration_rate)
+	
+	if checkpoints.is_empty():
+		printerr("Sanity checkpoints cannot be empty!")
 		
 func _process(_delta: float) -> void:
 	#Adjust sanity drain effect based on the time since first encountered
 	if multiplayer.is_server() and GameState.sanity_drain_first_activated:
-		if checkpoints.size() - 1 >= sanity_checkpoint:
+		if checkpoints.size() - 1 > sanity_checkpoint:
 			#Increment the checkpoint if enough time passed
 			if GameState.time_since_sanity_drain_first_activated >= checkpoints[sanity_checkpoint+1].time_to_increment_sanity_checkpoint:
 				sanity_checkpoint += 1
@@ -31,7 +34,7 @@ func _process(_delta: float) -> void:
 			set_interpolated_sanity_values()
 			
 			#Inform the game that the regeneration value changed
-			GameState.request_toaster_activation(sanity_regeneration_rate)
+			GameState.update_toaster_rate.rpc(sanity_regeneration_rate)
 
 #Sets the values based on the set checkpoint values for the Toaster sanity drain process
 func set_interpolated_sanity_values() -> void:
@@ -50,7 +53,7 @@ func set_interpolated_sanity_values() -> void:
 	#Calculate interpolation weight
 	var start_point = checkpoints[sanity_checkpoint]
 	var end_point = checkpoints[sanity_checkpoint+1]
-	var segment_duration = start_point.time_to_increment_sanity_checkpoint - end_point.time_to_increment_sanity_checkpoint
+	var segment_duration = end_point.time_to_increment_sanity_checkpoint - start_point.time_to_increment_sanity_checkpoint
 	var elapsed_in_segment = GameState.time_since_sanity_drain_first_activated - start_point.time_to_increment_sanity_checkpoint
 	var t = elapsed_in_segment / segment_duration
 	
