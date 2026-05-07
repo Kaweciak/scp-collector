@@ -42,6 +42,4 @@ metadata/_custom_type_script = "uid://baoqeasrylh61"
 
 [node name="PortalManagerCheckpoint" type="Node3D" unique_id=1646356192]
 script = ExtResource("1_hh3pb")
-time_since_last_portal_creation = 100.0
-portal_creation_cooldown = 100.0
 checkpoints = Array[ExtResource("2_iv6qk")]([SubResource("Resource_b38lc"), SubResource("Resource_50r7t"), SubResource("Resource_bavc0"), SubResource("Resource_2dp14"), SubResource("Resource_c5dxf")])
