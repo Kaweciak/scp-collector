@@ -79,7 +79,7 @@ func set_interpolated_portal_values(elapsed: float) -> void:
 	#Calculate interpolation weight
 	var start_point = checkpoints[portal_checkpoint]
 	var end_point = checkpoints[portal_checkpoint+1]
-	var segment_duration = start_point.time_to_increment_portal_checkpoint - end_point.time_to_increment_portal_checkpoint
+	var segment_duration = end_point.time_to_increment_portal_checkpoint - start_point.time_to_increment_portal_checkpoint
 	var elapsed_in_segment = elapsed - start_point.time_to_increment_portal_checkpoint
 	var t = elapsed_in_segment / segment_duration
 	

@@ -64,6 +64,11 @@ func request_toaster_activation(new_rate: float) -> void:
 	if multiplayer.is_server() and not toaster_present:
 		sync_toaster_state.rpc(true, new_rate)
 
+#Sync the current toaster regeneration rate
+@rpc("authority", "call_local", "unreliable")
+func update_toaster_rate(new_rate: float) -> void:
+	sanity_regeneration_rate = new_rate
+
 #Connect the signal for updating joining peers about the state of the game
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)

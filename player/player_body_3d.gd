@@ -100,7 +100,6 @@ var clone_flashlights: Array[SpotLight3D] = []
 @onready var blink_timer: Timer = $BlinkTimer
 
 @onready var pause_menu: Control = $MainCamera/PauseMenu
-# @onready var hud: Hud = $MainCamera/Hud
 
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
@@ -205,9 +204,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	#Debug logic processing
 	if event is InputEventKey:
 		if event.is_action_pressed("debug_activate"):
-			debug_mode_enabled = true
-		elif event.is_action_released("debug_activate"):
-			debug_mode_enabled = false
+			debug_mode_enabled = !debug_mode_enabled
+			DebugOverlay._toggle_debug_mode(debug_mode_enabled)
 		elif debug_mode_enabled:
 			if event.is_action_pressed("debug_death"):
 				death.rpc()
