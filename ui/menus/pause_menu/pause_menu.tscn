@@ -123,6 +123,9 @@ layout_mode = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer173/HBoxContainer" unique_id=774508990]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "SCP-173 is a tall statue made of concrete that can move when not in direct eyesight of anyone. 
+
+Capturing SCP-173 requires maintaining distance and constant eye contact. Members of the capture team should only close their eyes for short periods of time to get it closer to the capture area and alternate who is blinking at a given moment."
 
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer173/HBoxContainer" unique_id=382431503]
 layout_mode = 2
@@ -142,6 +145,9 @@ layout_mode = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer184/HBoxContainer" unique_id=827721566]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "SCP-184 is a small, metal dodecahedron. It causes any space it's located in to constantly grow in size from the inside, regardless of the size of its shell. Any structure holding SCP-184 will have additional rooms that seem to be violating the laws of physics.
+
+Capturing SCP-184 requires good navigational skills and a large capture squad. Navigating the modified structures can be more time consuming than it seems as their true size cannot be accurately estimated."
 
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer184/HBoxContainer" unique_id=525072569]
 layout_mode = 2
@@ -160,6 +166,9 @@ layout_mode = 2
 [node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer428/HBoxContainer" unique_id=1656124781]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "I am a toaster. My name is SCP-482. I cause hallucinations to whoever is looking at me for prolonged periods of time, especially when I'm being held. Whoever is exposed to me for prolonged periods of time starts thinking of themselves as me.
+
+To capture me scientists need to cooperate. They need to ensure one isn't directly looking me for too long by closing their eyes and giving each other directions or changing the person that holds me."
 
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer428/HBoxContainer" unique_id=106227739]
 layout_mode = 2
