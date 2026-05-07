@@ -25,6 +25,9 @@ func _reset_portal_state():
 
 func _ready() -> void:
 	multiplayer.peer_connected.connect(_on_peer_connected)
+	
+	if checkpoints.is_empty():
+		printerr("Portal checkpoints cannot be empty!")
 
 
 func _process(delta: float) -> void:
@@ -33,7 +36,7 @@ func _process(delta: float) -> void:
 	
 	#Update the current checkpoint value
 	var elapsed = GameState.current_game_time_elapsed
-	if checkpoints.size() - 1 >= portal_checkpoint:
+	if checkpoints.size() - 1 > portal_checkpoint:
 		if elapsed >= checkpoints[portal_checkpoint+1].time_to_increment_portal_checkpoint:
 			portal_checkpoint += 1
 			
@@ -178,7 +181,7 @@ func sync_link_portals(path_a: NodePath, path_b: NodePath) -> void:
 		if portal_b == door_b.front_portal:
 			door_b.connected_front_portal = door_a
 		else:
-			door_b.connected_back_portal = door_b
+			door_b.connected_back_portal = door_a
 			
 		#Update the physical blocking walls
 		door_a.update_walls()

@@ -19,11 +19,14 @@ func _ready() -> void:
 		
 	if multiplayer.is_server():
 		GameState.request_toaster_activation(sanity_regeneration_rate)
+	
+	if checkpoints.is_empty():
+		printerr("Sanity checkpoints cannot be empty!")
 		
 func _process(_delta: float) -> void:
 	#Adjust sanity drain effect based on the time since first encountered
 	if multiplayer.is_server() and GameState.sanity_drain_first_activated:
-		if checkpoints.size() - 1 >= sanity_checkpoint:
+		if checkpoints.size() - 1 > sanity_checkpoint:
 			#Increment the checkpoint if enough time passed
 			if GameState.time_since_sanity_drain_first_activated >= checkpoints[sanity_checkpoint+1].time_to_increment_sanity_checkpoint:
 				sanity_checkpoint += 1
