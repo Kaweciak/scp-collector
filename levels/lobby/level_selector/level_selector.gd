@@ -23,8 +23,8 @@ var map_votes := {}
 
 var maps := {
 	"House": "res://levels/house/house.tscn",
-	"Factory": "TBA",
-	"Lab": "TBA"
+	"Factory": "res://levels/factory/factory.tscn",
+	"Lab": "res://levels/lab/lab.tscn"
 }
 
 func _ready():
