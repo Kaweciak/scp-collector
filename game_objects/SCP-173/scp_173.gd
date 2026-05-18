@@ -15,7 +15,7 @@ var is_wandering: bool = false
 
 #Deaggro variables
 var vision_lost_timer: float = 0.0
-@export var deaggro_delay: float = 3.0
+@export var deaggro_delay: float = 1.5
 
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
 
@@ -204,6 +204,14 @@ func _closest_from_list(target_list: Array) -> PlayerBody3D:
 #Teleports instead of moving to avoid being spotted movign due to lag
 func _teleport_towards_position(target_pos: Vector3, delta: float) -> void:
 	nav_agent.target_position = target_pos
+	
+	#Skip movement if already close enough to the target
+	if global_position.distance_to(target_pos) <= nav_agent.target_desired_distance:
+		#Ensure the entity is still facing the player for kill check
+		var flat_target = target_pos
+		flat_target.y = global_position.y
+		look_at(flat_target, Vector3.UP, true)
+		return
 	
 	#Skips movement if navigation in progress
 	if nav_agent.is_navigation_finished():

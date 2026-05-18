@@ -22,6 +22,10 @@ var active_anomalies: Array[Node] = []
 var global_cheats_enabled: bool = true
 
 func _process(delta: float) -> void:
+	#Check if the peer is null before querying the server status
+	if multiplayer.multiplayer_peer == null:
+		return
+	
 	#Process global timers
 	if multiplayer.is_server():
 		total_time_elapsed += delta
@@ -36,6 +40,7 @@ func _process(delta: float) -> void:
 @rpc("authority", "call_local", "reliable")
 func reset_game_state() -> void:
 	PortalManager._reset_portal_state()
+	
 	current_game_time_elapsed = 0.0
 	is_game_in_progress = false
 
@@ -44,7 +49,7 @@ func reset_game_state() -> void:
 	sanity_drain_first_activated = false
 	toaster_present = false
 	
-	#Clear entity registries between games
+	#Clear entity registries
 	active_portals.clear()
 	active_anomalies.clear()
 
@@ -108,6 +113,8 @@ func sync_cheats_state(is_enabled: bool) -> void:
 #Called by the server when the level is fully loaded and ready
 @rpc("authority", "call_local", "reliable")
 func start_game(cheats_allowed: bool) -> void:
+	reset_game_state()
+	
 	is_game_in_progress = true
 	global_cheats_enabled = cheats_allowed
 

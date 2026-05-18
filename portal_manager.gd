@@ -31,7 +31,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if not is_active or not multiplayer.is_server():
+	if multiplayer.multiplayer_peer == null or not is_active or not multiplayer.is_server():
 		return
 	
 	#Update the current checkpoint value

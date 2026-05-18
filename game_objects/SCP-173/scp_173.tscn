@@ -133,6 +133,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8886719, 0)
 shape = SubResource("CapsuleShape3D_7c15j")
 
 [node name="NavigationAgent3D" type="NavigationAgent3D" parent="." unique_id=1772383367]
+target_desired_distance = 1.5
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=713801118]
 replication_config = SubResource("SceneReplicationConfig_4j84y")
@@ -174,6 +175,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.292, 1.11, -0.292)
 
 [node name="Edge12" type="Marker3D" parent="VisibilityPoints" unique_id=1715620170]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.292, 1.11, -0.292)
+
+[node name="Edge13" type="Marker3D" parent="VisibilityPoints" unique_id=1555232851]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9066137, 0)
+
+[node name="Edge14" type="Marker3D" parent="VisibilityPoints" unique_id=261350142]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4057393, 0)
+
+[node name="Edge15" type="Marker3D" parent="VisibilityPoints" unique_id=1214561254]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5031625, 0)
 
 [node name="Mesh" type="MeshInstance3D" parent="." unique_id=409191777]
 transform = Transform3D(-0.085, 1.6499992e-24, 7.430936e-09, 0, 0.085, -1.8873792e-17, -7.430936e-09, -1.8873792e-17, -0.085, 0, 0, 0)
