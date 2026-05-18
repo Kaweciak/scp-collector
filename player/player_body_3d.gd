@@ -737,6 +737,8 @@ func _update_portal_flashlight() -> void:
 	var all_portals = get_tree().get_nodes_in_group("Portals")
 	#Pre-calculate cone boundaries
 	var max_dist_sq = flashlight.spot_range * flashlight.spot_range
+	#SpotLight3D points along the -Z axis
+	var light_forward = -flashlight.global_transform.basis.z.normalized()
 
 	for p in all_portals:
 		#Stop if the flashlight clones were exhausted
@@ -752,7 +754,7 @@ func _update_portal_flashlight() -> void:
 
 			#Check if the portal is active
 			if sub_portal is Portal3D and sub_portal.exit_portal != null:
-				if sub_portal.forward_distance(camera) <= 0.0:
+				if sub_portal.forward_distance(flashlight) <= 0.0:
 					continue
 
 				#Check the distance between the portal and the camera
@@ -778,15 +780,21 @@ func _update_portal_flashlight() -> void:
 						sub_portal.global_position - right - up  #Bottom Left
 					]
 
-					#Check if any of the portal corners are inside the player camera frustum
-					var is_visible_on_screen = false
+					#Evaluate if any of the portal corners intersect the flashlight's cone
+					var is_in_light_cone = false
 					for pt in points_to_check:
-						if camera.is_position_in_frustum(pt):
-							is_visible_on_screen = true
+						var dir_to_pt = (pt - flashlight.global_position).normalized()
+						#Clamp the dot product to avoid floating point imprecision
+						var dot_val = clamp(dir_to_pt.dot(light_forward), -1.0, 1.0)
+						var angle = rad_to_deg(acos(dot_val))
+						
+						#Compare the calculated angle to the spot_angle
+						if angle <= flashlight.spot_angle:
+							is_in_light_cone = true
 							break
 
-					#Raycast if visible to ensure no walls are blocking the portal
-					if is_visible_on_screen:
+					#Raycast if in light cone to ensure no walls are blocking the portal
+					if is_in_light_cone:
 						var space_state = get_world_3d().direct_space_state
 						var is_not_blocked = false
 

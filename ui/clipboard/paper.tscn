@@ -56,7 +56,7 @@ size = Vector3(0.42, 0.05, 0.594)
 [node name="Paper" unique_id=1764183819 instance=ExtResource("1_f8qso")]
 script = ExtResource("2_7r8si")
 
-[node name="Page 1" parent="Rotation" parent_id_path=PackedInt32Array(2043325929) index="1" unique_id=1778762850]
+[node name="Page 1" parent="Rotation" parent_id_path=PackedInt32Array(721197806) index="1" unique_id=1768131490]
 mesh = SubResource("ArrayMesh_76agk")
 blend_shapes/SimpleDeform = 1.0
 

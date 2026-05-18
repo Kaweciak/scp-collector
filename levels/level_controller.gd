@@ -85,5 +85,5 @@ func _spawn_random_anomaly() -> void:
 
 	#Instantiate, position, and add to the network container
 	var anomaly_instance = selected_scene.instantiate()
-	anomaly_instance.global_position = spawn_point.global_position
 	anomaly_container.add_child(anomaly_instance, true)
+	anomaly_instance.global_position = spawn_point.global_position
