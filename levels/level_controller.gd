@@ -1,7 +1,5 @@
 extends Node3D
 
-var alive_players: Array = []
-
 #Variables for anomaly spawning
 @export var anomaly_scenes: Array[PackedScene] = []
 @onready var anomaly_spawns: Array = $AnomalySpawns.get_children()
@@ -24,6 +22,9 @@ func _ready() -> void:
 
 	if multiplayer.is_server():
 		_spawn_random_anomaly()
+		
+		#Register the game start
+		GameState.start_game.rpc(GameState.global_cheats_enabled)
 
 
 func register_player(player: Node) -> void:
@@ -32,10 +33,10 @@ func register_player(player: Node) -> void:
 		return
 
 	#Prevent duplicate registration if caught by both the ready loop and signal
-	if alive_players.has(player):
+	if GameState.alive_players.has(player):
 		return
 
-	alive_players.append(player)
+	GameState.alive_players.append(player)
 	player.died.connect(_on_player_died.bind(player))
 
 	#Handle node removal dynamically to clean up array on disconnects
@@ -54,24 +55,18 @@ func _on_player_exited_tree(player: Node) -> void:
 	remove_player_and_check_win(player)
 
 func remove_player_and_check_win(player: Node) -> void:
-	if alive_players.has(player):
-		alive_players.erase(player)
+	if GameState.alive_players.has(player):
+		GameState.alive_players.erase(player)
 
-	print("Players alive: ", alive_players.size())
+	print("Players alive: ", GameState.alive_players.size())
 
-	if alive_players.is_empty():
-		GameState.lobby_message = "All players died. You lost."
-		go_to_lobby.rpc()
+	if GameState.alive_players.is_empty():
+		GameState.trigger_end_game.rpc("All players died. You lost.")
 
 func _on_van_area_body_entered(body: Node3D) -> void:
 	if body.is_in_group("Anomaly"):
 		if multiplayer.is_server():
-			GameState.lobby_message = "SCP has been safely retrieved. You won."
-			go_to_lobby.rpc()
-
-@rpc("authority", "call_local", "reliable")
-func go_to_lobby() -> void:
-	get_tree().change_scene_to_file("res://levels/lobby/lobby.tscn")
+			GameState.trigger_end_game.rpc("SCP has been safely retrieved. You won.")
 
 #Spawns one of the available anomalies in one of the designated spots
 #TODO has to be replace by a choosing mechanism in the level selector

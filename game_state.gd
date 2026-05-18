@@ -11,6 +11,7 @@ var is_game_in_progress = false
 var total_time_elapsed: float = 0.0
 var current_game_time_elapsed: float = 0.0
 
+var alive_players: Array[Node] = []
 var lobby_message: String = ""
 
 #Debug variable
@@ -73,6 +74,10 @@ func request_toaster_activation(new_rate: float) -> void:
 @rpc("authority", "call_local", "unreliable")
 func update_toaster_rate(new_rate: float) -> void:
 	sanity_regeneration_rate = new_rate
+	
+@rpc("authority", "call_remote", "reliable")
+func sync_game_progress(in_progress: bool) -> void:
+	is_game_in_progress = in_progress
 
 #Connect the signal for updating joining peers about the state of the game
 func _ready() -> void:
@@ -84,8 +89,33 @@ func _on_peer_connected(id: int) -> void:
 		sync_toaster_state.rpc_id(id, toaster_present, sanity_regeneration_rate)
 		sync_sanity_state.rpc_id(id, sanity_drain_first_activated, time_since_sanity_drain_first_activated)
 		sync_global_timers.rpc_id(id, total_time_elapsed, current_game_time_elapsed)
+		sync_game_progress.rpc_id(id, is_game_in_progress)
+		sync_cheats_state.rpc_id(id, global_cheats_enabled)
 		
 #Allows the host/server to enable or disable cheats during runtime
 @rpc("authority", "call_local", "reliable")
 func sync_cheats_state(is_enabled: bool) -> void:
 	global_cheats_enabled = is_enabled
+
+#Called by the server when the level is fully loaded and ready
+@rpc("authority", "call_local", "reliable")
+func start_game(cheats_allowed: bool) -> void:
+	is_game_in_progress = true
+	global_cheats_enabled = cheats_allowed
+
+#Handles the end game sequence
+@rpc("authority", "call_local", "reliable")
+func trigger_end_game(message: String) -> void:
+	if not is_game_in_progress:
+		return
+		
+	is_game_in_progress = false
+	lobby_message = message
+	
+	_go_to_lobby.rpc(message)
+
+#Changes the scene to the lobby when the game ends
+@rpc("authority", "call_local", "reliable")
+func _go_to_lobby(message: String) -> void:
+	lobby_message = message
+	get_tree().change_scene_to_file.call_deferred("res://levels/lobby/lobby.tscn")
