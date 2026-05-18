@@ -93,7 +93,7 @@ func set_interpolated_portal_values(elapsed: float) -> void:
 	
 #Finds a pair of portals to connect
 func _trigger_portal_anomaly() -> void:
-	var all_portals = get_tree().get_nodes_in_group("Portals")
+	var all_portals = GameState.active_portals
 	
 	if all_portals.size() >= 2:
 		all_portals.shuffle()
@@ -204,8 +204,8 @@ func _unlink_portal(portal: Portal3D) -> void:
 		#Disconnect exits
 		portal.exit_portal = null
 		partner_portal.exit_portal = null
-		portal.deactivate(true)
-		partner_portal.deactivate(true)
+		portal.deactivate(false)
+		partner_portal.deactivate(false)
 		
 		#Clear tracked connections
 		if door.front_portal == portal:
@@ -241,7 +241,7 @@ func _on_peer_connected(id: int) -> void:
 		sync_portal_state.rpc_id(id, is_active, time_since_last_portal_creation, time_since_last_room_creation, time_since_last_item_duplication, portal_checkpoint)
 		
 		#Tell the new player about all currently active portal pairs
-		var all_portals = get_tree().get_nodes_in_group("Portals")
+		var all_portals = GameState.active_portals
 		for portal in all_portals:
 			if portal.is_portal:
 				if portal.front_portal.exit_portal != null:

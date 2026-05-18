@@ -27,6 +27,13 @@ func _ready() -> void:
 	#Ensure random seeds for the wandering vectors
 	randomize()
 
+#Adds itself to the maintained anomaly list
+func _enter_tree() -> void:
+	GameState.register_anomaly(self)
+
+#Removes itself from the maintained anomaly list
+func _exit_tree() -> void:
+	GameState.register_anomaly(self)
 
 func _physics_process(delta: float) -> void:
 	#Wait for the map to sync on game start

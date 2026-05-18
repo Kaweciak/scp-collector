@@ -147,7 +147,7 @@ func _ready() -> void:
 			m.set_layer_mask_value(2, true)
 
 		#Inject the camera for all portals in the scene
-		var all_portals = get_tree().get_nodes_in_group("Portals")
+		var all_portals = GameState.active_portals
 		for portal in all_portals:
 			if portal.back_portal is Portal3D:
 				portal.back_portal.player_camera = camera
@@ -525,7 +525,7 @@ func _update_held():
 
 	#Check if the held object and target are physically separated
 	if held.global_position.distance_squared_to(target) > 6.0:
-		var all_portals = get_tree().get_nodes_in_group("Portals")
+		var all_portals = GameState.active_portals
 		var closest_portal_to_held = null
 		var min_dist_to_held = INF
 
@@ -574,7 +574,7 @@ func _process_sanity(delta: float) -> void:
 	#Check if the player's eyes are closed for the visual sanity drain
 	if not current_eyes_state == Eyes_state.CLOSED:
 		#Find the Toaster in the scene
-		var anomalies = get_tree().get_nodes_in_group("Anomaly")
+		var anomalies = GameState.active_anomalies
 		for anomaly in anomalies:
 			if anomaly is Toaster:
 				#Get the corners of the model
@@ -734,7 +734,7 @@ func _update_portal_flashlight() -> void:
 	var used_clones = 0
 
 	#Get all portals in the scene
-	var all_portals = get_tree().get_nodes_in_group("Portals")
+	var all_portals = GameState.active_portals
 	#Pre-calculate cone boundaries
 	var max_dist_sq = flashlight.spot_range * flashlight.spot_range
 	#SpotLight3D points along the -Z axis

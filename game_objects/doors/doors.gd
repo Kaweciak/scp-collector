@@ -30,8 +30,17 @@ extends PortalInteractable
 var connected_front_portal: Node = null
 var connected_back_portal: Node = null
 
+
 func _ready() -> void:
 	update_walls()
+
+#Adds the portals to the maintained portal list
+func _enter_tree() -> void:
+	GameState.register_portal(self)
+
+#Removes the portals from the maintained portal list
+func _exit_tree() -> void:
+	GameState.unregister_portal(self)
 
 #Allows the player to open and close the door upon interaction
 func interact() -> void:

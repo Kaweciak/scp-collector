@@ -11,8 +11,12 @@ var is_game_in_progress = false
 var total_time_elapsed: float = 0.0
 var current_game_time_elapsed: float = 0.0
 
-var alive_players: Array[Node] = []
 var lobby_message: String = ""
+
+#Preloaded arrays with important objects to save computation time
+var alive_players: Array[Node] = []
+var active_portals: Array[Node] = []
+var active_anomalies: Array[Node] = []
 
 #Debug variable
 var global_cheats_enabled: bool = true
@@ -39,6 +43,10 @@ func reset_game_state() -> void:
 	time_since_sanity_drain_first_activated = 0.0
 	sanity_drain_first_activated = false
 	toaster_present = false
+	
+	#Clear entity registries between games
+	active_portals.clear()
+	active_anomalies.clear()
 
 #Allows the server to set the global sanity mechanic state
 @rpc("authority", "call_local", "reliable")
@@ -119,3 +127,21 @@ func trigger_end_game(message: String) -> void:
 func _go_to_lobby(message: String) -> void:
 	lobby_message = message
 	get_tree().change_scene_to_file.call_deferred("res://levels/lobby/lobby.tscn")
+
+#Registers a new portal that has entered the scene
+func register_portal(portal: Node) -> void:
+	if not active_portals.has(portal):
+		active_portals.append(portal)
+
+#Removes a portal that exited the scene
+func unregister_portal(portal: Node) -> void:
+	active_portals.erase(portal)
+
+#Registers a new anomaly that has entered the scene
+func register_anomaly(anomaly: Node) -> void:
+	if not active_anomalies.has(anomaly):
+		active_anomalies.append(anomaly)
+
+#Removes an anomaly that exited the scene
+func unregister_anomaly(anomaly: Node) -> void:
+	active_anomalies.erase(anomaly)
