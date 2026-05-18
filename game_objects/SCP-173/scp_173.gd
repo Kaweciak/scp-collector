@@ -13,6 +13,10 @@ var active_target: PlayerBody3D = null
 var wander_target: Vector3 = Vector3.ZERO
 var is_wandering: bool = false
 
+#Deaggro variables
+var vision_lost_timer: float = 0.0
+@export var deaggro_delay: float = 3.0
+
 @onready var nav_agent: NavigationAgent3D = $NavigationAgent3D
 
 
@@ -40,7 +44,7 @@ func _physics_process(delta: float) -> void:
 	var is_observed = not observing_players.is_empty()
 	
 	#Determine target aggro or de-aggro based on vision checks
-	_update_target_state(valid_players, observing_players)
+	_update_target_state(valid_players, observing_players, delta)
 	
 	#Freeze if any player is looking at the entity
 	if is_observed:
@@ -54,7 +58,7 @@ func _physics_process(delta: float) -> void:
 		_handle_wandering(delta)
 
 #Updates the active target based on aggro/de-aggro rules
-func _update_target_state(valid_players: Array, observing_players: Array) -> void:
+func _update_target_state(valid_players: Array, observing_players: Array, delta: float) -> void:
 	var potential_targets = []
 	
 	#Get all players which are looking at the entity or are being looked at
@@ -62,7 +66,7 @@ func _update_target_state(valid_players: Array, observing_players: Array) -> voi
 		if player in observing_players or _sees_player(player):
 			potential_targets.append(player)
 	
-	#Choose the closest player a target
+	#Choose the closest player as a target
 	if not potential_targets.is_empty():
 		active_target = _closest_from_list(potential_targets)
 		is_wandering = false
@@ -74,7 +78,13 @@ func _update_target_state(valid_players: Array, observing_players: Array) -> voi
 		var scp_sees_player = _has_line_of_sight(active_target)
 		#De-aggro if lost the player
 		if not player_sees_scp and not scp_sees_player:
+			vision_lost_timer += delta
+		else:
+			vision_lost_timer = 0.0
+		
+		if vision_lost_timer >= deaggro_delay or not nav_agent.is_target_reachable():
 			active_target = null
+			vision_lost_timer = 0.0
 
 #Processes wandering logic when idle
 func _handle_wandering(delta: float) -> void:
