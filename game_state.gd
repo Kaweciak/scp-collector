@@ -13,6 +13,9 @@ var current_game_time_elapsed: float = 0.0
 
 var lobby_message: String = ""
 
+#Debug variable
+var global_cheats_enabled: bool = true
+
 func _process(delta: float) -> void:
 	#Process global timers
 	if multiplayer.is_server():
@@ -81,3 +84,8 @@ func _on_peer_connected(id: int) -> void:
 		sync_toaster_state.rpc_id(id, toaster_present, sanity_regeneration_rate)
 		sync_sanity_state.rpc_id(id, sanity_drain_first_activated, time_since_sanity_drain_first_activated)
 		sync_global_timers.rpc_id(id, total_time_elapsed, current_game_time_elapsed)
+		
+#Allows the host/server to enable or disable cheats during runtime
+@rpc("authority", "call_local", "reliable")
+func sync_cheats_state(is_enabled: bool) -> void:
+	global_cheats_enabled = is_enabled

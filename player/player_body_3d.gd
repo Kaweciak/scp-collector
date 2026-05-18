@@ -131,7 +131,7 @@ func _ready() -> void:
 		clone.spot_angle = flashlight.spot_angle
 		clone.light_projector = flashlight.light_projector
 
-		get_tree().root.call_deferred("add_child", clone)
+		get_tree().current_scene.call_deferred("add_child", clone)
 		clone.hide()
 		clone_flashlights.append(clone)
 
@@ -162,28 +162,32 @@ func _physics_process(delta: float) -> void:
 		if dead:
 			_update_spectator_camera()
 			return
-
-		#Calculate coyote timer for better feeling jump mechanics
-		var on_floor: bool = is_on_floor()
-		if on_floor:
-			coyote_timer = coyote_time
+		
+		#Check if the noclip is enabled
+		if admin_noclip_enabled:
+			_process_noclip(delta)
 		else:
-			coyote_timer = max(coyote_timer - delta, 0.0)
+			#Calculate coyote timer for better feeling jump mechanics
+			var on_floor: bool = is_on_floor()
+			if on_floor:
+				coyote_timer = coyote_time
+			else:
+				coyote_timer = max(coyote_timer - delta, 0.0)
 
-		#Check if the player jumped
-		if Input.is_action_just_pressed("jump"):
-			jumping = true
+			#Check if the player jumped
+			if Input.is_action_just_pressed("jump"):
+				jumping = true
 
-		#Check for and process the player crouching
-		if tried_uncroaching:
-			_try_uncroach()
+			#Check for and process the player crouching
+			if tried_uncroaching:
+				_try_uncroach()
 
-		#Process movement logic
-		velocity = _walk(delta) + _gravity(delta) + _jump(delta)
-		move_and_slide()
+			#Process movement logic
+			velocity = _walk(delta) + _gravity(delta) + _jump(delta)
+			move_and_slide()
 
-		#Apply force to RigidBody collision objects
-		_push_objects(delta)
+			#Apply force to RigidBody collision objects
+			_push_objects(delta)
 
 		#Process player animation
 		_update_animation()
@@ -210,13 +214,26 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	#Debug logic processing
-	if event is InputEventKey:
-		if event.is_action_pressed("debug_activate"):
-			debug_mode_enabled = !debug_mode_enabled
-			DebugOverlay._toggle_debug_mode(debug_mode_enabled)
-		elif debug_mode_enabled:
-			if event.is_action_pressed("debug_death"):
-				death.rpc()
+	if GameState.global_cheats_enabled:
+		if event is InputEventKey and event.pressed and not event.echo:
+			if Input.is_action_pressed("debug_activate"):
+				if event.is_action_pressed("debug_info"):
+					debug_mode_enabled = !debug_mode_enabled
+					DebugOverlay._toggle_debug_mode(debug_mode_enabled)
+					get_viewport().set_input_as_handled()
+					return
+				elif event.is_action_pressed("godmode"):
+					admin_immortality_enabled = !admin_immortality_enabled
+					get_viewport().set_input_as_handled()
+					return
+				elif event.is_action_pressed("noclip"):
+					_toggle_noclip()
+					get_viewport().set_input_as_handled()
+					return
+				elif Input.is_action_pressed("debug_death"):
+					death.rpc()
+					get_viewport().set_input_as_handled()
+					return
 
 	#Process spectator inputs
 	if dead:
@@ -450,7 +467,8 @@ func _interact() -> void:
 #Multiplayer synched death processing logic
 @rpc("call_local", "any_peer")
 func death() -> void:
-	if dead: return
+	#Return early if already dead or if godmode is enabled
+	if dead or admin_immortality_enabled: return
 	dead = true
 
 	emit_signal("died")
@@ -543,6 +561,12 @@ func _update_held():
 #Decrease the player sanity when interacting with the Toaster
 func _process_sanity(delta: float) -> void:
 	if not GameState.toaster_present or dead:
+		return
+		
+	#Set sanity to max if godmode is active
+	if admin_immortality_enabled:
+		sanity = 100.0
+		hud.update_distortion(0.0)
 		return
 
 	var sanity_drain = 0.0
@@ -801,3 +825,34 @@ func _update_portal_flashlight() -> void:
 	for i in range(used_clones, max_flashlight_clones):
 		if is_instance_valid(clone_flashlights[i]):
 			clone_flashlights[i].hide()
+			
+#Toggles the collision shapes and states for noclip cheats
+func _toggle_noclip() -> void:
+	admin_noclip_enabled = !admin_noclip_enabled
+	if admin_noclip_enabled:
+		base_collision.disabled = true
+		crouch_collision.disabled = true
+	else:
+		base_collision.disabled = false
+		if crouching:
+			_crouch()
+
+#Processes unconstrained camera-directed flying
+func _process_noclip(delta: float) -> void:
+	#Declare variables used to determine the flight direction
+	move_dir = Input.get_vector(&"left", &"right", &"forwards", &"backwards")
+	var fly_dir: Vector3 = Vector3.ZERO
+	
+	#Get the direction where the player is looking
+	if move_dir.length() > 0:
+		fly_dir = (camera.global_transform.basis * Vector3(move_dir.x, 0, move_dir.y)).normalized()
+	
+	#Vertical movement controls
+	if Input.is_action_pressed("jump"):
+		fly_dir += Vector3.UP
+	if Input.is_action_pressed("crouch"):
+		fly_dir += Vector3.DOWN
+	
+	#Apply the movement
+	var current_fly_speed = speed * sprint_factor * 2.0 if sprinting else speed * 2.0
+	global_position += fly_dir.normalized() * current_fly_speed * delta
