@@ -6,6 +6,7 @@
 [ext_resource type="Shader" uid="uid://bss1vsl4apqyh" path="res://player/BlinkingShader.gdshader" id="4_pyi6a"]
 [ext_resource type="PackedScene" uid="uid://cb7eyfa8i7nlo" path="res://ui/menus/pause_menu/pause_menu.tscn" id="4_qh2r7"]
 [ext_resource type="PackedScene" uid="uid://dst2bsilth5mb" path="res://player/model/player_model.res" id="5_qh2r7"]
+[ext_resource type="Theme" uid="uid://cqruciomkq3xh" path="res://ui/menus/pause_menu/pause_menu_theme.tres" id="6_iveab"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ugv4o"]
 radius = 0.3
@@ -162,6 +163,23 @@ spot_angle = 30.0
 
 [node name="PauseMenu" parent="MainCamera" unique_id=83991203 instance=ExtResource("4_qh2r7")]
 visible = false
+
+[node name="EndGameInfo" type="Label" parent="MainCamera" unique_id=795254387]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -16.0
+offset_right = 192.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme = ExtResource("6_iveab")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")
