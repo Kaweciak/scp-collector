@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bnb5d8vsijw8f" path="res://ui/menus/main_menu/main_menu.gd" id="1_ioe73"]
 [ext_resource type="PackedScene" uid="uid://upfigsc4dnmq" path="res://levels/lobby/lobby.tscn" id="2_gpubi"]
 [ext_resource type="PackedScene" uid="uid://be4lnr1yn6kdb" path="res://ui/clipboard/clipboard.glb" id="2_txwgg"]
+[ext_resource type="PackedScene" uid="uid://byug644rpkj3d" path="res://levels/tutorial/tutorial.tscn" id="3_30wi2"]
 [ext_resource type="PackedScene" uid="uid://3uuttntmofks" path="res://ui/clipboard/paper.tscn" id="3_j3h1s"]
 [ext_resource type="PackedScene" uid="uid://dbsd108b657cb" path="res://ui/menus/screens/title_screen/title_screen.tscn" id="4_txwgg"]
 [ext_resource type="PackedScene" uid="uid://c22tqeaql5olk" path="res://ui/menus/screens/start_game_screen/start_game_screen.tscn" id="5_j3h1s"]
@@ -29,6 +30,7 @@ glow_enabled = true
 [node name="MainMenu" type="Node3D" unique_id=1910017354]
 script = ExtResource("1_ioe73")
 lobby_scene = ExtResource("2_gpubi")
+tutorial_scene = ExtResource("3_30wi2")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2107231598]
 environment = SubResource("Environment_uni0y")
