@@ -74,6 +74,7 @@ _data = {
 }
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pyi6a"]
+resource_local_to_scene = true
 shader = ExtResource("4_pyi6a")
 shader_parameter/blink_progress = 0.0
 shader_parameter/smoothness = 0.1

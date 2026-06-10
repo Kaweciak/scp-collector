@@ -5,13 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://gnjbg1shvpa3" path="res://ui/menus/pause_menu/icons/cross.png" id="2_57ky2"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3a2ww"]
-load_path = "res://.godot/imported/scp173.png-299e567dfe48a99d14404b6e78ab2ccb.ctex"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_57ky2"]
-load_path = "res://.godot/imported/scp184.png-ed3ee5ea29b764ee9ca174ba3cb38305.ctex"
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2gx4h"]
-load_path = "res://.godot/imported/scp428.png-ca8457099691ee0de02c53296743b8e0.ctex"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2gx4h"]
 bg_color = Color(0.6, 0.6, 0.6, 0)

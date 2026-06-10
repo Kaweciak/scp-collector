@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dhggd4ek8ipxb"]
 
-[ext_resource type="PackedScene" uid="uid://jqwjosxt6gpo" path="res://levels/lobby/assets/lobby_base.glb" id="1_kg1dp"]
+[ext_resource type="PackedScene" uid="uid://5koc04iaiiod" path="res://levels/lobby/assets/lobby_base.glb" id="1_kg1dp"]
 [ext_resource type="Shader" uid="uid://biy5s77uuyx82" path="res://levels/lobby/assets/wall_shader.gdshader" id="2_fducr"]
 [ext_resource type="Texture2D" uid="uid://hh3divrlled" path="res://levels/lobby/assets/clipboard_WoodChips003_1K-JPG_Color.jpg" id="2_o11rd"]
 [ext_resource type="Texture2D" uid="uid://cgwrflcd1xl8d" path="res://levels/lobby/assets/Concrete031_1K-JPG_Color.jpg" id="3_0bw3m"]
@@ -46,21 +46,21 @@ uv1_scale = Vector3(2, 2, 2)
 
 [node name="lobby" unique_id=1245646185 instance=ExtResource("1_kg1dp")]
 
-[node name="Plane_001" parent="." index="0" unique_id=1089629418]
+[node name="Plane_001" parent="." index="0" unique_id=1203593524]
 surface_material_override/0 = SubResource("ShaderMaterial_wsyin")
 
-[node name="Plane_003" parent="." index="1" unique_id=1801027029]
+[node name="Plane_003" parent="." index="1" unique_id=1217441265]
 surface_material_override/0 = SubResource("StandardMaterial3D_vwy8i")
 
-[node name="Plane_005" parent="." index="9" unique_id=1629001876]
+[node name="Plane_005" parent="." index="9" unique_id=1075677740]
 transform = Transform3D(-5.4573704e-08, -0.4352311, 3.804911e-08, -0.3051982, 7.782538e-08, 0, -4.7709842e-15, -3.804911e-08, -0.4352311, 0.99044955, 0.98572844, -1.9192655)
 surface_material_override/0 = SubResource("StandardMaterial3D_cj68o")
 
-[node name="Plane_006" parent="." index="11" unique_id=1826824228]
+[node name="Plane_006" parent="." index="11" unique_id=562214449]
 transform = Transform3D(2.646006e-09, -0.12427741, 9.7893595e-09, -0.17259745, -1.5752892e-10, 0.021465806, -0.03026678, -9.966362e-09, -0.12240954, 0.9890449, 1.0659759, -2.1546419)
 
-[node name="Plane_007" parent="." index="12" unique_id=458327923]
+[node name="Plane_007" parent="." index="12" unique_id=1259386070]
 transform = Transform3D(-1.36723575e-08, -0.12427741, 2.6913508e-08, -0.1712973, 3.808321e-09, -0.026185367, 0.03692137, -2.835242e-08, -0.121487476, 0.98457533, 0.928825, -1.6825264)
 
-[node name="Plane_011" parent="." index="22" unique_id=315323610]
+[node name="Plane_011" parent="." index="22" unique_id=1602414933]
 surface_material_override/0 = SubResource("StandardMaterial3D_0bw3m")

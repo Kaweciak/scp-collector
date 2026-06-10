@@ -16,7 +16,6 @@ extends Node
 #Used to reset all the variables to the initial state
 func _reset_portal_state():
 	portal_checkpoint = -1
-	is_active = false
 	
 	time_since_last_portal_creation = 0.0
 	time_since_last_room_creation = 0.0
@@ -31,7 +30,7 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
-	if not is_active or not multiplayer.is_server():
+	if multiplayer.multiplayer_peer == null or not is_active or not multiplayer.is_server():
 		return
 	
 	#Update the current checkpoint value
@@ -61,12 +60,19 @@ func _process(delta: float) -> void:
 		time_since_last_room_creation = 0.0
 		_trigger_room_anomaly()
 
-#Called from by SCP-184 on initialization
+#Called by SCP-184 on initialization
 func activate_anomaly() -> void:
 	if not is_active:
 		is_active = true
 		
 		print("Portal anomaly activated!")
+
+#Called  by SCP-184 on exit
+func deactivate_anomaly() -> void:
+	if is_active:
+		is_active = false
+		
+		print("Portal anomaly deactivated!")
 
 func set_interpolated_portal_values(elapsed: float) -> void:
 	#Check if the checkpoints are correctly formatted
@@ -93,7 +99,7 @@ func set_interpolated_portal_values(elapsed: float) -> void:
 	
 #Finds a pair of portals to connect
 func _trigger_portal_anomaly() -> void:
-	var all_portals = get_tree().get_nodes_in_group("Portals")
+	var all_portals = GameState.active_portals
 	
 	if all_portals.size() >= 2:
 		all_portals.shuffle()
@@ -102,7 +108,18 @@ func _trigger_portal_anomaly() -> void:
 		var portal_b = null
 		for i in range(1, all_portals.size()):
 			var candidate = all_portals[i]
-			if portal_a != candidate and portal_a.connected_front_portal != candidate and portal_a.connected_back_portal != candidate:
+			
+			if portal_a == candidate:
+				continue
+			
+			var already_connected = false
+			#Evaluate tracking flags dynamically depending on whether it is a single or double portal variant
+			if ("connected_front_portal" in portal_a and portal_a.connected_front_portal == candidate) or \
+			   ("connected_back_portal" in portal_a and portal_a.connected_back_portal == candidate) or \
+			   ("connected_portal" in portal_a and portal_a.connected_portal == candidate):
+				already_connected = true
+				
+			if not already_connected:
 				portal_b = candidate
 				break
 				
@@ -173,15 +190,19 @@ func sync_link_portals(path_a: NodePath, path_b: NodePath) -> void:
 		portal_b.exit_portal = portal_a
 		
 		#Record the connections to prevent double-links
-		if portal_a == door_a.front_portal:
+		if "front_portal" in door_a and portal_a == door_a.front_portal:
 			door_a.connected_front_portal = door_b
-		else:
+		elif "back_portal" in door_a and portal_a == door_a.back_portal:
 			door_a.connected_back_portal = door_b
+		elif "connected_portal_door" in door_a:
+			door_a.connected_portal_door = door_b
 		
-		if portal_b == door_b.front_portal:
+		if "front_portal" in door_b and portal_b == door_b.front_portal:
 			door_b.connected_front_portal = door_a
-		else:
+		elif "back_portal" in door_b and portal_b == door_b.back_portal:
 			door_b.connected_back_portal = door_a
+		elif "connected_portal_door" in door_b:
+			door_b.connected_portal_door = door_a
 			
 		#Update the physical blocking walls
 		door_a.update_walls()
@@ -204,23 +225,36 @@ func _unlink_portal(portal: Portal3D) -> void:
 		#Disconnect exits
 		portal.exit_portal = null
 		partner_portal.exit_portal = null
-		portal.deactivate(true)
-		partner_portal.deactivate(true)
+		portal.deactivate(false)
+		partner_portal.deactivate(false)
 		
 		#Clear tracked connections
-		if door.front_portal == portal:
+		if "front_portal" in door and door.front_portal == portal:
 			door.connected_front_portal = null
-		else:
+		elif "back_portal" in door and door.back_portal == portal:
 			door.connected_back_portal = null
+		elif "connected_portal_door" in door:
+			door.connected_portal_door = null
 		
-		if partner_door.front_portal == partner_portal:
+		if "front_portal" in partner_door and partner_door.front_portal == partner_portal:
 			partner_door.connected_front_portal = null
-		else:
+		elif "back_portal" in partner_door and partner_door.back_portal == partner_portal:
 			partner_door.connected_back_portal = null
+		elif "connected_portal_door" in partner_door:
+			partner_door.connected_portal_door = null
 			
 		#Update portal flags
-		door.is_portal = (door.front_portal.exit_portal != null or door.back_portal.exit_portal != null)
-		partner_door.is_portal = (partner_door.front_portal.exit_portal != null or partner_door.back_portal.exit_portal != null)
+		var active = false
+		for p in door.get_portals():
+			if p and p.exit_portal != null:
+				active = true
+		door.is_portal = active
+			
+		active = false
+		for p in partner_door.get_portals():
+			if p and p.exit_portal != null:
+				active = true
+		partner_door.is_portal = active
 		
 		#Update the physical blocking walls
 		door.update_walls()
@@ -241,18 +275,16 @@ func _on_peer_connected(id: int) -> void:
 		sync_portal_state.rpc_id(id, is_active, time_since_last_portal_creation, time_since_last_room_creation, time_since_last_item_duplication, portal_checkpoint)
 		
 		#Tell the new player about all currently active portal pairs
-		var all_portals = get_tree().get_nodes_in_group("Portals")
+		var all_portals = GameState.active_portals
 		for portal in all_portals:
 			if portal.is_portal:
-				if portal.front_portal.exit_portal != null:
-					var partner = portal.front_portal.exit_portal
-					if str(portal.front_portal.get_path()) > str(partner.get_path()):
-						sync_link_portals.rpc_id(id, portal.front_portal.get_path(), partner.get_path())
-						
-				if portal.back_portal.exit_portal != null:
-					var partner = portal.back_portal.exit_portal
-					if str(portal.back_portal.get_path()) > str(partner.get_path()):
-						sync_link_portals.rpc_id(id, portal.back_portal.get_path(), partner.get_path())
+				if portal.is_portal and portal.has_method("get_portals"):
+					for p in portal.get_portals():
+						if p and p.exit_portal != null:
+							var partner = p.exit_portal
+							#Compare node paths to ensure each unique bidirectional link is synchronized exactly once
+							if str(p.get_path()) > str(partner.get_path()):
+								sync_link_portals.rpc_id(id, p.get_path(), partner.get_path())
 
 #Sync the data to the new client
 @rpc("authority", "call_local", "reliable")
