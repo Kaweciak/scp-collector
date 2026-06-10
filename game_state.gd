@@ -146,4 +146,5 @@ func register_anomaly(anomaly: Node) -> void:
 
 #Removes an anomaly that exited the scene
 func unregister_anomaly(anomaly: Node) -> void:
-	active_anomalies.erase(anomaly)
+	if active_anomalies.has(anomaly):
+		active_anomalies.erase(anomaly)

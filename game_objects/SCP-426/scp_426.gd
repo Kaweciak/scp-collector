@@ -29,7 +29,7 @@ func _enter_tree() -> void:
 
 #Removes itself from the maintained anomaly list
 func _exit_tree() -> void:
-	GameState.register_anomaly(self)
+	GameState.unregister_anomaly(self)
 
 
 func _process(_delta: float) -> void:
