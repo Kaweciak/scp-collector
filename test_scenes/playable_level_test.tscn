@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dlyigf4pperl2" path="res://test_scenes/playable_level_test.gd" id="1_ej0qp"]
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="2_1aoms"]
-[ext_resource type="PackedScene" uid="uid://bskiuf3it3yto" path="res://game_objects/SCP-173/scp_173.tscn" id="3_sutao"]
 [ext_resource type="PackedScene" uid="uid://dx84qligg4usn" path="res://game_objects/doors/house_doors.tscn" id="3_yc33k"]
-[ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="4_ej0qp"]
 [ext_resource type="PackedScene" uid="uid://diln36m863vwt" path="res://game_objects/SCP-184/scp_184.tscn" id="5_6l8mq"]
 [ext_resource type="NavigationMesh" uid="uid://bwc3bx4xlokke" path="res://game_objects/SCP-173/scp_173_navigation_mesh.tres" id="5_pg44s"]
 
@@ -38,15 +36,9 @@ shadow_enabled = true
 
 [node name="Anomalies" type="Node3D" parent="." unique_id=796600648]
 
-[node name="Toaster" parent="Anomalies" unique_id=843890881 instance=ExtResource("4_ej0qp")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2105255, -1.8245118, 7.2158527)
-
 [node name="Scp184" parent="Anomalies" unique_id=273090344 groups=["Anomaly"] instance=ExtResource("5_6l8mq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.248845, -1.6686045, 7.1034355)
 mass = 5.79
-
-[node name="Scp173" parent="Anomalies" unique_id=1821968034 instance=ExtResource("3_sutao")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.697926, -1.4912865, 3.6861696)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=1270998505]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.597102, -2.0138817, 10.676552)

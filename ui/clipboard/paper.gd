@@ -46,34 +46,44 @@ func _screen_signal(arg = null, signal_name: String = ""):
 	if arg is String and signal_name == "":
 		signal_name = arg
 		args = []
-
+	
 	elif arg is Array:
 		args = arg
-
+	
 	elif arg != null:
 		args = [arg]
-
+	
 	emit_signal("screen_event", signal_name, args)
 
 func forward_keyboard_input(event: InputEvent):
 	sub_viewport.push_input(event.duplicate())
 
 func forward_mouse_input(event: InputEvent, ray_result: Dictionary):
+	print("Forward_mouse_input triggered by the Main Menu")
+	
+	if not is_node_ready() or not sub_viewport.is_inside_tree():
+		print("Guard clause activated")
+		return
+		
+	print("Guard clause passed")
+	
 	var ev := event.duplicate()
-
+	
 	var hit_pos: Vector3 = ray_result.position
-
+	
 	var local_pos: Vector3 = global_transform.affine_inverse() * hit_pos
-
+	
 	var box_shape: BoxShape3D = $StaticBody3D/CollisionShape3D.shape
 	var extents: Vector3 = box_shape.size
-
+	
 	var uv_x = (local_pos.x + extents.x * 0.5) / extents.x # idk why I have to add extents only here, but it works i guess
 	var uv_y = (local_pos.z) / extents.z
-
+	
 	var viewport_size: Vector2 = sub_viewport.size
 	var pixel_pos = Vector2(uv_x, uv_y) * viewport_size
-
+	
 	ev.position = Vector2(pixel_pos)
-
+	
+	print("Viewport is_inside_tree status: ", sub_viewport.is_inside_tree())
 	sub_viewport.push_input(ev, false)
+	print("Input pushed successfully")

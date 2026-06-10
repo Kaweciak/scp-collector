@@ -39,7 +39,6 @@ func _on_paper_screen_event(event_name: String, args: Array = []) -> void:
 			_flip_page_to("TitleScreenPage")
 
 
-
 func _flip_page_to(page_name: String) -> bool:
 	if page_name not in pages:
 		print(page_name + " not a valid page")
@@ -69,14 +68,20 @@ func _flip_page_to(page_name: String) -> bool:
 	return true
 
 func _host_game(nickname: String) -> void:
+	print("Hosting game lobby")
 	MultiplayerController.host(nickname)
-
-	get_tree().change_scene_to_packed(lobby_scene)
+	
+	set_process_unhandled_input(false)
+	
+	get_tree().call_deferred("change_scene_to_packed", lobby_scene)
 
 func _join_game(ip: String, nickname: String) -> void:
+	print("Joining game lobby")
 	MultiplayerController.join(ip, nickname)
-
-	get_tree().change_scene_to_packed(lobby_scene)
+	
+	set_process_unhandled_input(false)
+	
+	get_tree().call_deferred("change_scene_to_packed", lobby_scene)
 
 func _start_tutorial() -> void:
 	MultiplayerController.host("Player")

@@ -131,7 +131,7 @@ func _ready() -> void:
 		clone.spot_angle = flashlight.spot_angle
 		clone.light_projector = flashlight.light_projector
 
-		get_tree().root.call_deferred("add_child", clone)
+		get_tree().current_scene.call_deferred("add_child", clone)
 		clone.hide()
 		clone_flashlights.append(clone)
 
@@ -147,12 +147,12 @@ func _ready() -> void:
 			m.set_layer_mask_value(2, true)
 
 		#Inject the camera for all portals in the scene
-		var all_portals = get_tree().get_nodes_in_group("Portals")
+		var all_portals = GameState.active_portals
 		for portal in all_portals:
-			if portal.back_portal is Portal3D:
-				portal.back_portal.player_camera = camera
-			if portal.front_portal is Portal3D:
-				portal.front_portal.player_camera = camera
+			if portal.has_method("get_portals"):
+				for sub_portal in portal.get_portals():
+					if sub_portal is Portal3D:
+						sub_portal.player_camera = camera
 
 
 func _physics_process(delta: float) -> void:
@@ -162,28 +162,32 @@ func _physics_process(delta: float) -> void:
 		if dead:
 			_update_spectator_camera()
 			return
-
-		#Calculate coyote timer for better feeling jump mechanics
-		var on_floor: bool = is_on_floor()
-		if on_floor:
-			coyote_timer = coyote_time
+		
+		#Check if the noclip is enabled
+		if admin_noclip_enabled:
+			_process_noclip(delta)
 		else:
-			coyote_timer = max(coyote_timer - delta, 0.0)
+			#Calculate coyote timer for better feeling jump mechanics
+			var on_floor: bool = is_on_floor()
+			if on_floor:
+				coyote_timer = coyote_time
+			else:
+				coyote_timer = max(coyote_timer - delta, 0.0)
 
-		#Check if the player jumped
-		if Input.is_action_just_pressed("jump"):
-			jumping = true
+			#Check if the player jumped
+			if Input.is_action_just_pressed("jump"):
+				jumping = true
 
-		#Check for and process the player crouching
-		if tried_uncroaching:
-			_try_uncroach()
+			#Check for and process the player crouching
+			if tried_uncroaching:
+				_try_uncroach()
 
-		#Process movement logic
-		velocity = _walk(delta) + _gravity(delta) + _jump(delta)
-		move_and_slide()
+			#Process movement logic
+			velocity = _walk(delta) + _gravity(delta) + _jump(delta)
+			move_and_slide()
 
-		#Apply force to RigidBody collision objects
-		_push_objects(delta)
+			#Apply force to RigidBody collision objects
+			_push_objects(delta)
 
 		#Process player animation
 		_update_animation()
@@ -210,13 +214,26 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	#Debug logic processing
-	if event is InputEventKey:
-		if event.is_action_pressed("debug_activate"):
-			debug_mode_enabled = !debug_mode_enabled
-			DebugOverlay._toggle_debug_mode(debug_mode_enabled)
-		elif debug_mode_enabled:
-			if event.is_action_pressed("debug_death"):
-				death.rpc()
+	if GameState.global_cheats_enabled:
+		if event is InputEventKey and event.pressed and not event.echo:
+			if Input.is_action_pressed("debug_activate"):
+				if event.is_action_pressed("debug_info"):
+					debug_mode_enabled = !debug_mode_enabled
+					DebugOverlay._toggle_debug_mode(debug_mode_enabled)
+					get_viewport().set_input_as_handled()
+					return
+				elif event.is_action_pressed("godmode"):
+					admin_immortality_enabled = !admin_immortality_enabled
+					get_viewport().set_input_as_handled()
+					return
+				elif event.is_action_pressed("noclip"):
+					_toggle_noclip()
+					get_viewport().set_input_as_handled()
+					return
+				elif Input.is_action_pressed("debug_death"):
+					death.rpc()
+					get_viewport().set_input_as_handled()
+					return
 
 	#Process spectator inputs
 	if dead:
@@ -450,7 +467,8 @@ func _interact() -> void:
 #Multiplayer synched death processing logic
 @rpc("call_local", "any_peer")
 func death() -> void:
-	if dead: return
+	#Return early if already dead or if godmode is enabled
+	if dead or admin_immortality_enabled: return
 	dead = true
 
 	emit_signal("died")
@@ -507,22 +525,19 @@ func _update_held():
 
 	#Check if the held object and target are physically separated
 	if held.global_position.distance_squared_to(target) > 6.0:
-		var all_portals = get_tree().get_nodes_in_group("Portals")
+		var all_portals = GameState.active_portals
 		var closest_portal_to_held = null
 		var min_dist_to_held = INF
 
 		#Find the portal closest to the held object
 		for p in all_portals:
-			if p.back_portal is Portal3D and p.back_portal.exit_portal != null:
-				var dist = p.back_portal.global_position.distance_squared_to(held.global_position)
-				if dist < min_dist_to_held:
-					min_dist_to_held = dist
-					closest_portal_to_held = p.back_portal
-			if p.front_portal is Portal3D and p.front_portal.exit_portal != null:
-				var dist = p.front_portal.global_position.distance_squared_to(held.global_position)
-				if dist < min_dist_to_held:
-					min_dist_to_held = dist
-					closest_portal_to_held = p.front_portal
+			if p.has_method("get_portals"):
+				for sub_portal in p.get_portals():
+					if sub_portal is Portal3D and sub_portal.exit_portal != null:
+						var dist = sub_portal.global_position.distance_squared_to(held.global_position)
+						if dist < min_dist_to_held:
+							min_dist_to_held = dist
+							closest_portal_to_held = sub_portal
 
 		#If a portal was found, verify the player is near its connected exit
 		if closest_portal_to_held != null:
@@ -544,13 +559,19 @@ func _update_held():
 func _process_sanity(delta: float) -> void:
 	if not GameState.toaster_present or dead:
 		return
+		
+	#Set sanity to max if godmode is active
+	if admin_immortality_enabled:
+		sanity = 100.0
+		hud.update_distortion(0.0)
+		return
 
 	var sanity_drain = 0.0
 
 	#Check if the player's eyes are closed for the visual sanity drain
 	if not current_eyes_state == Eyes_state.CLOSED:
 		#Find the Toaster in the scene
-		var anomalies = get_tree().get_nodes_in_group("Anomaly")
+		var anomalies = GameState.active_anomalies
 		for anomaly in anomalies:
 			if anomaly is Toaster:
 				#Get the corners of the model
@@ -710,9 +731,11 @@ func _update_portal_flashlight() -> void:
 	var used_clones = 0
 
 	#Get all portals in the scene
-	var all_portals = get_tree().get_nodes_in_group("Portals")
+	var all_portals = GameState.active_portals
 	#Pre-calculate cone boundaries
 	var max_dist_sq = flashlight.spot_range * flashlight.spot_range
+	#SpotLight3D points along the -Z axis
+	var light_forward = -flashlight.global_transform.basis.z.normalized()
 
 	for p in all_portals:
 		#Stop if the flashlight clones were exhausted
@@ -728,7 +751,7 @@ func _update_portal_flashlight() -> void:
 
 			#Check if the portal is active
 			if sub_portal is Portal3D and sub_portal.exit_portal != null:
-				if sub_portal.forward_distance(camera) <= 0.0:
+				if sub_portal.forward_distance(flashlight) <= 0.0:
 					continue
 
 				#Check the distance between the portal and the camera
@@ -754,15 +777,21 @@ func _update_portal_flashlight() -> void:
 						sub_portal.global_position - right - up  #Bottom Left
 					]
 
-					#Check if any of the portal corners are inside the player camera frustum
-					var is_visible_on_screen = false
+					#Evaluate if any of the portal corners intersect the flashlight's cone
+					var is_in_light_cone = false
 					for pt in points_to_check:
-						if camera.is_position_in_frustum(pt):
-							is_visible_on_screen = true
+						var dir_to_pt = (pt - flashlight.global_position).normalized()
+						#Clamp the dot product to avoid floating point imprecision
+						var dot_val = clamp(dir_to_pt.dot(light_forward), -1.0, 1.0)
+						var angle = rad_to_deg(acos(dot_val))
+						
+						#Compare the calculated angle to the spot_angle
+						if angle <= flashlight.spot_angle:
+							is_in_light_cone = true
 							break
 
-					#Raycast if visible to ensure no walls are blocking the portal
-					if is_visible_on_screen:
+					#Raycast if in light cone to ensure no walls are blocking the portal
+					if is_in_light_cone:
 						var space_state = get_world_3d().direct_space_state
 						var is_not_blocked = false
 
@@ -801,3 +830,34 @@ func _update_portal_flashlight() -> void:
 	for i in range(used_clones, max_flashlight_clones):
 		if is_instance_valid(clone_flashlights[i]):
 			clone_flashlights[i].hide()
+			
+#Toggles the collision shapes and states for noclip cheats
+func _toggle_noclip() -> void:
+	admin_noclip_enabled = !admin_noclip_enabled
+	if admin_noclip_enabled:
+		base_collision.disabled = true
+		crouch_collision.disabled = true
+	else:
+		base_collision.disabled = false
+		if crouching:
+			_crouch()
+
+#Processes unconstrained camera-directed flying
+func _process_noclip(delta: float) -> void:
+	#Declare variables used to determine the flight direction
+	move_dir = Input.get_vector(&"left", &"right", &"forwards", &"backwards")
+	var fly_dir: Vector3 = Vector3.ZERO
+	
+	#Get the direction where the player is looking
+	if move_dir.length() > 0:
+		fly_dir = (camera.global_transform.basis * Vector3(move_dir.x, 0, move_dir.y)).normalized()
+	
+	#Vertical movement controls
+	if Input.is_action_pressed("jump"):
+		fly_dir += Vector3.UP
+	if Input.is_action_pressed("crouch"):
+		fly_dir += Vector3.DOWN
+	
+	#Apply the movement
+	var current_fly_speed = speed * sprint_factor * 2.0 if sprinting else speed * 2.0
+	global_position += fly_dir.normalized() * current_fly_speed * delta

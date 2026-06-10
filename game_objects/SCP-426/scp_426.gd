@@ -23,6 +23,15 @@ func _ready() -> void:
 	if checkpoints.is_empty():
 		printerr("Sanity checkpoints cannot be empty!")
 
+#Adds itself to the maintained anomaly list
+func _enter_tree() -> void:
+	GameState.register_anomaly(self)
+
+#Removes itself from the maintained anomaly list
+func _exit_tree() -> void:
+	GameState.unregister_anomaly(self)
+
+
 func _process(_delta: float) -> void:
 	#Adjust sanity drain effect based on the time since first encountered
 	if multiplayer.is_server() and GameState.sanity_drain_first_activated:

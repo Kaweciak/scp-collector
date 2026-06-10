@@ -28,7 +28,7 @@ func sync_reload() -> void:
 	GameState.reset_game_state.rpc()
 
 	#Reload the scene
-	get_tree().reload_current_scene()
+	get_tree().call_deferred("reload_current_scene")
 
 #Check game over conditions
 func _check_game_over() -> void:
