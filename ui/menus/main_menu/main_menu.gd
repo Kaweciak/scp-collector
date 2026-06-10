@@ -37,6 +37,8 @@ func _on_paper_screen_event(event_name: String, args: Array = []) -> void:
 			_host_game(args[0])
 		"join_game":
 			_join_game(args[0], args[1])
+		"settings_pressed":
+			_flip_page_to("SettingsScreenPage")
 		"return_pressed":
 			_flip_page_to("TitleScreenPage")
 
