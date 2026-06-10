@@ -29,6 +29,7 @@
 [ext_resource type="PackedScene" uid="uid://bi1xywo2ohhm" path="res://levels/factory/assets/factory_props/crate.tscn" id="26_my1lk"]
 [ext_resource type="PackedScene" uid="uid://tv0d30n8flbs" path="res://levels/factory/assets/factory_props/cart.tscn" id="27_uka0h"]
 [ext_resource type="PackedScene" uid="uid://bqudetji1e06n" path="res://levels/factory/assets/factory_props/pipe_short.tscn" id="29_o6pmt"]
+[ext_resource type="AudioStream" uid="uid://ddb5bmuxo7pwd" path="res://ambient_sounds/Vent_airflow.wav" id="30_ej2dp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3xbg0"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -2532,3 +2533,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.572992, 1.1032639, -28.75
 
 [node name="PipeShort" parent="Props" unique_id=727796309 instance=ExtResource("29_o6pmt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.135115, 2.5260944, -38.76667)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=735105758]
+stream = ExtResource("30_ej2dp")
+autoplay = true

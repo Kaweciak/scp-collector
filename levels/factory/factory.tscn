@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://tv0d30n8flbs" path="res://levels/factory/assets/factory_props/cart.tscn" id="24_j6h0s"]
 [ext_resource type="PackedScene" uid="uid://dj5urbnbhm84w" path="res://levels/factory/assets/factory_props/barrel.tscn" id="25_egfj8"]
 [ext_resource type="PackedScene" uid="uid://clk4aoocvlexo" path="res://levels/factory/assets/factory_props/pipe_valve.tscn" id="26_8a2xl"]
+[ext_resource type="AudioStream" uid="uid://ddb5bmuxo7pwd" path="res://ambient_sounds/Vent_airflow.wav" id="27_40233"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3xbg0"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -1665,3 +1666,7 @@ transform = Transform3D(0.81531984, -0.57901084, -2.5309367e-08, 0, -4.371139e-0
 
 [node name="Container_17" parent="props" unique_id=1917424087 instance=ExtResource("15_rtrpl")]
 transform = Transform3D(-0.055124503, -0.9984795, -4.3644924e-08, 0, -4.371139e-08, 1, -0.9984795, 0.055124503, 2.4095685e-09, 3.8758411, 2.3466554, -31.214907)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=282405852]
+stream = ExtResource("27_40233")
+autoplay = true

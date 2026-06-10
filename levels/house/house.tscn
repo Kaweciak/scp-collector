@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="3_3xbg0"]
 [ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="3_xt4br"]
 [ext_resource type="PackedScene" uid="uid://bskiuf3it3yto" path="res://game_objects/SCP-173/scp_173.tscn" id="4_bv610"]
+[ext_resource type="AudioStream" uid="uid://ddb5bmuxo7pwd" path="res://ambient_sounds/Vent_airflow.wav" id="7_vk5rs"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3xbg0"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -909,3 +910,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.66782, 5.0471797, -5.572810
 
 [node name="Marker3D7" type="Marker3D" parent="AnomalySpawns" unique_id=1347013732]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.755421, 0.77619135, -14.919712)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1514941927]
+stream = ExtResource("7_vk5rs")
+autoplay = true
