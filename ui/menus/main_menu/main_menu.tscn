@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" uid="uid://bpkyy0wa18fxg" path="res://ui/menus/screens/join_screen/join_screen.tscn" id="7_0rrps"]
 [ext_resource type="PackedScene" uid="uid://dhpbrm8e0oi3u" path="res://game_objects/decorations/flat_desk_top/flat_desk_top.tscn" id="7_m57jf"]
 [ext_resource type="PackedScene" uid="uid://bctf3wfpgtdgx" path="res://ui/menus/screens/host_screen/host_screen.tscn" id="9_tn877"]
+[ext_resource type="PackedScene" uid="uid://co66o7htx5cl8" path="res://ui/menus/screens/settings_screen/settings_screen.tscn" id="11_r2gs1"]
+[ext_resource type="AudioStream" uid="uid://cu4hcp8ngeerb" path="res://ui/clipboard/page_flip.mp3" id="13_vdhl0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_igis3"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -65,6 +67,10 @@ screen_scene = ExtResource("9_tn877")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.021, -0.298)
 screen_scene = ExtResource("7_0rrps")
 
+[node name="SettingsScreenPage" parent="Pages" unique_id=1865393941 instance=ExtResource("3_j3h1s")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.99999994, 0, 0.02, -0.298)
+screen_scene = ExtResource("11_r2gs1")
+
 [node name="Decorations" type="Node3D" parent="." unique_id=998910503]
 
 [node name="Lamp" parent="Decorations" unique_id=1050655681 instance=ExtResource("6_igis3")]
@@ -76,8 +82,13 @@ spot_range = 2.0
 
 [node name="FlatDeskTop" parent="Decorations" unique_id=523672489 instance=ExtResource("7_m57jf")]
 
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=2006605477]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.40112817)
+stream = ExtResource("13_vdhl0")
+
 [connection signal="screen_event" from="Pages/TitleScreenPage" to="." method="_on_paper_screen_event"]
 [connection signal="screen_event" from="Pages/StartGameScreenPage" to="." method="_on_paper_screen_event"]
 [connection signal="screen_event" from="Pages/ExtrasScreenPage" to="." method="_on_paper_screen_event"]
 [connection signal="screen_event" from="Pages/HostGameScreenPage" to="." method="_on_paper_screen_event"]
 [connection signal="screen_event" from="Pages/JoinGameScreenPage" to="." method="_on_paper_screen_event"]
+[connection signal="screen_event" from="Pages/SettingsScreenPage" to="." method="_on_paper_screen_event"]

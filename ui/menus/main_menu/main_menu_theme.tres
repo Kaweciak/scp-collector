@@ -1,6 +1,8 @@
 [gd_resource type="Theme" format=3 uid="uid://bxvf2f7vgqd4h"]
 
 [ext_resource type="FontFile" uid="uid://buyckl5t2s0ic" path="res://ui/fonts/JosefinSans-BoldItalic.ttf" id="1_bflbr"]
+[ext_resource type="Texture2D" uid="uid://cs6q4msutd6kc" path="res://levels/lobby/level_selector/checkbox_checked.png" id="1_epiep"]
+[ext_resource type="Texture2D" uid="uid://bkfeviuvdmxk7" path="res://levels/lobby/level_selector/checkbox_empty.png" id="2_3ynsn"]
 
 [resource]
 default_font = ExtResource("1_bflbr")
@@ -12,6 +14,8 @@ Button/colors/font_hover_color = Color(0.22382358, 0.22382358, 0.22382355, 1)
 Button/colors/font_hover_pressed_color = Color(0.46929657, 0.46929651, 0.46929651, 1)
 Button/colors/font_outline_color = Color(0, 0, 0, 0)
 Button/colors/font_pressed_color = Color(0, 0, 0, 1)
+CheckBox/icons/checked = ExtResource("1_epiep")
+CheckBox/icons/unchecked = ExtResource("2_3ynsn")
 Label/colors/font_color = Color(0, 0, 0, 1)
 LineEdit/colors/caret_color = Color(0.043951854, 0.04395192, 0.043952137, 1)
 LineEdit/colors/font_color = Color(0, 0, 0, 1)

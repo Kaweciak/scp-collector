@@ -24,6 +24,12 @@ var coyote_timer: float = 0.0
 @export var player_mass: float = 80.0
 @export var terminal_velocity: float = -30.0
 
+
+@export var walk_step_interval: float = 0.55
+@export var run_step_interval: float = 0.35
+
+var footstep_timer: float = 0.0
+
 #Movement variables
 var sprinting: bool = false
 var crouching: bool = false
@@ -105,6 +111,12 @@ var clone_flashlights: Array[SpotLight3D] = []
 
 @onready var end_game_info: Label = $MainCamera/EndGameInfo
 
+@onready var audio_stream_player: AudioStreamPlayer3D = $AudioStreamPlayer3D
+
+var walk_sound: AudioStream = preload("res://player/sounds/Footsteps_walking.wav")
+var run_sound: AudioStream = preload("res://player/sounds/Footsteps_ running.wav")
+var death_sound: AudioStream = preload("res://player/sounds/death.mp3")
+
 func _enter_tree() -> void:
 	set_multiplayer_authority(name.to_int())
 
@@ -162,7 +174,7 @@ func _physics_process(delta: float) -> void:
 		if dead:
 			_update_spectator_camera()
 			return
-		
+
 		#Check if the noclip is enabled
 		if admin_noclip_enabled:
 			_process_noclip(delta)
@@ -192,11 +204,15 @@ func _physics_process(delta: float) -> void:
 		#Process player animation
 		_update_animation()
 
+		_process_footsteps(delta)
+
 		#Process sanity drain for SCP-426
 		_process_sanity(delta)
 
 		#Process blinking mechanics
 		_process_blinking(delta)
+
+		_update_interaction_cursor()
 
 	#Process entity holding mechanics
 	if is_multiplayer_authority() or multiplayer.is_server():
@@ -481,6 +497,9 @@ func death() -> void:
 	#Hide the model for everyone but the dead player
 	model.visible = !is_multiplayer_authority()
 
+	audio_stream_player.stream = death_sound
+	audio_stream_player.play()
+
 
 #Find the next spectator POV
 func _find_next_spectate_target() -> void:
@@ -559,7 +578,7 @@ func _update_held():
 func _process_sanity(delta: float) -> void:
 	if not GameState.toaster_present or dead:
 		return
-		
+
 	#Set sanity to max if godmode is active
 	if admin_immortality_enabled:
 		sanity = 100.0
@@ -625,6 +644,37 @@ func _process_sanity(delta: float) -> void:
 		sanity = 100.0
 		hud.update_distortion(0.0)
 		death.rpc()
+
+func _process_footsteps(delta: float) -> void:
+	if dead:
+		audio_stream_player.stop()
+		return
+
+	var is_moving := move_dir.length() > 0.1
+
+	if not is_moving or not is_on_floor():
+		footstep_timer = 0.0
+
+		if audio_stream_player.playing:
+			audio_stream_player.stop()
+
+		return
+
+	var interval := run_step_interval if sprinting else walk_step_interval
+
+	footstep_timer += delta
+
+	if footstep_timer >= interval:
+		footstep_timer = 0.0
+
+		var target_stream := run_sound if sprinting else walk_sound
+
+		if audio_stream_player.stream != target_stream:
+			audio_stream_player.stop()
+			audio_stream_player.stream = target_stream
+
+		if not audio_stream_player.playing:
+			audio_stream_player.play()
 
 #Process the player's blinking timer and input
 func _process_blinking(delta) -> void:
@@ -718,6 +768,20 @@ func _toggle_flashlight(state: bool) -> void:
 		flashlight.visible = state
 		flashlight.light_energy = flashlight_energy
 
+func _update_interaction_cursor() -> void:
+	if not is_multiplayer_authority() or dead:
+		hud.update_cursor(false)
+		return
+
+	var collider = interaction_raycast.get_collider()
+
+	var hovering := (
+		collider is Interactable
+		or collider is RigidBody3D
+	)
+
+	hud.update_cursor(hovering)
+
 #Projects the flashlight through any portals within the light cone
 func _update_portal_flashlight() -> void:
 	#If the flashlight is off, hide all clones and exit
@@ -784,7 +848,7 @@ func _update_portal_flashlight() -> void:
 						#Clamp the dot product to avoid floating point imprecision
 						var dot_val = clamp(dir_to_pt.dot(light_forward), -1.0, 1.0)
 						var angle = rad_to_deg(acos(dot_val))
-						
+
 						#Compare the calculated angle to the spot_angle
 						if angle <= flashlight.spot_angle:
 							is_in_light_cone = true
@@ -830,7 +894,7 @@ func _update_portal_flashlight() -> void:
 	for i in range(used_clones, max_flashlight_clones):
 		if is_instance_valid(clone_flashlights[i]):
 			clone_flashlights[i].hide()
-			
+
 #Toggles the collision shapes and states for noclip cheats
 func _toggle_noclip() -> void:
 	admin_noclip_enabled = !admin_noclip_enabled
@@ -847,17 +911,17 @@ func _process_noclip(delta: float) -> void:
 	#Declare variables used to determine the flight direction
 	move_dir = Input.get_vector(&"left", &"right", &"forwards", &"backwards")
 	var fly_dir: Vector3 = Vector3.ZERO
-	
+
 	#Get the direction where the player is looking
 	if move_dir.length() > 0:
 		fly_dir = (camera.global_transform.basis * Vector3(move_dir.x, 0, move_dir.y)).normalized()
-	
+
 	#Vertical movement controls
 	if Input.is_action_pressed("jump"):
 		fly_dir += Vector3.UP
 	if Input.is_action_pressed("crouch"):
 		fly_dir += Vector3.DOWN
-	
+
 	#Apply the movement
 	var current_fly_speed = speed * sprint_factor * 2.0 if sprinting else speed * 2.0
 	global_position += fly_dir.normalized() * current_fly_speed * delta

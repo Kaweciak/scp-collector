@@ -23,7 +23,7 @@ var map_votes := {}
 
 var maps := {
 	"House": "res://levels/house/house.tscn",
-	"Factory": "res://test_scenes/playable_level_test.tscn",
+	"Factory": "res://levels/factory/factory.tscn",
 	"Lab": "res://levels/lab/lab.tscn"
 }
 
