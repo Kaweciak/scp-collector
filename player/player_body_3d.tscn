@@ -5,6 +5,7 @@
 [ext_resource type="Shader" uid="uid://brlqm58kcl17r" path="res://player/sanity_distortion.gdshader" id="2_ryni8"]
 [ext_resource type="Shader" uid="uid://bss1vsl4apqyh" path="res://player/BlinkingShader.gdshader" id="4_pyi6a"]
 [ext_resource type="PackedScene" uid="uid://cb7eyfa8i7nlo" path="res://ui/menus/pause_menu/pause_menu.tscn" id="4_qh2r7"]
+[ext_resource type="Texture2D" uid="uid://bdufxya084mk3" path="res://player/line_cross.png" id="5_467px"]
 [ext_resource type="PackedScene" uid="uid://dst2bsilth5mb" path="res://player/model/player_model.res" id="5_qh2r7"]
 [ext_resource type="Theme" uid="uid://cqruciomkq3xh" path="res://ui/menus/pause_menu/pause_menu_theme.tres" id="6_iveab"]
 
@@ -133,6 +134,22 @@ collide_with_areas = true
 
 [node name="HUD" type="CanvasLayer" parent="MainCamera" unique_id=1812656686]
 script = ExtResource("2_rjoga")
+
+[node name="Cursor" type="TextureRect" parent="MainCamera/HUD" unique_id=1896477587]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+texture = ExtResource("5_467px")
 
 [node name="SanityFilter" type="ColorRect" parent="MainCamera/HUD" unique_id=195940665]
 material = SubResource("ShaderMaterial_rjoga")
