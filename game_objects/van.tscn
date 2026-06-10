@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://b6mkvk6wm72oj"]
 
+[ext_resource type="FontFile" uid="uid://buyckl5t2s0ic" path="res://ui/fonts/JosefinSans-BoldItalic.ttf" id="1_o52dy"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2tban"]
 albedo_color = Color(0.13464907, 0.1346491, 0.1346491, 1)
 
@@ -8,6 +10,19 @@ data = PackedVector3Array(-0.7763672, 0.08544922, -3.9104004, -0.7763672, 0.1912
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2tban"]
 size = Vector3(3.034607, 3.762268, 5.553711)
+
+[sub_resource type="BoxMesh" id="BoxMesh_yfgc1"]
+size = Vector3(0.05, 0.05, 2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_25upq"]
+size = Vector3(0.05, 0.05, 1.25)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qrm0w"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_8rntq"]
+material = SubResource("StandardMaterial3D_qrm0w")
+size = Vector2(1.25, 2)
 
 [node name="Van" type="StaticBody3D" unique_id=1665049532]
 collision_mask = 0
@@ -76,3 +91,36 @@ shape = SubResource("BoxShape3D_2tban")
 [node name="NavigationLink3D" type="NavigationLink3D" parent="." unique_id=1752625203]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.06450069, 0.8951038)
 end_position = Vector3(0.5527607, 0.75456125, -0.7221961)
+
+[node name="Monitor1" type="Node3D" parent="." unique_id=1545109777]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.354728, 2.1170015, -3.1597695)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Monitor1" unique_id=917696745]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0.025)
+mesh = SubResource("BoxMesh_yfgc1")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Monitor1" unique_id=1805605039]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.15, 1)
+mesh = SubResource("BoxMesh_25upq")
+
+[node name="MeshInstance3D4" type="MeshInstance3D" parent="Monitor1" unique_id=2089926957]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.1, -1)
+mesh = SubResource("BoxMesh_25upq")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Monitor1" unique_id=551725401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -0.025)
+mesh = SubResource("BoxMesh_yfgc1")
+
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="Monitor1" unique_id=1180457916]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0.0024336576, 0.12085736, 0)
+mesh = SubResource("PlaneMesh_8rntq")
+
+[node name="Label3D" type="Label3D" parent="Monitor1" unique_id=973599150]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.0025515556, 0.1316849, 0)
+text = "Go explore the location,
+find the SCP and bring it
+back to the van.
+Press ESC and go to
+\"Anomalies\" to find out
+more about them."
+font = ExtResource("1_o52dy")

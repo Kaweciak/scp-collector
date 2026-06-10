@@ -5,8 +5,6 @@
 [ext_resource type="PackedScene" uid="uid://diln36m863vwt" path="res://game_objects/SCP-184/scp_184.tscn" id="2_hqfmh"]
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="3_3xbg0"]
 [ext_resource type="PackedScene" uid="uid://cf25du2g6k7nj" path="res://game_objects/doors/manor_doors.tscn" id="6_hqfmh"]
-[ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="3_xt4br"]
-[ext_resource type="PackedScene" uid="uid://bskiuf3it3yto" path="res://game_objects/SCP-173/scp_173.tscn" id="4_bv610"]
 [ext_resource type="AudioStream" uid="uid://ddb5bmuxo7pwd" path="res://ambient_sounds/Vent_airflow.wav" id="7_vk5rs"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3xbg0"]
@@ -318,7 +316,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38916016, 4, -19)
 size = Vector3(23, 9, 1)
 
 [node name="PlayerContainer" type="Node3D" parent="." unique_id=33540505]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, 15)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=36991001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0046658516, -1.1920929e-07, 0.0036978722)
