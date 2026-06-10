@@ -2,9 +2,10 @@
 
 [ext_resource type="Script" uid="uid://bo0spnwujjijg" path="res://levels/level_controller.gd" id="1_nll3y"]
 [ext_resource type="PackedScene" uid="uid://b6p1tu4lsdsbg" path="res://levels/house/assests/house2.glb" id="1_uu7lh"]
+[ext_resource type="PackedScene" uid="uid://diln36m863vwt" path="res://game_objects/SCP-184/scp_184.tscn" id="2_hqfmh"]
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="3_3xbg0"]
-[ext_resource type="PackedScene" uid="uid://bskiuf3it3yto" path="res://game_objects/SCP-173/scp_173.tscn" id="4_bv610"]
 [ext_resource type="NavigationMesh" uid="uid://bwc3bx4xlokke" path="res://game_objects/SCP-173/scp_173_navigation_mesh.tres" id="4_j0pwv"]
+[ext_resource type="PackedScene" uid="uid://cf25du2g6k7nj" path="res://game_objects/doors/manor_doors.tscn" id="6_hqfmh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3xbg0"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -291,7 +292,7 @@ size = Vector3(2.6858597, 1, 1.4397085)
 
 [node name="House" type="Node3D" unique_id=1062811088]
 script = ExtResource("1_nll3y")
-anomaly_scenes = Array[PackedScene]([ExtResource("4_bv610")])
+anomaly_scenes = Array[PackedScene]([ExtResource("2_hqfmh")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1114252263]
 environment = SubResource("Environment_2vnkb")
@@ -874,6 +875,15 @@ shape = SubResource("BoxShape3D_2vnkb")
 
 [node name="Van" parent="NavigationRegion3D" unique_id=1665049532 instance=ExtResource("3_3xbg0")]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.7521715, 0.75024915, 15.476159)
+
+[node name="PortalLocations" type="Node3D" parent="NavigationRegion3D" unique_id=79693283]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.597102, 2.0138817, -10.676552)
+
+[node name="ManorDoors" parent="NavigationRegion3D/PortalLocations" unique_id=677386291 instance=ExtResource("6_hqfmh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2960157, -1.4211297, 9.058163)
+
+[node name="ManorDoors2" parent="NavigationRegion3D/PortalLocations" unique_id=708271564 instance=ExtResource("6_hqfmh")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2960157, -1.4211297, 2.0350208)
 
 [node name="AnomalyContainer" type="Node3D" parent="." unique_id=238797602]
 

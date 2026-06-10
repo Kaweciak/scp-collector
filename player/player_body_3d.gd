@@ -149,10 +149,10 @@ func _ready() -> void:
 		#Inject the camera for all portals in the scene
 		var all_portals = GameState.active_portals
 		for portal in all_portals:
-			if portal.back_portal is Portal3D:
-				portal.back_portal.player_camera = camera
-			if portal.front_portal is Portal3D:
-				portal.front_portal.player_camera = camera
+			if portal.has_method("get_portals"):
+				for sub_portal in portal.get_portals():
+					if sub_portal is Portal3D:
+						sub_portal.player_camera = camera
 
 
 func _physics_process(delta: float) -> void:
@@ -531,16 +531,13 @@ func _update_held():
 
 		#Find the portal closest to the held object
 		for p in all_portals:
-			if p.back_portal is Portal3D and p.back_portal.exit_portal != null:
-				var dist = p.back_portal.global_position.distance_squared_to(held.global_position)
-				if dist < min_dist_to_held:
-					min_dist_to_held = dist
-					closest_portal_to_held = p.back_portal
-			if p.front_portal is Portal3D and p.front_portal.exit_portal != null:
-				var dist = p.front_portal.global_position.distance_squared_to(held.global_position)
-				if dist < min_dist_to_held:
-					min_dist_to_held = dist
-					closest_portal_to_held = p.front_portal
+			if p.has_method("get_portals"):
+				for sub_portal in p.get_portals():
+					if sub_portal is Portal3D and sub_portal.exit_portal != null:
+						var dist = sub_portal.global_position.distance_squared_to(held.global_position)
+						if dist < min_dist_to_held:
+							min_dist_to_held = dist
+							closest_portal_to_held = sub_portal
 
 		#If a portal was found, verify the player is near its connected exit
 		if closest_portal_to_held != null:

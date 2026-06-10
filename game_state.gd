@@ -43,15 +43,10 @@ func reset_game_state() -> void:
 	
 	current_game_time_elapsed = 0.0
 	is_game_in_progress = false
-
+	
+	sanity_drain_first_activated = false
 	sanity_regeneration_rate = 0.5
 	time_since_sanity_drain_first_activated = 0.0
-	sanity_drain_first_activated = false
-	toaster_present = false
-	
-	#Clear entity registries
-	active_portals.clear()
-	active_anomalies.clear()
 
 #Allows the server to set the global sanity mechanic state
 @rpc("authority", "call_local", "reliable")

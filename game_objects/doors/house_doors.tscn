@@ -248,11 +248,11 @@ size = Vector3(1.75, 1.9, 0.1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_gi5sw"]
 size = Vector3(0.01, 1.91, 1.75)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fd73q"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7jqqt"]
 albedo_color = Color(0.31395888, 0.32663587, 0.3076789, 1)
 
 [sub_resource type="BoxMesh" id="BoxMesh_8bj0a"]
-material = SubResource("StandardMaterial3D_fd73q")
+material = SubResource("StandardMaterial3D_7jqqt")
 size = Vector3(0.01, 1.91, 1.75)
 
 [node name="HouseDoors" type="StaticBody3D" unique_id=677386291 groups=["Portals"]]
@@ -335,7 +335,7 @@ start_deactivated = true
 collision_layer = 0
 
 [node name="Collider" type="CollisionShape3D" parent="PortalFront/TeleportArea" unique_id=343125823]
-transform = Transform3D(1, 0, -2.1671553e-13, 0, 1, 0, 2.1671553e-13, 0, 1, 0, -0.04699707, 0)
+transform = Transform3D(1, 0, -2.1671553e-13, 0, 1, 0, 2.1671553e-13, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_w64up")
 
 [node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="PortalFront" unique_id=409740232]
@@ -364,7 +364,7 @@ start_deactivated = true
 collision_layer = 0
 
 [node name="Collider" type="CollisionShape3D" parent="PortalBack/TeleportArea" unique_id=1470184711]
-transform = Transform3D(1, 0, 8.277823e-13, 0, 1, 0, -8.277823e-13, 0, 1, 0, -0.04, 0)
+transform = Transform3D(1, 0, 8.277823e-13, 0, 1, 0, -8.277823e-13, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_w64up")
 
 [node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="PortalBack" unique_id=1812302373]
