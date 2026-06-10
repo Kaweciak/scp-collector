@@ -5,6 +5,7 @@ var pages_arr: Array[Node]
 var current_page: Node
 @onready var camera: Camera3D = $Camera3D
 @export var lobby_scene: PackedScene
+@export var tutorial_scene: PackedScene
 
 
 func _ready() -> void:
@@ -28,6 +29,8 @@ func _on_paper_screen_event(event_name: String, args: Array = []) -> void:
 			_flip_page_to("HostGameScreenPage")
 		"join_pressed":
 			_flip_page_to("JoinGameScreenPage")
+		"tutorial_pressed":
+			_start_tutorial()
 		"host_game":
 			_host_game(args[0])
 		"join_game":
@@ -79,6 +82,11 @@ func _join_game(ip: String, nickname: String) -> void:
 	set_process_unhandled_input(false)
 	
 	get_tree().call_deferred("change_scene_to_packed", lobby_scene)
+
+func _start_tutorial() -> void:
+	MultiplayerController.host("Player")
+
+	get_tree().change_scene_to_packed(tutorial_scene)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:

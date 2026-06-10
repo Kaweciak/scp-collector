@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="2_81ny1"]
 [ext_resource type="Script" uid="uid://bln8yx3dhecm7" path="res://ui/menus/screens/start_game_screen/start_game_screen.gd" id="2_arju3"]
 
-
 [node name="StartGameScreen" type="MarginContainer" unique_id=1072418236]
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,6 +32,11 @@ layout_mode = 2
 text = "JOIN"
 flat = true
 
+[node name="TutorialButton" type="Button" parent="VBoxContainer" unique_id=1342733361]
+layout_mode = 2
+text = "TUTORIAL"
+flat = true
+
 [node name="ReturnButton" type="Button" parent="VBoxContainer" unique_id=482511099]
 layout_mode = 2
 text = "RETURN"
@@ -40,4 +44,5 @@ flat = true
 
 [connection signal="pressed" from="VBoxContainer/HostButton" to="." method="_on_host_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/TutorialButton" to="." method="_on_tutorial_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]

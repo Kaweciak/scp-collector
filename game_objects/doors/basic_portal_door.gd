@@ -28,7 +28,7 @@ func _open() -> void:
 		return
 	opened = true
 	animation_player.play("doors_open_animation", 0.5)
-	
+
 	#Activate the portal connection
 	if is_portal:
 		portal.activate()
@@ -39,7 +39,7 @@ func _close() -> void:
 		return
 	opened = false
 	animation_player.play("doors_close_animation", 0.5)
-	
+
 	#Deactivate the portal connection
 	if is_portal:
 		portal.deactivate(true)

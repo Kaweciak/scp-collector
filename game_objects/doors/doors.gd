@@ -63,19 +63,19 @@ func _open(is_partner: bool = false) -> void:
 	if opened:
 		return
 	opened = true
-	
+
 	var front_active = front_portal.exit_portal != null
 	var back_active = back_portal.exit_portal != null
-	
+
 	#Play the correct animation depending on what is the current door state
 	if not front_active and back_active:
 		animation_player.play("doors_open_animation_reversed", 0.5)
 	else:
 		animation_player.play("doors_open_animation", 0.5)
-	
+
 	#Update blockers
 	update_walls()
-	
+
 	#Activate the portal connection
 	if is_portal:
 		if front_portal.exit_portal != null:
@@ -88,17 +88,17 @@ func _open(is_partner: bool = false) -> void:
 			if not is_partner:
 				var partner_door = back_portal.exit_portal.get_parent()
 				partner_door.rpc("_open", true)
-				
+
 	#Update the navigation link
 	nav_link.enabled = true
-		
+
 #Closes the door for all players
 @rpc("call_local", "any_peer")
 func _close(is_partner: bool = false) -> void:
 	if !opened:
 		return
 	opened = false
-		
+
 	#Deactivate the portal connection
 	if is_portal:
 		if front_portal.exit_portal != null:
@@ -109,16 +109,16 @@ func _close(is_partner: bool = false) -> void:
 			if not is_partner:
 				var partner_door = back_portal.exit_portal.get_parent()
 				partner_door.rpc("_close", true)
-	
+
 	var front_active = front_portal.exit_portal != null
 	var back_active = back_portal.exit_portal != null
-	
+
 	#Open the correct way depending on which door is opened
 	if not front_active and back_active:
 		animation_player.play("doors_close_animation_reversed", 0.5)
 	else:
 		animation_player.play("doors_close_animation", 0.5)
-		
+
 	#Update the navigation link
 	nav_link.enabled = false
 
@@ -130,7 +130,7 @@ func _on_animation_player_animation_finished(anim_name: StringName) -> void:
 				front_portal.deactivate(true)
 			if back_portal.exit_portal != null:
 				back_portal.deactivate(true)
-				
+
 	#Update blockers
 	update_walls()
 
@@ -145,13 +145,13 @@ func get_portals() -> Array[Portal3D]:
 func update_walls() -> void:
 	var front_active = front_portal.exit_portal != null
 	var back_active = back_portal.exit_portal != null
-	
+
 	#The back wall appears if the front is an active portal, but the back is empty
 	var should_block_back = front_active and not back_active
 	if (blocker_back.visible != should_block_back):
 		blocker_back.visible = should_block_back
 		blocker_back.collision_layer = 32769 if should_block_back else 0
-	
+
 	#The front wall appears if the back is an active portal, but the front is empty
 	var should_block_front = back_active and not front_active
 	if (blocker_front.visible != should_block_front):
