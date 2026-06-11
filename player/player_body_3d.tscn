@@ -160,23 +160,6 @@ offset_right = 198.0
 offset_bottom = 23.0
 text = "Press interact to Spectate"
 
-[node name="EndGameInfo" type="Label" parent="MainCamera/HUD" unique_id=795254387]
-visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -192.0
-offset_top = -16.0
-offset_right = 192.0
-offset_bottom = 16.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 6
-size_flags_vertical = 6
-theme = ExtResource("6_iveab")
-
 [node name="SanityFilter" type="ColorRect" parent="MainCamera/HUD" unique_id=195940665]
 material = SubResource("ShaderMaterial_rjoga")
 anchors_preset = 15
@@ -195,6 +178,23 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
+
+[node name="EndGameInfo" type="Label" parent="MainCamera/HUD" unique_id=795254387]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -192.0
+offset_top = -16.0
+offset_right = 192.0
+offset_bottom = 16.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+theme = ExtResource("6_iveab")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="MainCamera/HUD" unique_id=266477069]
 root_node = NodePath("../../..")

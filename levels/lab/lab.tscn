@@ -910,7 +910,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13205767, -1.1920929e-07, 
 navigation_mesh = SubResource("NavigationMesh_ibu5n")
 
 [node name="Van" parent="NavigationRegion3D" unique_id=1665049532 instance=ExtResource("7_o4snh")]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.752, 0, 15.476)
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 2.752, 0.7883618, 15.476)
 
 [node name="Walls" type="StaticBody3D" parent="NavigationRegion3D" unique_id=801286956]
 

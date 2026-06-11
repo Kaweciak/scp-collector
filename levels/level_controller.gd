@@ -6,6 +6,8 @@ extends Node3D
 @onready var anomaly_container: Node3D = $AnomalyContainer
 @onready var anomaly_spawner: MultiplayerSpawner = $AnomalySpawner
 
+@onready var van_spawns: Array = $NavigationRegion3D/Van/SpawnPoints.get_children()
+
 func _ready() -> void:
 	MultiplayerController.spawner.spawn_path = $PlayerContainer.get_path()
 	MultiplayerController.spawn_players_in_new_scene()
@@ -47,6 +49,13 @@ func register_player(player: Node) -> void:
 
 	#Handle node removal dynamically to clean up array on disconnects
 	player.tree_exiting.connect(_on_player_exited_tree.bind(player))
+	
+	#The client who owns the player sets their own initial spawn point
+	if player.name == str(multiplayer.get_unique_id()):
+		if van_spawns.size() > 0:
+			#Distribute players across the van's internal markers
+			var spawn_point = van_spawns[GameState.alive_players.size() % van_spawns.size()]
+			player.global_position = spawn_point.global_position
 
 func _on_player_died(player: Node) -> void:
 	if not multiplayer.is_server():

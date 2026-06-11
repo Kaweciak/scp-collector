@@ -4,16 +4,18 @@ signal died
 
 #Movement export variables
 @export_group("Movement")
-@export_range(1, 35, 1) var speed: float = 10
-@export_range(10, 400, 1) var acceleration: float = 100
+@export_range(1, 35, 1) var speed: float = 10.0
+@export_range(10, 400, 1) var acceleration: float = 100.0
 
-@export_range(0.1, 3.0, 0.1) var jump_height: float = 1
-@export_range(0.1, 3.0, 0.1, "or_greater") var camera_sens: float = 1
+@export_range(0.1, 3.0, 0.1) var jump_height: float = 1.0
+@export_range(0.1, 3.0, 0.1, "or_greater") var camera_sens: float = 1.0
 
 @export_range(1.1, 2.0, 0.05) var sprint_factor: float = 1.1
 @export_range(0.1, 0.9, 0.05) var crouch_factor: float = 0.9
 
 @export_range(0.01, 0.5, 0.01) var coyote_time: float = 0.2
+
+@export var flight_speed: float = 14.0
 
 #Variable giving the player time to jump after they start falling
 var coyote_timer: float = 0.0
@@ -503,7 +505,8 @@ func _interact() -> void:
 @rpc("call_local", "any_peer")
 func death() -> void:
 	#Return early if already dead or if godmode is enabled
-	if dead or admin_immortality_enabled: return
+	if dead or admin_immortality_enabled:
+		return
 	dead = true
 
 	emit_signal("died")
@@ -521,15 +524,37 @@ func death() -> void:
 			held = null
 			
 			_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
-
+	
 	#Reparent model as a corpse
-	model.reparent(get_parent(), true)
+	model.reparent(get_tree().current_scene, true)
 	#Hide the model for everyone but the dead player
 	model.visible = !is_multiplayer_authority()
-
+	
+	#Stop standard animations so they don't override the physics
+	animation_player.stop()
+	
+	#Find the skeleton and start the ragdoll simulation
+	var skeleton = _find_skeleton(model)
+	if skeleton:
+		skeleton.physical_bones_start_simulation()
+		
+		#Transfer the player's momentum to the corpse so it slumps realistically
+		for child in skeleton.get_children():
+			if child is PhysicalBone3D:
+				child.linear_velocity = velocity
+	
 	audio_stream_player.stream = death_sound
 	audio_stream_player.play()
 
+#Recursive helper function to find the Skeleton3D inside the player model
+func _find_skeleton(node: Node) -> Skeleton3D:
+	if node is Skeleton3D:
+		return node
+	for child in node.get_children():
+		var result = _find_skeleton(child)
+		if result != null:
+			return result
+	return null
 
 #Find the next spectator POV
 func _find_next_spectate_target() -> void:
@@ -1014,5 +1039,5 @@ func _process_noclip(delta: float) -> void:
 		fly_dir += Vector3.DOWN
 
 	#Apply the movement
-	var current_fly_speed = speed * sprint_factor * 2.0 if sprinting else speed * 2.0
+	var current_fly_speed = flight_speed * sprint_factor * 2.0 if sprinting else flight_speed * 2.0
 	global_position += fly_dir.normalized() * current_fly_speed * delta
