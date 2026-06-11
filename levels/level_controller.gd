@@ -6,23 +6,31 @@ extends Node3D
 @onready var anomaly_container: Node3D = $AnomalyContainer
 @onready var anomaly_spawner: MultiplayerSpawner = $AnomalySpawner
 
+@onready var van_spawns: Array = $NavigationRegion3D/Van/SpawnPoints.get_children()
+
 func _ready() -> void:
 	MultiplayerController.spawner.spawn_path = $PlayerContainer.get_path()
 	MultiplayerController.spawn_players_in_new_scene()
-
+	
 	$NavigationRegion3D/Van/AnomalyDetactionArea3D.body_entered.connect(_on_van_area_body_entered)
-
+	
 	#Listen for players added mid-round
 	$PlayerContainer.child_entered_tree.connect(register_player)
-
+	
+	#Initialize all networked rigid bodies placed in the scene
+	for prop in get_tree().get_nodes_in_group("networked_physics"):
+		if prop is RigidBody3D:
+			prop.set_multiplayer_authority(1)
+	
 	await get_tree().process_frame
-
+	
 	for player in $PlayerContainer.get_children():
 		register_player(player)
-
-	if multiplayer.is_server():
-		_spawn_random_anomaly()
+	
+	anomaly_spawner.spawn_path = anomaly_container.get_path()
+	_spawn_random_anomaly()
 		
+	if multiplayer.is_server():
 		#Register the game start
 		GameState.start_game.rpc(GameState.global_cheats_enabled)
 
@@ -41,6 +49,13 @@ func register_player(player: Node) -> void:
 
 	#Handle node removal dynamically to clean up array on disconnects
 	player.tree_exiting.connect(_on_player_exited_tree.bind(player))
+	
+	#The client who owns the player sets their own initial spawn point
+	if player.name == str(multiplayer.get_unique_id()):
+		if van_spawns.size() > 0:
+			#Distribute players across the van's internal markers
+			var spawn_point = van_spawns[GameState.alive_players.size() % van_spawns.size()]
+			player.global_position = spawn_point.global_position
 
 func _on_player_died(player: Node) -> void:
 	if not multiplayer.is_server():
@@ -74,16 +89,17 @@ func _spawn_random_anomaly() -> void:
 	if anomaly_scenes.is_empty() or anomaly_spawns.is_empty():
 		printerr("Missing anomaly scenes or spawn points in the level!")
 		return
-
+	
 	#Register all possible anomalies to the spawner so clients can replicate them
 	for scene in anomaly_scenes:
 		anomaly_spawner.add_spawnable_scene(scene.resource_path)
-
-	#Select a random anomaly and a random spawn point
-	var selected_scene: PackedScene = anomaly_scenes.pick_random()
-	var spawn_point: Marker3D = anomaly_spawns.pick_random()
-
-	#Instantiate, position, and add to the network container
-	var anomaly_instance = selected_scene.instantiate()
-	anomaly_container.add_child(anomaly_instance, true)
-	anomaly_instance.global_position = spawn_point.global_position
+	
+	if multiplayer.is_server():
+		#Select a random anomaly and a random spawn point
+		var selected_scene: PackedScene = anomaly_scenes.pick_random()
+		var spawn_point: Marker3D = anomaly_spawns.pick_random()
+		
+		#Instantiate, position, and add to the network container
+		var anomaly_instance = selected_scene.instantiate()
+		anomaly_container.add_child(anomaly_instance, true)
+		anomaly_instance.global_position = spawn_point.global_position

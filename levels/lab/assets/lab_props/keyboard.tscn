@@ -1,5 +1,7 @@
 [gd_scene format=4 uid="uid://35ajpkd28v0n"]
 
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="1_dptbs"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6e0uo"]
 resource_name = "keyboard1"
 cull_mode = 2
@@ -2891,7 +2893,12 @@ shadow_mesh = SubResource("ArrayMesh_dqc4l")
 [sub_resource type="BoxShape3D" id="BoxShape3D_v0aji"]
 size = Vector3(0.58091736, 0.04925537, 0.22045898)
 
-[node name="Keyboard" type="RigidBody3D" unique_id=941085870]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_w4ukg"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Keyboard" type="RigidBody3D" unique_id=941085870 groups=["networked_physics"]]
 
 [node name="pCube77" type="Node3D" parent="." unique_id=852153360]
 transform = Transform3D(-0.028489415, 3.4889477e-18, -2.4906237e-09, 3.4889473e-18, 0.028489415, 3.4889473e-18, 2.4906237e-09, 3.488947e-18, -0.028489415, -0.28636277, 0.08912408, -0.0010564852)
@@ -3436,3 +3443,7 @@ mesh = SubResource("ArrayMesh_8ix4y")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2113494981]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14891815, 0.0741272, -0.008422852)
 shape = SubResource("BoxShape3D_v0aji")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=123393408]
+replication_config = SubResource("SceneReplicationConfig_w4ukg")
+script = ExtResource("1_dptbs")

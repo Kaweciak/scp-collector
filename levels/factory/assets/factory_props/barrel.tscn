@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bm5abci5g7llj" path="res://levels/factory/assets/factory_props/import/factory_props_18.png" id="1_dy4hp"]
 [ext_resource type="Texture2D" uid="uid://dy7lsgw22gsu1" path="res://levels/factory/assets/factory_props/import/factory_props_19.png" id="2_rpmcf"]
 [ext_resource type="Texture2D" uid="uid://bcoxkae6rkslc" path="res://levels/factory/assets/factory_props/import/factory_props_20.png" id="3_cb0h3"]
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="4_rpmcf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ss2ib"]
 resource_name = "Barrel__tools"
@@ -54,7 +55,12 @@ shadow_mesh = SubResource("ArrayMesh_8f55c")
 height = 0.7907715
 radius = 0.20996094
 
-[node name="Barrel" type="RigidBody3D" unique_id=741576723]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_cb0h3"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Barrel" type="RigidBody3D" unique_id=741576723 groups=["networked_physics"]]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 
 [node name="Cylinder_015_Barrel + tools_0" type="MeshInstance3D" parent="." unique_id=1187201457]
@@ -63,3 +69,7 @@ mesh = SubResource("ArrayMesh_fwuw2")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=797999416]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, -4.583508e-09, -0.1048584)
 shape = SubResource("CylinderShape3D_yemq1")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1498762788]
+replication_config = SubResource("SceneReplicationConfig_cb0h3")
+script = ExtResource("4_rpmcf")

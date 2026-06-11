@@ -1,5 +1,7 @@
 [gd_scene format=4 uid="uid://n70smoutq1nm"]
 
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="1_fqbo0"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ni0xr"]
 resource_name = "black"
 cull_mode = 2
@@ -976,7 +978,12 @@ size = Vector3(0.17736816, 0.6788826, 0.15740967)
 [sub_resource type="BoxShape3D" id="BoxShape3D_iab5u"]
 size = Vector3(0.15411377, 0.6788826, 0.47714233)
 
-[node name="Chair" type="RigidBody3D" unique_id=279712594]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7keum"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Chair" type="RigidBody3D" unique_id=279712594 groups=["networked_physics"]]
 
 [node name="pCylinder11" type="Node3D" parent="." unique_id=1513780982]
 transform = Transform3D(0.046962425, 0, 0, 0, 0.41410705, 0, 0, 0, 0.046962425, -0.00043423322, 0.5977541, 1.6138048)
@@ -1193,3 +1200,7 @@ shape = SubResource("BoxShape3D_iab5u")
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="." unique_id=1250316270]
 transform = Transform3D(1, 0, 0, 0, 0.0034906277, 0.999994, 0, -0.999994, 0.0034906277, 0.3751744, 0.37181038, -0.41824093)
 shape = SubResource("BoxShape3D_iab5u")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=446810228]
+replication_config = SubResource("SceneReplicationConfig_7keum")
+script = ExtResource("1_fqbo0")

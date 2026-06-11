@@ -1,5 +1,7 @@
 [gd_scene format=4 uid="uid://bggrlg6mmw00e"]
 
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="1_g5u3g"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vb1t"]
 resource_name = "glass"
 transparency = 4
@@ -49,7 +51,12 @@ radius = 0.1640625
 height = 0.2534485
 radius = 0.02734375
 
-[node name="Flask1" type="RigidBody3D" unique_id=305857334]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_7jf4g"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Flask1" type="RigidBody3D" unique_id=305857334 groups=["networked_physics"]]
 
 [node name="Beaker" type="Node3D" parent="." unique_id=1034607916]
 transform = Transform3D(0.062, 0, 0, 0, 0.45, 0, 0, 0, 0.062, 0, 0, 0)
@@ -64,3 +71,7 @@ shape = SubResource("CylinderShape3D_6a78n")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=2057899086]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.09651568, 0)
 shape = SubResource("CylinderShape3D_g5u3g")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1170854716]
+replication_config = SubResource("SceneReplicationConfig_7jf4g")
+script = ExtResource("1_g5u3g")

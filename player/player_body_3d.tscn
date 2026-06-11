@@ -22,6 +22,13 @@ resource_local_to_scene = true
 shader = ExtResource("2_ryni8")
 shader_parameter/distortion_strength = 0.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pyi6a"]
+resource_local_to_scene = true
+shader = ExtResource("4_pyi6a")
+shader_parameter/blink_progress = 0.0
+shader_parameter/smoothness = 0.1
+shader_parameter/curvature = 0.1
+
 [sub_resource type="Animation" id="Animation_pyi6a"]
 length = 0.001
 tracks/0/type = "value"
@@ -74,13 +81,6 @@ _data = {
 &"open_eyes": SubResource("Animation_iveab")
 }
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_pyi6a"]
-resource_local_to_scene = true
-shader = ExtResource("4_pyi6a")
-shader_parameter/blink_progress = 0.0
-shader_parameter/smoothness = 0.1
-shader_parameter/curvature = 0.1
-
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ied1u"]
 properties/0/path = NodePath(".:position")
 properties/0/spawn = true
@@ -103,6 +103,9 @@ properties/5/replication_mode = 1
 properties/6/path = NodePath(".:current_eyes_state")
 properties/6/spawn = true
 properties/6/replication_mode = 1
+properties/7/path = NodePath("MainCamera:rotation")
+properties/7/spawn = true
+properties/7/replication_mode = 1
 
 [node name="PlayerBody3D" type="CharacterBody3D" unique_id=1605310021 groups=["Player"]]
 collision_layer = 2
@@ -132,9 +135,6 @@ target_position = Vector3(0, 0, -2)
 collision_mask = 32769
 collide_with_areas = true
 
-[node name="PauseMenu" parent="MainCamera" unique_id=83991203 instance=ExtResource("4_qh2r7")]
-visible = false
-
 [node name="HUD" type="CanvasLayer" parent="MainCamera" unique_id=1812656686]
 script = ExtResource("2_rjoga")
 
@@ -154,6 +154,12 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 texture = ExtResource("5_467px")
 
+[node name="HintLabel" type="Label" parent="MainCamera/HUD" unique_id=609083591]
+visible = false
+offset_right = 198.0
+offset_bottom = 23.0
+text = "Press interact to Spectate"
+
 [node name="SanityFilter" type="ColorRect" parent="MainCamera/HUD" unique_id=195940665]
 material = SubResource("ShaderMaterial_rjoga")
 anchors_preset = 15
@@ -162,10 +168,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="MainCamera/HUD" unique_id=266477069]
-root_node = NodePath("../../..")
-libraries/ = SubResource("AnimationLibrary_pyi6a")
 
 [node name="BlinkingFilter" type="ColorRect" parent="MainCamera/HUD" unique_id=1844247417]
 material = SubResource("ShaderMaterial_pyi6a")
@@ -177,12 +179,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 
-[node name="Flashlight" type="SpotLight3D" parent="MainCamera" unique_id=1871008492]
-visible = false
-spot_range = 15.0
-spot_angle = 30.0
-
-[node name="EndGameInfo" type="Label" parent="MainCamera" unique_id=795254387]
+[node name="EndGameInfo" type="Label" parent="MainCamera/HUD" unique_id=795254387]
 visible = false
 anchors_preset = 8
 anchor_left = 0.5
@@ -198,6 +195,21 @@ grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
 theme = ExtResource("6_iveab")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="MainCamera/HUD" unique_id=266477069]
+root_node = NodePath("../../..")
+libraries/ = SubResource("AnimationLibrary_pyi6a")
+
+[node name="Flashlight" type="SpotLight3D" parent="MainCamera" unique_id=1871008492]
+visible = false
+spot_range = 15.0
+spot_angle = 30.0
+
+[node name="MenuLayer" type="CanvasLayer" parent="MainCamera" unique_id=1303122197]
+layer = 10
+
+[node name="PauseMenu" parent="MainCamera/MenuLayer" unique_id=83991203 instance=ExtResource("4_qh2r7")]
+visible = false
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1185295244]
 replication_config = SubResource("SceneReplicationConfig_ied1u")
@@ -215,8 +227,8 @@ one_shot = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.7503513, 0)
 volume_db = -5.0
 
-[connection signal="unpause" from="MainCamera/PauseMenu" to="." method="_unpause"]
 [connection signal="blink_closed" from="MainCamera/HUD" to="." method="_on_hud_blink_closed"]
 [connection signal="blink_opened" from="MainCamera/HUD" to="." method="_on_hud_blink_opened"]
 [connection signal="animation_finished" from="MainCamera/HUD/AnimationPlayer" to="MainCamera/HUD" method="_on_animation_player_animation_finished"]
+[connection signal="unpause" from="MainCamera/MenuLayer/PauseMenu" to="." method="_unpause"]
 [connection signal="timeout" from="BlinkTimer" to="." method="_on_blink_timer_timeout"]

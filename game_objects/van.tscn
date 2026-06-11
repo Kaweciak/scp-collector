@@ -124,3 +124,23 @@ Press ESC and go to
 \"Anomalies\" to find out
 more about them."
 font = ExtResource("1_o52dy")
+
+[node name="SpawnPoints" type="Node3D" parent="." unique_id=1603276015]
+
+[node name="Marker3D" type="Marker3D" parent="SpawnPoints" unique_id=750941987]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3014781, 1.275589, -2.9295022)
+
+[node name="Marker3D2" type="Marker3D" parent="SpawnPoints" unique_id=640338838]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.67151004, 1.275589, -1.3886069)
+
+[node name="Marker3D3" type="Marker3D" parent="SpawnPoints" unique_id=1629984145]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7237261, 1.275589, -2.9295022)
+
+[node name="Marker3D4" type="Marker3D" parent="SpawnPoints" unique_id=315002961]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29044354, 1.275589, -1.3454576)
+
+[node name="Marker3D5" type="Marker3D" parent="SpawnPoints" unique_id=1180644256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6588577, 1.275589, -0.10757613)
+
+[node name="Marker3D6" type="Marker3D" parent="SpawnPoints" unique_id=92918250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.3769059, 1.275589, -0.042928338)

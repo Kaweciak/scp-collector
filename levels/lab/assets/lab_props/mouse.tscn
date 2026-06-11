@@ -1,5 +1,7 @@
 [gd_scene format=4 uid="uid://oa0dqd2i3k3h"]
 
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="1_02nbv"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6e0uo"]
 resource_name = "keyboard1"
 cull_mode = 2
@@ -145,7 +147,12 @@ shadow_mesh = SubResource("ArrayMesh_ghcsi")
 [sub_resource type="BoxShape3D" id="BoxShape3D_k17no"]
 size = Vector3(0.066833496, 0.03942871, 0.12036133)
 
-[node name="Mouse" type="RigidBody3D" unique_id=1637610449]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_12rbw"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Mouse" type="RigidBody3D" unique_id=1637610449 groups=["networked_physics"]]
 
 [node name="pSphere6" type="Node3D" parent="." unique_id=1714564834]
 transform = Transform3D(1, 2.6462547e-32, 0, -2.6462547e-32, 1, 0, 0, 0, 1, 0, -1.0894282, -0.34403175)
@@ -174,3 +181,7 @@ mesh = SubResource("ArrayMesh_qysbv")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1292649792]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00088500977, 0.018249512, -0.0018310547)
 shape = SubResource("BoxShape3D_k17no")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=461406129]
+replication_config = SubResource("SceneReplicationConfig_12rbw")
+script = ExtResource("1_02nbv")

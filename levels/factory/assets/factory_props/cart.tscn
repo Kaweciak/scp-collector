@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://deh7mb2x47e6u" path="res://levels/factory/assets/factory_props/import/factory_props_45.png" id="1_561vd"]
 [ext_resource type="Texture2D" uid="uid://b2gtqxaixmxqv" path="res://levels/factory/assets/factory_props/import/factory_props_46.png" id="2_iudch"]
 [ext_resource type="Texture2D" uid="uid://cc2wcldscpcbe" path="res://levels/factory/assets/factory_props/import/factory_props_47.png" id="3_6kl3k"]
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="4_iudch"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ymef3"]
 resource_name = "Carts"
@@ -56,7 +57,12 @@ size = Vector3(1, 1.5917969, 0.28588867)
 [sub_resource type="BoxShape3D" id="BoxShape3D_tvmir"]
 size = Vector3(1, 0.93847656, 0.1408081)
 
-[node name="Cart" type="RigidBody3D" unique_id=78461047]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_6kl3k"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Cart" type="RigidBody3D" unique_id=78461047 groups=["networked_physics"]]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
 
 [node name="Forklift_01_Carts_0" type="MeshInstance3D" parent="." unique_id=659752973]
@@ -69,3 +75,7 @@ shape = SubResource("BoxShape3D_bh3eo")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=1824660027]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.3862877, 0.022827148)
 shape = SubResource("BoxShape3D_tvmir")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=57950425]
+replication_config = SubResource("SceneReplicationConfig_6kl3k")
+script = ExtResource("4_iudch")

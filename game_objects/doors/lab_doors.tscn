@@ -1,0 +1,164 @@
+[gd_scene format=3 uid="uid://cr4e4e2l1c2ca"]
+
+[ext_resource type="Script" uid="uid://bgc86ucr4jmum" path="res://game_objects/doors/manor_doors.gd" id="1_p7qrv"]
+[ext_resource type="Script" uid="uid://cw1r4c1d7beyv" path="res://addons/portals/scripts/portal_3d.gd" id="2_7jwyk"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gvu4j"]
+size = Vector3(0.1, 1.921, 0.863)
+
+[sub_resource type="Animation" id="Animation_7jqqt"]
+length = 0.001
+
+[sub_resource type="Animation" id="Animation_w64up"]
+resource_name = "doors_close_animation"
+
+[sub_resource type="Animation" id="Animation_dgk66"]
+resource_name = "doors_open_animation"
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_7jqqt"]
+_data = {
+&"RESET": SubResource("Animation_7jqqt"),
+&"doors_close_animation": SubResource("Animation_w64up"),
+&"doors_open_animation": SubResource("Animation_dgk66")
+}
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rohmv"]
+size = Vector3(0.751, 1.874, 0.1)
+
+[sub_resource type="Shader" id="Shader_fp3v4"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.6.3.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+//Portal handling uniforms
+uniform vec3 partner_camera_position;
+
+//Standard uniforms
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+}
+
+void fragment() {
+	//Check if the current camera matches the calculated partner portal camera position
+	if (distance(CAMERA_POSITION_WORLD, partner_camera_position) < 0.05) {
+		discard;
+	}
+	
+	//Standard material compilation pipeline
+	vec2 base_uv = UV;
+	
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+	
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v7cab"]
+render_priority = 0
+shader = SubResource("Shader_fp3v4")
+shader_parameter/partner_camera_position = Vector3(0, 0, 0)
+shader_parameter/albedo = Color(0.31395888, 0.32663587, 0.3076789, 1)
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nf4l4"]
+material = SubResource("ShaderMaterial_v7cab")
+size = Vector3(0.77, 1.87, 0.01)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fp3v4"]
+size = Vector3(0.74, 1.87, 0.01)
+
+[node name="ManorDoors" type="StaticBody3D" unique_id=677386291]
+collision_layer = 32768
+collision_mask = 32768
+script = ExtResource("1_p7qrv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=483306319]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -0.369, 1.005, 0.002)
+shape = SubResource("BoxShape3D_gvu4j")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1997843712]
+libraries/ = SubResource("AnimationLibrary_7jqqt")
+
+[node name="Portal" type="Node3D" parent="." unique_id=1523387056]
+transform = Transform3D(0.9999999, 0, 0, 0, 1, 0, 0, 0, 0.9999999, -0.375, 0.938, 0.00039744377)
+script = ExtResource("2_7jwyk")
+_teleport_area_path = NodePath("TeleportArea")
+_teleport_collider_path = NodePath("TeleportArea/Collider")
+portal_size = Vector2(0.751, 1.874)
+portal_frame_width = 0.38
+viewport_size_mode = 1
+_viewport_size_max_width_absolute = 720
+view_direction = 1
+portal_render_layer = 524288
+is_teleport = true
+teleport_direction = 0
+rigidbody_boost = 0.0
+teleport_tolerance = 0.8
+teleport_interactions = 7
+teleport_collision_mask = 6
+start_deactivated = true
+
+[node name="VisibilityNotifier" type="VisibleOnScreenNotifier3D" parent="Portal" unique_id=2077043545]
+aabb = AABB(-0.32, -0.775, 0, 0.628, 1.542, 0.018)
+
+[node name="TeleportArea" type="Area3D" parent="Portal" unique_id=1587429454]
+
+[node name="Collider" type="CollisionShape3D" parent="Portal/TeleportArea" unique_id=19898456]
+shape = SubResource("BoxShape3D_rohmv")
+
+[node name="Meshes" type="Node3D" parent="." unique_id=612290377]
+transform = Transform3D(2.28, 0, 0, 0, 2.28, 0, 0, 0, 2.28, 0, 0, 0)
+
+[node name="BackBlocker" type="StaticBody3D" parent="." unique_id=1468623776]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.355, -0.09, -0.13737679)
+collision_layer = 32769
+collision_mask = 49154
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BackBlocker" unique_id=1748162058]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.012277991, 1.0265259, 0.048587352)
+layers = 131072
+mesh = SubResource("BoxMesh_nf4l4")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="BackBlocker" unique_id=830801791]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.012277991, 1.0265259, -0.25354326)
+shape = SubResource("BoxShape3D_fp3v4")
+
+[node name="NavigationLink3D" type="NavigationLink3D" parent="." unique_id=2133419782]
+transform = Transform3D(0.405, 0, 0, 0, 0.405, 0, 0, 0, 0.405, -0.38, 0.663, 0)
+enabled = false
+start_position = Vector3(0, 0, 0.74)
+end_position = Vector3(0, 0, -0.74)

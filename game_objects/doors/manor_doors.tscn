@@ -220,11 +220,77 @@ size = Vector3(0.041, 0.083, 0.865)
 [sub_resource type="BoxShape3D" id="BoxShape3D_qb4fi"]
 size = Vector3(0.33, 0.083, 0.04)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fd73q"]
-albedo_color = Color(0.31395888, 0.32663587, 0.3076789, 1)
+[sub_resource type="Shader" id="Shader_fp3v4"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.6.3.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+//Portal handling uniforms
+uniform vec3 partner_camera_position;
+
+//Standard uniforms
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+}
+
+void fragment() {
+	//Check if the current camera matches the calculated partner portal camera position
+	if (distance(CAMERA_POSITION_WORLD, partner_camera_position) < 0.05) {
+		discard;
+	}
+	
+	//Standard material compilation pipeline
+	vec2 base_uv = UV;
+	
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+	
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+	
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_v7cab"]
+render_priority = 0
+shader = SubResource("Shader_fp3v4")
+shader_parameter/partner_camera_position = Vector3(0, 0, 0)
+shader_parameter/albedo = Color(0.31395888, 0.32663587, 0.3076789, 1)
+shader_parameter/albedo_texture_size = Vector2i(0, 0)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
 
 [sub_resource type="BoxMesh" id="BoxMesh_nf4l4"]
-material = SubResource("StandardMaterial3D_fd73q")
+material = SubResource("ShaderMaterial_v7cab")
 size = Vector3(0.77, 1.87, 0.01)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_fp3v4"]
@@ -317,7 +383,7 @@ shape = SubResource("BoxShape3D_qb4fi")
 
 [node name="BackBlocker" type="StaticBody3D" parent="." unique_id=1468623776]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.355, -0.09, -0.13737679)
-collision_layer = 32800
+collision_layer = 32769
 collision_mask = 49154
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="BackBlocker" unique_id=1748162058]
@@ -330,7 +396,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.012277991, 1.0265259, -0.2
 shape = SubResource("BoxShape3D_fp3v4")
 
 [node name="NavigationLink3D" type="NavigationLink3D" parent="." unique_id=2133419782]
-transform = Transform3D(0.405, 0, 0, 0, 0.405, 0, 0, 0, 0.405, -0.3, 0.663, 0)
+transform = Transform3D(0.405, 0, 0, 0, 0.405, 0, 0, 0, 0.405, -0.38, 0.663, 0)
 enabled = false
 start_position = Vector3(0, 0, 0.74)
 end_position = Vector3(0, 0, -0.74)

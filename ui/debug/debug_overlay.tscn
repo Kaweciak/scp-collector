@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://b43ihmvp7oi2m" path="res://ui/debug/debug_overlay.gd" id="1_uomc5"]
 
 [node name="DebugOverlay" type="CanvasLayer" unique_id=1324849116]
-layer = -1
+layer = 2
 script = ExtResource("1_uomc5")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1067712222]

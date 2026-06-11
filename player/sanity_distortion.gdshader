@@ -5,7 +5,7 @@ uniform float distortion_strength : hint_range(0, 1) = 0.0;
 void fragment() {
     //Fisheye / Barrel Distortion
     vec2 p = SCREEN_UV - 0.5;
-    float r = length(p);;
+    float r = length(p);
     
 	float k = distortion_strength * 1.5;
     vec2 fisheye_uv = p * (1.0 + k * r * r * r) + 0.5;
@@ -19,8 +19,8 @@ void fragment() {
     
     //Vignette
 	float vignette_strength = pow(distortion_strength, 0.5);
-	float v_start = mix(1.9, 0.2, vignette_strength);
-    float v_end = mix(3.0, 0.9, vignette_strength);
+	float v_start = mix(1.5, 0.3, vignette_strength);
+    float v_end = mix(2.5, 0.65, vignette_strength);
     float vignette = 1.0 - smoothstep(v_start, v_end, r);
     
 	//Chromatic aberration
@@ -30,5 +30,6 @@ void fragment() {
 	tex.b = texture(screen_texture, fisheye_uv - vec2(separation, 0.0)).b;
 	
     //Apply vignette to the color
-    COLOR = tex * vignette;
+	tex.rgb *= vignette;
+    COLOR = tex;
 }

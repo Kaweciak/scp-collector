@@ -4,16 +4,18 @@ signal died
 
 #Movement export variables
 @export_group("Movement")
-@export_range(1, 35, 1) var speed: float = 10
-@export_range(10, 400, 1) var acceleration: float = 100
+@export_range(1, 35, 1) var speed: float = 10.0
+@export_range(10, 400, 1) var acceleration: float = 100.0
 
-@export_range(0.1, 3.0, 0.1) var jump_height: float = 1
-@export_range(0.1, 3.0, 0.1, "or_greater") var camera_sens: float = 1
+@export_range(0.1, 3.0, 0.1) var jump_height: float = 1.0
+@export_range(0.1, 3.0, 0.1, "or_greater") var camera_sens: float = 1.0
 
 @export_range(1.1, 2.0, 0.05) var sprint_factor: float = 1.1
 @export_range(0.1, 0.9, 0.05) var crouch_factor: float = 0.9
 
 @export_range(0.01, 0.5, 0.01) var coyote_time: float = 0.2
+
+@export var flight_speed: float = 14.0
 
 #Variable giving the player time to jump after they start falling
 var coyote_timer: float = 0.0
@@ -107,9 +109,10 @@ var clone_flashlights: Array[SpotLight3D] = []
 @onready var hud: CanvasLayer = $MainCamera/HUD
 @onready var blink_timer: Timer = $BlinkTimer
 
-@onready var pause_menu: Control = $MainCamera/PauseMenu
+@onready var pause_menu: Control = $MainCamera/MenuLayer/PauseMenu
 
-@onready var end_game_info: Label = $MainCamera/EndGameInfo
+@onready var end_game_info: Label = $MainCamera/HUD/EndGameInfo
+@onready var hint_label: Label = $MainCamera/HUD/HintLabel
 
 @onready var audio_stream_player: AudioStreamPlayer3D = $AudioStreamPlayer3D
 
@@ -215,7 +218,7 @@ func _physics_process(delta: float) -> void:
 		_update_interaction_cursor()
 
 	#Process entity holding mechanics
-	if is_multiplayer_authority() or multiplayer.is_server():
+	if is_multiplayer_authority():
 		if held != null:
 			_update_held()
 
@@ -228,7 +231,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	#Only the owner instance can process input for the player
 	if not is_multiplayer_authority():
 		return
-
+	
+	#Pause menu functionality
+	elif event.is_action_pressed("pause"):
+		if end_game_info.visible:
+				end_game_info.visible = false
+		elif !pause_menu.visible:
+			_pause()
+		else:
+			_unpause()
+		return
+	
 	#Debug logic processing
 	if GameState.global_cheats_enabled:
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -250,19 +263,20 @@ func _unhandled_input(event: InputEvent) -> void:
 					death.rpc()
 					get_viewport().set_input_as_handled()
 					return
-
+	
 	#Process spectator inputs
 	if dead:
 		if event is InputEventKey:
 			if event.is_action_pressed("interact"):
+				hint_label.hide()
 				_find_next_spectate_target()
 		return
-
+	
 	#Process mouse inputs
 	if event is InputEventMouseMotion:
 		look_dir = event.relative * 0.001
 		if mouse_captured: _rotate_camera()
-
+	
 	#Process player input
 	if event is InputEventKey and not dead:
 		if event.is_action_pressed("sprint"):
@@ -279,52 +293,51 @@ func _unhandled_input(event: InputEvent) -> void:
 			_try_uncroach()
 			if(Input.is_action_pressed("sprint")):
 				_sprint()
-
+		
 		elif event.is_action_pressed("toggle_flashlight"):
 			_toggle_flashlight.rpc(!is_flashlight_on)
-
+		
 		elif event.is_action_pressed("interact"):
 			_interact()
-
-		#Helper for releaseing mouse capture -> should be replaced by the game menu
-		#TODO
-		elif event.is_action_pressed("pause"):
-			if end_game_info.visible:
-				end_game_info.visible = false
-			elif !pause_menu.visible:
-				_pause()
-			else:
-				_unpause()
 
 func _push_objects(delta: float) -> void:
 	for i in get_slide_collision_count():
 		var collision = get_slide_collision(i)
 		var collider = collision.get_collider()
-
+		
 		if collider is RigidBody3D:
 			#Get the direction of the collision
 			var push_dir = -collision.get_normal()
-
+			
 			#Get contact point relative to the center of the object
 			var contact_point = collision.get_position() - collider.global_position
-
+			
 			#Calculate velocity relative to the object
 			var velocity_diff = velocity.dot(push_dir) - collider.linear_velocity.dot(push_dir)
 			velocity_diff = max(0.0, velocity_diff)
-
+			
 			#Scale the force by mass
 			var mass_ratio = min(1.0, player_mass / collider.mass)
-
+			
 			#Base push impulse calculation
 			var impulse = push_dir * speed * push_force * mass_ratio
-
+			
 			#Weight logic for standing on objects
 			if collision.get_normal().y > 0.5:
 				var weight_impulse = Vector3.DOWN * gravity_factor * delta * mass_ratio
 				impulse += weight_impulse
 
-			#Apply the final impulse
-			collider.apply_impulse(impulse, contact_point)
+			#Tell the server to apply the impulse globally
+			apply_server_impulse.rpc_id(1, collider.get_path(), impulse, contact_point)
+
+#Applies the same impulse across all players
+@rpc("any_peer", "call_local", "unreliable")
+func apply_server_impulse(path: NodePath, impulse: Vector3, contact_point: Vector3) -> void:
+	if not multiplayer.is_server():
+		return
+	var object = get_node_or_null(path)
+	if object is RigidBody3D:
+		object.apply_impulse(impulse, contact_point)
 
 func _pause() -> void:
 	pause_menu.visible = true
@@ -409,9 +422,8 @@ func _update_spectator_camera() -> void:
 				last_spectator_target.model.show()
 			last_spectator_target = spectator_target
 			spectator_target.model.hide()
-
-		camera.global_position = spectator_target.camera.global_position
-		camera.global_rotation = spectator_target.camera.global_rotation
+		
+		camera.global_transform = spectator_target.camera.global_transform
 
 #Process walking mechanics
 func _walk(delta: float) -> Vector3:
@@ -468,7 +480,16 @@ func _jump(delta: float) -> Vector3:
 func _interact() -> void:
 	#Drop any held entity
 	if held != null:
-		_server_drop.rpc()
+		#Capture state before clearing
+		var drop_path = held.get_path()
+		var final_tform = held.global_transform
+		var final_vel = held.linear_velocity
+		
+		# Client-side prediction: Instantly drop the item locally
+		held.gravity_scale = 1
+		held = null
+		
+		_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
 		return
 
 	#Get the initial interaction object
@@ -478,28 +499,62 @@ func _interact() -> void:
 	if collider is Interactable:
 		collider.interact()
 	elif collider is RigidBody3D:
-		_server_pick_up.rpc(collider.get_path())
+		_request_pick_up.rpc_id(1, collider.get_path())
 
 #Multiplayer synched death processing logic
 @rpc("call_local", "any_peer")
 func death() -> void:
 	#Return early if already dead or if godmode is enabled
-	if dead or admin_immortality_enabled: return
+	if dead or admin_immortality_enabled:
+		return
 	dead = true
 
 	emit_signal("died")
-
-	#Drop any currently held item
-	_server_drop.rpc()
-
+	
+	if is_multiplayer_authority():
+		hint_label.show()
+		
+		#Drop any currently held item
+		if held != null:
+			var drop_path = held.get_path()
+			var final_tform = held.global_transform
+			var final_vel = held.linear_velocity
+			
+			held.gravity_scale = 1
+			held = null
+			
+			_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
+	
 	#Reparent model as a corpse
-	model.reparent(get_parent(), true)
+	model.reparent(get_tree().current_scene, true)
 	#Hide the model for everyone but the dead player
 	model.visible = !is_multiplayer_authority()
-
+	
+	#Stop standard animations so they don't override the physics
+	animation_player.stop()
+	
+	#Find the skeleton and start the ragdoll simulation
+	var skeleton = _find_skeleton(model)
+	if skeleton:
+		skeleton.physical_bones_start_simulation()
+		
+		#Transfer the player's momentum to the corpse so it slumps realistically
+		for child in skeleton.get_children():
+			if child is PhysicalBone3D:
+				child.linear_velocity = velocity
+	
 	audio_stream_player.stream = death_sound
 	audio_stream_player.play()
 
+#Recursive helper function to find the Skeleton3D inside the player model
+func _find_skeleton(node: Node) -> Skeleton3D:
+	if node is Skeleton3D:
+		return node
+	for child in node.get_children():
+		var result = _find_skeleton(child)
+		if result != null:
+			return result
+	return null
 
 #Find the next spectator POV
 func _find_next_spectate_target() -> void:
@@ -515,27 +570,72 @@ func _find_next_spectate_target() -> void:
 	else:
 		spectator_target = null
 
-#func set_dialog_image(texture: CompressedTexture2D) -> void:
-	#hud.set_dialog_image(texture)
-#
-#func remove_dialog_image() -> void:
-	#hud.remove_dialog_image()
-
-#Multiplayer synched entity pickup processing logic
-@rpc("any_peer", "call_local")
-func _server_pick_up(path: NodePath):
+#Server processes the pickup and transfers authority to the caller
+@rpc("any_peer", "call_local", "reliable")
+func _request_pick_up(path: NodePath) -> void:
+	if not multiplayer.is_server():
+		return
+		
 	var object = get_node_or_null(path)
 	if object is RigidBody3D:
-		held = object
-		held.gravity_scale = 0
+		var current_auth = object.get_multiplayer_authority()
+		var active_peers = multiplayer.get_peers()
+		
+		#Allow pickup if the server currently owns it or if the previous owner disconnected
+		if current_auth == 1 or not active_peers.has(current_auth):
+			var client_id = multiplayer.get_remote_sender_id()
+			_set_object_authority.rpc(path, client_id)
+			_confirm_pick_up.rpc_id(client_id, path)
 
-#Multiplayer synched entity dropping processing logic
-@rpc("any_peer", "call_local")
-func _server_drop():
-	if is_instance_valid(held):
+#Changes the object state to held
+@rpc("any_peer", "call_local", "reliable")
+func _confirm_pick_up(path: NodePath) -> void:
+	if multiplayer.get_remote_sender_id() != 1 and not multiplayer.is_server():
+		return
+	
+	var object = get_node_or_null(path)
+	held = object
+	held.gravity_scale = 0
+
+#Requests the drop of an object which in turn changes the owenership over it
+@rpc("any_peer", "call_local", "reliable")
+func _request_drop(path: NodePath, final_transform: Transform3D, final_velocity: Vector3) -> void:
+	if not multiplayer.is_server():
+		return
+	
+	var object = get_node_or_null(path)
+	if object is RigidBody3D:
+		var client_id = multiplayer.get_remote_sender_id()
+		
+		#Force the server to accept the exact drop state before taking authority back
+		object.global_transform = final_transform
+		object.linear_velocity = final_velocity
+		
+		_confirm_drop.rpc_id(client_id, path)
+		
+		#Reclaim authority back to the server
+		_set_object_authority.rpc(path, 1)
+
+#Changes the object state to normal, which drops it
+@rpc("any_peer", "call_local", "reliable")
+func _confirm_drop(path: NodePath) -> void:
+	if multiplayer.get_remote_sender_id() != 1 and not multiplayer.is_server():
+		return
+	
+	var object = get_node_or_null(path)
+	if is_instance_valid(object) and held == object:
 		held.gravity_scale = 1
+		held = null
 
-	held = null
+#Sets the authority over an object to the peer holding it
+@rpc("any_peer", "call_local", "reliable")
+func _set_object_authority(path: NodePath, auth_id: int) -> void:
+	if multiplayer.get_remote_sender_id() != 1 and not multiplayer.is_server():
+		return
+		
+	var object = get_node_or_null(path)
+	if object is RigidBody3D:
+		object.set_multiplayer_authority(auth_id)
 
 #Process logic for held items regarding their velocity and rotation
 func _update_held():
@@ -557,20 +657,36 @@ func _update_held():
 						if dist < min_dist_to_held:
 							min_dist_to_held = dist
 							closest_portal_to_held = sub_portal
-
+		
+		var portal_resolved = false
+		
 		#If a portal was found, verify the player is near its connected exit
 		if closest_portal_to_held != null:
 			var player_portal = closest_portal_to_held.exit_portal
 			if player_portal.global_position.distance_squared_to(target) < 25.0:
 				#Transform the target point through the portal back to the object's side
 				target = player_portal.to_exit_position(target)
-
+				
 				#Transform the target rotation to match the new space
 				var target_basis = Basis.from_euler(target_rotation)
 				var target_transform = Transform3D(target_basis, target)
 				var exit_transform = player_portal.to_exit_transform(target_transform)
 				target_rotation = exit_transform.basis.get_euler()
-
+				
+				portal_resolved = true
+		
+		#If the item got stuck and no portals are involved drop it
+		if not portal_resolved:
+			var drop_path = held.get_path()
+			var final_tform = held.global_transform
+			var final_vel = held.linear_velocity
+			
+			held.gravity_scale = 1
+			held = null
+			
+			_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
+			return
+	
 	held.linear_velocity = 10 * (target - held.global_position)
 	held.angular_velocity = 1 * (target_rotation - held.global_rotation)
 
@@ -646,7 +762,7 @@ func _process_sanity(delta: float) -> void:
 		death.rpc()
 
 func _process_footsteps(delta: float) -> void:
-	if dead:
+	if dead or admin_noclip_enabled:
 		audio_stream_player.stop()
 		return
 
@@ -923,5 +1039,5 @@ func _process_noclip(delta: float) -> void:
 		fly_dir += Vector3.DOWN
 
 	#Apply the movement
-	var current_fly_speed = speed * sprint_factor * 2.0 if sprinting else speed * 2.0
+	var current_fly_speed = flight_speed * sprint_factor * 2.0 if sprinting else flight_speed * 2.0
 	global_position += fly_dir.normalized() * current_fly_speed * delta

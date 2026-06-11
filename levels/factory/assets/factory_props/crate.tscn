@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://8qkem6pkxveo" path="res://levels/factory/assets/factory_props/import/factory_props_48.png" id="1_dxnjh"]
 [ext_resource type="Texture2D" uid="uid://dsbu7y05aqj7l" path="res://levels/factory/assets/factory_props/import/factory_props_49.png" id="2_7flen"]
 [ext_resource type="Texture2D" uid="uid://b4w3jea2hfg7j" path="res://levels/factory/assets/factory_props/import/factory_props_50.png" id="3_c72ra"]
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="4_7flen"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4aard"]
 resource_name = "Crate"
@@ -51,10 +52,19 @@ shadow_mesh = SubResource("ArrayMesh_3488a")
 [sub_resource type="BoxShape3D" id="BoxShape3D_ksu8x"]
 size = Vector3(0.95, 0.95, 0.95)
 
-[node name="Crate" type="RigidBody3D" unique_id=2059299683]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_c72ra"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Crate" type="RigidBody3D" unique_id=2059299683 groups=["networked_physics"]]
 
 [node name="Crate_01_Crate_0" type="MeshInstance3D" parent="." unique_id=84937683]
 mesh = SubResource("ArrayMesh_a02lp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1003521650]
 shape = SubResource("BoxShape3D_ksu8x")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1142142113]
+replication_config = SubResource("SceneReplicationConfig_c72ra")
+script = ExtResource("4_7flen")
