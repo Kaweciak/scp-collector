@@ -85,6 +85,7 @@ spot_range = 2.0
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=2006605477]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.40112817)
 stream = ExtResource("13_vdhl0")
+volume_db = -13.615
 
 [connection signal="screen_event" from="Pages/TitleScreenPage" to="." method="_on_paper_screen_event"]
 [connection signal="screen_event" from="Pages/StartGameScreenPage" to="." method="_on_paper_screen_event"]

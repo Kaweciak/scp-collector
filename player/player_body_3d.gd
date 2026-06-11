@@ -107,9 +107,10 @@ var clone_flashlights: Array[SpotLight3D] = []
 @onready var hud: CanvasLayer = $MainCamera/HUD
 @onready var blink_timer: Timer = $BlinkTimer
 
-@onready var pause_menu: Control = $MainCamera/PauseMenu
+@onready var pause_menu: Control = $MainCamera/MenuLayer/PauseMenu
 
-@onready var end_game_info: Label = $MainCamera/EndGameInfo
+@onready var end_game_info: Label = $MainCamera/HUD/EndGameInfo
+@onready var hint_label: Label = $MainCamera/HUD/HintLabel
 
 @onready var audio_stream_player: AudioStreamPlayer3D = $AudioStreamPlayer3D
 
@@ -228,7 +229,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	#Only the owner instance can process input for the player
 	if not is_multiplayer_authority():
 		return
-
+	
+	#Pause menu functionality
+	elif event.is_action_pressed("pause"):
+		if end_game_info.visible:
+				end_game_info.visible = false
+		elif !pause_menu.visible:
+			_pause()
+		else:
+			_unpause()
+		return
+	
 	#Debug logic processing
 	if GameState.global_cheats_enabled:
 		if event is InputEventKey and event.pressed and not event.echo:
@@ -250,19 +261,20 @@ func _unhandled_input(event: InputEvent) -> void:
 					death.rpc()
 					get_viewport().set_input_as_handled()
 					return
-
+	
 	#Process spectator inputs
 	if dead:
 		if event is InputEventKey:
 			if event.is_action_pressed("interact"):
+				hint_label.hide()
 				_find_next_spectate_target()
 		return
-
+	
 	#Process mouse inputs
 	if event is InputEventMouseMotion:
 		look_dir = event.relative * 0.001
 		if mouse_captured: _rotate_camera()
-
+	
 	#Process player input
 	if event is InputEventKey and not dead:
 		if event.is_action_pressed("sprint"):
@@ -279,22 +291,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			_try_uncroach()
 			if(Input.is_action_pressed("sprint")):
 				_sprint()
-
+		
 		elif event.is_action_pressed("toggle_flashlight"):
 			_toggle_flashlight.rpc(!is_flashlight_on)
-
+		
 		elif event.is_action_pressed("interact"):
 			_interact()
-
-		#Helper for releaseing mouse capture -> should be replaced by the game menu
-		#TODO
-		elif event.is_action_pressed("pause"):
-			if end_game_info.visible:
-				end_game_info.visible = false
-			elif !pause_menu.visible:
-				_pause()
-			else:
-				_unpause()
 
 func _push_objects(delta: float) -> void:
 	for i in get_slide_collision_count():
@@ -418,9 +420,8 @@ func _update_spectator_camera() -> void:
 				last_spectator_target.model.show()
 			last_spectator_target = spectator_target
 			spectator_target.model.hide()
-
-		camera.global_position = spectator_target.camera.global_position
-		camera.global_rotation = spectator_target.camera.global_rotation
+		
+		camera.global_transform = spectator_target.camera.global_transform
 
 #Process walking mechanics
 func _walk(delta: float) -> Vector3:
@@ -506,17 +507,20 @@ func death() -> void:
 	dead = true
 
 	emit_signal("died")
-
-	#Drop any currently held item
-	if is_multiplayer_authority() and held != null:
-		var drop_path = held.get_path()
-		var final_tform = held.global_transform
-		var final_vel = held.linear_velocity
+	
+	if is_multiplayer_authority():
+		hint_label.show()
 		
-		held.gravity_scale = 1
-		held = null
-		
-		_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
+		#Drop any currently held item
+		if held != null:
+			var drop_path = held.get_path()
+			var final_tform = held.global_transform
+			var final_vel = held.linear_velocity
+			
+			held.gravity_scale = 1
+			held = null
+			
+			_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
 
 	#Reparent model as a corpse
 	model.reparent(get_parent(), true)
@@ -628,20 +632,36 @@ func _update_held():
 						if dist < min_dist_to_held:
 							min_dist_to_held = dist
 							closest_portal_to_held = sub_portal
-
+		
+		var portal_resolved = false
+		
 		#If a portal was found, verify the player is near its connected exit
 		if closest_portal_to_held != null:
 			var player_portal = closest_portal_to_held.exit_portal
 			if player_portal.global_position.distance_squared_to(target) < 25.0:
 				#Transform the target point through the portal back to the object's side
 				target = player_portal.to_exit_position(target)
-
+				
 				#Transform the target rotation to match the new space
 				var target_basis = Basis.from_euler(target_rotation)
 				var target_transform = Transform3D(target_basis, target)
 				var exit_transform = player_portal.to_exit_transform(target_transform)
 				target_rotation = exit_transform.basis.get_euler()
-
+				
+				portal_resolved = true
+		
+		#If the item got stuck and no portals are involved drop it
+		if not portal_resolved:
+			var drop_path = held.get_path()
+			var final_tform = held.global_transform
+			var final_vel = held.linear_velocity
+			
+			held.gravity_scale = 1
+			held = null
+			
+			_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
+			return
+	
 	held.linear_velocity = 10 * (target - held.global_position)
 	held.angular_velocity = 1 * (target_rotation - held.global_rotation)
 
@@ -717,7 +737,7 @@ func _process_sanity(delta: float) -> void:
 		death.rpc()
 
 func _process_footsteps(delta: float) -> void:
-	if dead:
+	if dead or admin_noclip_enabled:
 		audio_stream_player.stop()
 		return
 
