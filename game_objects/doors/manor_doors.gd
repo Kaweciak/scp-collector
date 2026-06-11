@@ -135,7 +135,7 @@ func update_navigation_link() -> void:
 		nav_link.start_position = Vector3(0, 0, 0.74)
 		
 		#Calculate where the ai should leave the portal on the other side
-		var local_exit_offset = Vector3(-0.3 * 0.405, 0, 0.74 * 0.405)
+		var local_exit_offset = Vector3(-0.38 * 0.405, 0, 0.74 * 0.405)
 		var global_end_pos = partner_portal.global_transform * local_exit_offset
 		
 		#Set the end position using the calculated coordinates set to local space

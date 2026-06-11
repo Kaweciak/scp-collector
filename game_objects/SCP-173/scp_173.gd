@@ -6,12 +6,19 @@ class_name SCP_173 extends CharacterBody3D
 @export var teleport_interval: float = 0.05
 @export var fov_dot_threshold: float = 0.5
 
+#Teleportation safeguard variables
+@export var stuck_timeout_limit: float = 0.4
+var stuck_accumulated_time: float = 0.0
 var time_since_last_move: float = 0.0
 
 #State Machine variables
 var active_target: PlayerBody3D = null
 var wander_target: Vector3 = Vector3.ZERO
 var is_wandering: bool = false
+
+#Wandering variables
+@export var max_wander_target_duration: float = 2.0
+var wander_timeout_timer: float = 0.0
 
 #Deaggro variables
 var vision_lost_timer: float = 0.0
@@ -95,52 +102,72 @@ func _update_target_state(valid_players: Array, observing_players: Array, delta:
 
 #Processes wandering logic when idle
 func _handle_wandering(delta: float) -> void:
-	if not is_wandering or global_position.distance_to(wander_target) < 1.0:
+	if not is_wandering or global_position.distance_to(wander_target) < 1.0 or wander_timeout_timer >= max_wander_target_duration:
 		_generate_new_wander_target()
-
+		wander_timeout_timer = 0.0
+	
+	wander_timeout_timer += delta
 	_teleport_towards_position(wander_target, delta)
 
 #Calculates a random, reachable point nearby
 func _generate_new_wander_target() -> void:
-	#Pick a random direction and distance
-	var random_dir = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0)).normalized()
-	var random_dist = randf_range(3.0, 8.0)
-	var desired_pos = global_position + (random_dir * random_dist)
-
-	#Raycast to ensure a point outside a wall is not picked
-	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.create(global_position + Vector3(0, 1, 0), desired_pos + Vector3(0, 1, 0))
-	query.exclude = [self]
-	var result = space_state.intersect_ray(query)
-
-	var safe_pos = desired_pos
-	if not result.is_empty():
-		safe_pos = result.position
-
-	#Snap to the closest valid navigation mesh coordinate
 	var map = nav_agent.get_navigation_map()
-	wander_target = NavigationServer3D.map_get_closest_point(map, safe_pos)
+	var max_attempts: int = 8
+	var found_valid_target: bool = false
+	
+	for attempt in range(max_attempts):
+		#Pick a random direction and distance
+		var random_dir = Vector3(randf_range(-1.0, 1.0), 0, randf_range(-1.0, 1.0)).normalized()
+		var random_dist = randf_range(3.0, 8.0)
+		var desired_pos = global_position + (random_dir * random_dist)
+		
+		#Raycast to ensure a point outside a wall is not picked
+		var space_state = get_world_3d().direct_space_state
+		var query = PhysicsRayQueryParameters3D.create(global_position + Vector3(0, 1, 0), desired_pos + Vector3(0, 1, 0))
+		query.exclude = [self]
+		var result = space_state.intersect_ray(query)
+		
+		var safe_pos = desired_pos
+		if not result.is_empty():
+			safe_pos = result.position + (global_position - desired_pos).normalized() * 0.5
+		
+		#Snap coordinates to the navigation surface data grid
+		var potential_target = NavigationServer3D.map_get_closest_point(map, safe_pos)
+		
+		#Set tge target position in the navigation agent
+		nav_agent.target_position = potential_target
+		
+		#Assert the target point layout is reachable 
+		if nav_agent.is_target_reachable() and potential_target.distance_to(safe_pos) < 2.0:
+			wander_target = potential_target
+			found_valid_target = true
+			break
+		
+	#Fallback in case of being boxed in
+	if not found_valid_target:
+		wander_target = NavigationServer3D.map_get_closest_point(map, global_position)
+		
 	is_wandering = true
 
 #Returns an array of players who see the entity on their screen
 func _get_observing_players(players: Array) -> Array:
 	var observers = []
 	var space_state = get_world_3d().direct_space_state
-
+	
 	#Get the corners of the model
 	var points_container = get_node_or_null("VisibilityPoints")
 	if not points_container:
 		printerr("No visbility points set for the SCP-173!")
 		return observers
 	var points_to_check = points_container.get_children()
-
+	
 	for player in players:
 		#If the player's eyes are closed, they cannot observe the entity
 		if player.current_eyes_state == player.Eyes_state.CLOSED:
 			continue
-
+		
 		var player_can_see = false
-
+		
 		#Cast a ray for each marker
 		for marker in points_to_check:
 			var pt = marker.global_position
@@ -151,16 +178,16 @@ func _get_observing_players(players: Array) -> Array:
 				#Exclude the entity itself and the player to prevent self-intersections
 				query.exclude = [self, player]
 				var result = space_state.intersect_ray(query)
-
+				
 				#Break if the ray didn't hit anything, meaning the player can see it
 				if result.is_empty():
 					player_can_see = true
 					break
-
+		
 		#Add the player to the total list of observers if they see the entity
 		if player_can_see:
 			observers.append(player)
-
+	
 	return observers
 
 #Checks if the entity is looking at a specific player
@@ -168,7 +195,7 @@ func _sees_player(player: PlayerBody3D) -> bool:
 	#Get which direction the entity is looking as well as the direction to the player
 	var dir_to_player = global_position.direction_to(player.global_position)
 	var forward = -global_transform.basis.z
-
+	
 	#Check if the entity is looking at a specific player using a dot product simulated frustum
 	if forward.dot(dir_to_player) > fov_dot_threshold:
 		#Cast a ray towards the player to check if they aren't behind a wall
@@ -176,9 +203,9 @@ func _sees_player(player: PlayerBody3D) -> bool:
 		var query = PhysicsRayQueryParameters3D.create(global_position + Vector3(0, 1, 0), player.global_position + Vector3(0, 1, 0))
 		query.exclude = [self, player]
 		var result = space_state.intersect_ray(query)
-
+		
 		return result.is_empty()
-
+	
 	return false
 
 #Checks if there is a clear physical path to the player
@@ -187,7 +214,7 @@ func _has_line_of_sight(player: PlayerBody3D) -> bool:
 	var query = PhysicsRayQueryParameters3D.create(global_position + Vector3(0, 1, 0), player.global_position + Vector3(0, 1, 0))
 	query.exclude = [self, player]
 	var result = space_state.intersect_ray(query)
-
+	
 	return result.is_empty()
 
 #Gets the closest player from a list
@@ -213,36 +240,43 @@ func _teleport_towards_position(target_pos: Vector3, delta: float) -> void:
 		look_at(flat_target, Vector3.UP, true)
 		return
 	
-	#Skips movement if navigation in progress
+	#Skips movement if navigation is finished
 	if nav_agent.is_navigation_finished():
+		if global_position.distance_to(target_pos) > nav_agent.target_desired_distance:
+			stuck_accumulated_time += delta
+			if stuck_accumulated_time >= stuck_timeout_limit:
+				_recover_from_stuck_state(target_pos)
 		return
-
+	
 	#Wait between each teleport to limit movement speed
 	time_since_last_move += delta
 	if time_since_last_move >= teleport_interval:
 		time_since_last_move = 0.0
-
+		
+		#Store the position for later failsaves
+		var pre_teleport_position = global_position
+		
 		#Get the next node in the path
 		var next_path_pos = nav_agent.get_next_path_position()
-
+		
 		#Calculate the distance it can travel in this interval
 		var distance_to_move = move_speed * teleport_interval
-
+		
 		#Teleport the anomaly forward along the path
 		global_position = global_position.move_toward(next_path_pos, distance_to_move)
-
+		
 		#Adjust the y rotation
 		var flat_target = target_pos
 		flat_target.y = global_position.y
-
+		
 		#Rotate to face the player so it aligns for the kill check
 		look_at(flat_target, Vector3.UP, true)
-
+		
 		#Variables used to find where the floor is
 		var space_state = get_world_3d().direct_space_state
 		var ray_start = Vector3(global_position.x, global_position.y + 1.0, global_position.z)
 		var ray_end = Vector3(global_position.x, global_position.y - 10.0, global_position.z)
-
+		
 		#Cast a ray to find the y position of the floor
 		var query = PhysicsRayQueryParameters3D.create(ray_start, ray_end)
 		query.exclude = [self]
@@ -250,17 +284,45 @@ func _teleport_towards_position(target_pos: Vector3, delta: float) -> void:
 		var result = space_state.intersect_ray(query)
 		if result:
 			global_position.y = result.position.y
+		
+		#Check if the anomaly is stuck
+		if pre_teleport_position.distance_to(global_position) < 0.05:
+			stuck_accumulated_time += teleport_interval
+			
+			#Forcefully resolve the problem if the anomaly gets stuck
+			if stuck_accumulated_time >= stuck_timeout_limit:
+				_recover_from_stuck_state(next_path_pos)
+		else:
+			stuck_accumulated_time = 0.0
+			
+#Forces relocation to the nearest navigable empty spave
+func _recover_from_stuck_state(fallback_target: Vector3) -> void:
+	stuck_accumulated_time = 0.0
+	var map = nav_agent.get_navigation_map()
+	
+	#Find the nearest safe point
+	var safe_unstuck_point = NavigationServer3D.map_get_closest_point(map, fallback_target)
+	
+	#Apply safety height addition
+	global_position = safe_unstuck_point + Vector3(0, 0.2, 0)
+	
+	#Set the new target
+	nav_agent.target_position = fallback_target
+	
+	#Remove movement smears created due to teleportation
+	if has_method("reset_physics_interpolation"):
+		call_deferred("reset_physics_interpolation")
 
 #Attempt to kill the player if they are behind and facing them
 func _attempt_kill(target: PlayerBody3D) -> void:
 	if global_position.distance_to(target.global_position) <= kill_distance:
-
+		
 		#Determine the direction from the player's camera to the anomaly
 		var dir_to_scp = (global_position - target.camera.global_position).normalized()
-
+		
 		#Check if the entity is beghind the player
 		var is_behind = target.camera.global_transform.basis.z.dot(dir_to_scp) > 0.0
-
-		#Call the player feath function
+		
+		#Call the player death function
 		if is_behind:
 			target.death.rpc()
