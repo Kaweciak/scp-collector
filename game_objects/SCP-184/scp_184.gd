@@ -1,6 +1,9 @@
 class_name SCP_184 extends TeleportableItem
 
+
 func _ready() -> void:
+	set_multiplayer_authority(1)
+	
 	PortalManager.activate_anomaly()
 
 #Adds itself to the maintained anomaly list

@@ -215,7 +215,7 @@ func _physics_process(delta: float) -> void:
 		_update_interaction_cursor()
 
 	#Process entity holding mechanics
-	if is_multiplayer_authority() or multiplayer.is_server():
+	if is_multiplayer_authority():
 		if held != null:
 			_update_held()
 
@@ -300,31 +300,40 @@ func _push_objects(delta: float) -> void:
 	for i in get_slide_collision_count():
 		var collision = get_slide_collision(i)
 		var collider = collision.get_collider()
-
+		
 		if collider is RigidBody3D:
 			#Get the direction of the collision
 			var push_dir = -collision.get_normal()
-
+			
 			#Get contact point relative to the center of the object
 			var contact_point = collision.get_position() - collider.global_position
-
+			
 			#Calculate velocity relative to the object
 			var velocity_diff = velocity.dot(push_dir) - collider.linear_velocity.dot(push_dir)
 			velocity_diff = max(0.0, velocity_diff)
-
+			
 			#Scale the force by mass
 			var mass_ratio = min(1.0, player_mass / collider.mass)
-
+			
 			#Base push impulse calculation
 			var impulse = push_dir * speed * push_force * mass_ratio
-
+			
 			#Weight logic for standing on objects
 			if collision.get_normal().y > 0.5:
 				var weight_impulse = Vector3.DOWN * gravity_factor * delta * mass_ratio
 				impulse += weight_impulse
 
-			#Apply the final impulse
-			collider.apply_impulse(impulse, contact_point)
+			#Tell the server to apply the impulse globally
+			apply_server_impulse.rpc_id(1, collider.get_path(), impulse, contact_point)
+
+#Applies the same impulse across all players
+@rpc("any_peer", "call_local", "unreliable")
+func apply_server_impulse(path: NodePath, impulse: Vector3, contact_point: Vector3) -> void:
+	if not multiplayer.is_server():
+		return
+	var object = get_node_or_null(path)
+	if object is RigidBody3D:
+		object.apply_impulse(impulse, contact_point)
 
 func _pause() -> void:
 	pause_menu.visible = true
@@ -468,7 +477,16 @@ func _jump(delta: float) -> Vector3:
 func _interact() -> void:
 	#Drop any held entity
 	if held != null:
-		_server_drop.rpc()
+		#Capture state before clearing
+		var drop_path = held.get_path()
+		var final_tform = held.global_transform
+		var final_vel = held.linear_velocity
+		
+		# Client-side prediction: Instantly drop the item locally
+		held.gravity_scale = 1
+		held = null
+		
+		_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
 		return
 
 	#Get the initial interaction object
@@ -478,7 +496,7 @@ func _interact() -> void:
 	if collider is Interactable:
 		collider.interact()
 	elif collider is RigidBody3D:
-		_server_pick_up.rpc(collider.get_path())
+		_request_pick_up.rpc_id(1, collider.get_path())
 
 #Multiplayer synched death processing logic
 @rpc("call_local", "any_peer")
@@ -490,7 +508,15 @@ func death() -> void:
 	emit_signal("died")
 
 	#Drop any currently held item
-	_server_drop.rpc()
+	if is_multiplayer_authority() and held != null:
+		var drop_path = held.get_path()
+		var final_tform = held.global_transform
+		var final_vel = held.linear_velocity
+		
+		held.gravity_scale = 1
+		held = null
+		
+		_request_drop.rpc_id(1, drop_path, final_tform, final_vel)
 
 	#Reparent model as a corpse
 	model.reparent(get_parent(), true)
@@ -515,27 +541,72 @@ func _find_next_spectate_target() -> void:
 	else:
 		spectator_target = null
 
-#func set_dialog_image(texture: CompressedTexture2D) -> void:
-	#hud.set_dialog_image(texture)
-#
-#func remove_dialog_image() -> void:
-	#hud.remove_dialog_image()
-
-#Multiplayer synched entity pickup processing logic
-@rpc("any_peer", "call_local")
-func _server_pick_up(path: NodePath):
+#Server processes the pickup and transfers authority to the caller
+@rpc("any_peer", "call_local", "reliable")
+func _request_pick_up(path: NodePath) -> void:
+	if not multiplayer.is_server():
+		return
+		
 	var object = get_node_or_null(path)
 	if object is RigidBody3D:
-		held = object
-		held.gravity_scale = 0
+		var current_auth = object.get_multiplayer_authority()
+		var active_peers = multiplayer.get_peers()
+		
+		#Allow pickup if the server currently owns it or if the previous owner disconnected
+		if current_auth == 1 or not active_peers.has(current_auth):
+			var client_id = multiplayer.get_remote_sender_id()
+			_set_object_authority.rpc(path, client_id)
+			_confirm_pick_up.rpc_id(client_id, path)
 
-#Multiplayer synched entity dropping processing logic
-@rpc("any_peer", "call_local")
-func _server_drop():
-	if is_instance_valid(held):
+#Changes the object state to held
+@rpc("any_peer", "call_local", "reliable")
+func _confirm_pick_up(path: NodePath) -> void:
+	if multiplayer.get_remote_sender_id() != 1 and not multiplayer.is_server():
+		return
+	
+	var object = get_node_or_null(path)
+	held = object
+	held.gravity_scale = 0
+
+#Requests the drop of an object which in turn changes the owenership over it
+@rpc("any_peer", "call_local", "reliable")
+func _request_drop(path: NodePath, final_transform: Transform3D, final_velocity: Vector3) -> void:
+	if not multiplayer.is_server():
+		return
+	
+	var object = get_node_or_null(path)
+	if object is RigidBody3D:
+		var client_id = multiplayer.get_remote_sender_id()
+		
+		#Force the server to accept the exact drop state before taking authority back
+		object.global_transform = final_transform
+		object.linear_velocity = final_velocity
+		
+		_confirm_drop.rpc_id(client_id, path)
+		
+		#Reclaim authority back to the server
+		_set_object_authority.rpc(path, 1)
+
+#Changes the object state to normal, which drops it
+@rpc("any_peer", "call_local", "reliable")
+func _confirm_drop(path: NodePath) -> void:
+	if multiplayer.get_remote_sender_id() != 1 and not multiplayer.is_server():
+		return
+	
+	var object = get_node_or_null(path)
+	if is_instance_valid(object) and held == object:
 		held.gravity_scale = 1
+		held = null
 
-	held = null
+#Sets the authority over an object to the peer holding it
+@rpc("any_peer", "call_local", "reliable")
+func _set_object_authority(path: NodePath, auth_id: int) -> void:
+	if multiplayer.get_remote_sender_id() != 1 and not multiplayer.is_server():
+		return
+		
+	var object = get_node_or_null(path)
+	if object is RigidBody3D:
+		object.set_multiplayer_authority(auth_id)
 
 #Process logic for held items regarding their velocity and rotation
 func _update_held():

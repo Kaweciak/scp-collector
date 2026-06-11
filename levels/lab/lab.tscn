@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bc3dblvoddjbc"]
 
 [ext_resource type="Script" uid="uid://bo0spnwujjijg" path="res://levels/level_controller.gd" id="1_75oky"]
+[ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="3_o6pmt"]
 [ext_resource type="PackedScene" uid="uid://bskiuf3it3yto" path="res://game_objects/SCP-173/scp_173.tscn" id="4_3n01h"]
 [ext_resource type="Texture2D" uid="uid://chx4r4viwwemh" path="res://levels/factory/assets/textures/house2_Grass001_1K-JPG_Color.jpg" id="6_raq2p"]
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="7_o4snh"]
@@ -892,7 +893,7 @@ size = Vector3(0.85167694, 3.9944458, 7.7951293)
 
 [node name="House" type="Node3D" unique_id=1062811088]
 script = ExtResource("1_75oky")
-anomaly_scenes = Array[PackedScene]([ExtResource("4_3n01h")])
+anomaly_scenes = Array[PackedScene]([ExtResource("4_3n01h"), ExtResource("3_o6pmt")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1114252263]
 environment = SubResource("Environment_2vnkb")
@@ -2842,7 +2843,8 @@ collision_layer = 32772
 [node name="Monitor6" parent="Items" unique_id=1799998843 instance=ExtResource("20_48pkn")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8217773, 1.6649253, -2.0669794)
 collision_layer = 32772
-[node name="PipeShort" parent="Props" unique_id=727796309 instance=ExtResource("29_o6pmt")]
+
+[node name="Props#PipeShort" parent="." unique_id=1830761649 instance=ExtResource("29_o6pmt")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.135115, 2.5260944, -38.76667)
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=735105758]

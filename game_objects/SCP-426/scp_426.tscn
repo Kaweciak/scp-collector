@@ -9,6 +9,7 @@
 [ext_resource type="ArrayMesh" uid="uid://buya7lajwsn22" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Plastic Light_0.res" id="5_x8abv"]
 [ext_resource type="ArrayMesh" uid="uid://douh8p08lnlrp" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_RED Surface_0.res" id="6_6oobr"]
 [ext_resource type="ArrayMesh" uid="uid://hsx8sdyddo1t" path="res://game_objects/SCP-426/rsc/Sketchfab_Scene_Toaster_Dark_0.res" id="7_ymocq"]
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="10_od64x"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_ey5d2"]
 friction = 0.5
@@ -72,33 +73,9 @@ height = 0.60491943
 radius = 0.18798828
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ey5d2"]
-properties/0/path = NodePath(".:position")
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
 properties/0/spawn = true
 properties/0/replication_mode = 1
-properties/1/path = NodePath(".:rotation")
-properties/1/spawn = true
-properties/1/replication_mode = 1
-properties/2/path = NodePath(".:linear_velocity")
-properties/2/spawn = true
-properties/2/replication_mode = 1
-properties/3/path = NodePath(".:angular_velocity")
-properties/3/spawn = true
-properties/3/replication_mode = 1
-properties/4/path = NodePath(".:vision_sanity_drain_rate")
-properties/4/spawn = true
-properties/4/replication_mode = 1
-properties/5/path = NodePath(".:touch_sanity_drain_rate")
-properties/5/spawn = true
-properties/5/replication_mode = 1
-properties/6/path = NodePath(".:proximity_sanity_drain_rate")
-properties/6/spawn = true
-properties/6/replication_mode = 1
-properties/7/path = NodePath(".:proximity_sanity_drain_radius")
-properties/7/spawn = true
-properties/7/replication_mode = 1
-properties/8/path = NodePath(".:sanity_regeneration_rate")
-properties/8/spawn = true
-properties/8/replication_mode = 1
 
 [node name="Toaster" type="RigidBody3D" unique_id=843890881 groups=["Anomaly"]]
 collision_layer = 49156
@@ -159,6 +136,7 @@ shape = SubResource("CylinderShape3D_gk7ay")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1388690759]
 replication_config = SubResource("SceneReplicationConfig_ey5d2")
+script = ExtResource("10_od64x")
 
 [node name="VisibilityPoints" type="Node3D" parent="." unique_id=1576379677]
 

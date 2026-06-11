@@ -14,8 +14,6 @@ class_name Toaster extends TeleportableItem
 func _ready() -> void:
 	#Only the server should process physics for this object
 	set_multiplayer_authority(1)
-	if not multiplayer.is_server():
-		freeze = true
 	
 	#Backup call for when checkpoints arent' initialized
 	if checkpoints.is_empty():
@@ -89,7 +87,7 @@ func _apply_static_checkpoint_values(idx: int) -> void:
 		GameState.update_toaster_rate.rpc(sanity_regeneration_rate)
 
 #Synchronizes sanity metrics across players
-@rpc("authority", "call_local", "unreliable")
+@rpc("any_peer", "call_local", "unreliable")
 func sync_toaster_values(p_checkpoint: int, v_rate: float, t_rate: float, p_rate: float, p_radius: float, r_rate: float) -> void:
 	sanity_checkpoint = p_checkpoint
 	vision_sanity_drain_rate = v_rate

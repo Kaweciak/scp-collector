@@ -1,5 +1,7 @@
 [gd_scene format=4 uid="uid://gmd388cq5oj8"]
 
+[ext_resource type="Script" uid="uid://ckfbpkb3cr5ig" path="res://multiplayer/physics_synchronizer.gd" id="1_dohie"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8vb1t"]
 resource_name = "glass"
 transparency = 4
@@ -45,7 +47,12 @@ shadow_mesh = SubResource("ArrayMesh_ybrrw")
 height = 0.20637512
 radius = 0.08300781
 
-[node name="Glass" type="RigidBody3D" unique_id=1670856223]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_ntgss"]
+properties/0/path = NodePath("MultiplayerSynchronizer:sync_bstate_array")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="Glass" type="RigidBody3D" unique_id=1670856223 groups=["networked_physics"]]
 
 [node name="glass1" type="Node3D" parent="." unique_id=622202875]
 transform = Transform3D(0.074, 0, 0, 0, 0.544, 0, 0, 0, 0.074, 0, 0, 0)
@@ -56,3 +63,7 @@ mesh = SubResource("ArrayMesh_6e8di")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2116981975]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.04877145, -0.09508772, 0.038556002)
 shape = SubResource("CylinderShape3D_dohie")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=834233756]
+replication_config = SubResource("SceneReplicationConfig_ntgss")
+script = ExtResource("1_dohie")
