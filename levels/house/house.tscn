@@ -23,6 +23,8 @@
 [ext_resource type="Texture2D" uid="uid://bsxweh4t1irb5" path="res://levels/house/assests/house2_Image_9.png" id="19_1rp0o"]
 [ext_resource type="Texture2D" uid="uid://ca53g6dp6m7s4" path="res://levels/house/assests/house2_Image_10.png" id="20_gxa3e"]
 [ext_resource type="Texture2D" uid="uid://c04qelwwmbhx6" path="res://levels/house/assests/house2_Image_4.png" id="21_8ro5w"]
+[ext_resource type="PackedScene" uid="uid://cf25du2g6k7nj" path="res://game_objects/doors/manor_doors.tscn" id="6_hqfmh"]
+[ext_resource type="AudioStream" uid="uid://ddb5bmuxo7pwd" path="res://ambient_sounds/Vent_airflow.wav" id="7_vk5rs"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3xbg0"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -8361,7 +8363,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.38916016, 4, -19)
 size = Vector3(23, 9, 1)
 
 [node name="PlayerContainer" type="Node3D" parent="." unique_id=33540505]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2, 15)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=36991001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0046658516, -1.1920929e-07, 0.0036978722)
@@ -9152,3 +9154,7 @@ mesh = SubResource("ArrayMesh_vk5rs")
 [node name="small_door_filler_wall13" type="MeshInstance3D" parent="FillerWalls" unique_id=888990144]
 transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, 0.25, 0, -0.25, -1.0927847e-08, -7.7, 4.037, -8.494)
 mesh = SubResource("ArrayMesh_vk5rs")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1514941927]
+stream = ExtResource("7_vk5rs")
+autoplay = true

@@ -26,6 +26,7 @@
 [ext_resource type="PackedScene" uid="uid://tv0d30n8flbs" path="res://levels/factory/assets/factory_props/cart.tscn" id="24_j6h0s"]
 [ext_resource type="PackedScene" uid="uid://dj5urbnbhm84w" path="res://levels/factory/assets/factory_props/barrel.tscn" id="25_egfj8"]
 [ext_resource type="PackedScene" uid="uid://clk4aoocvlexo" path="res://levels/factory/assets/factory_props/pipe_valve.tscn" id="26_8a2xl"]
+[ext_resource type="AudioStream" uid="uid://ddb5bmuxo7pwd" path="res://ambient_sounds/Vent_airflow.wav" id="27_40233"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3xbg0"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -276,7 +277,7 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.24999999, -0.39211768, 0.8984
 shadow_enabled = true
 
 [node name="PlayerContainer" type="Node3D" parent="." unique_id=33540505]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 9)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6, 2, 15)
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="." unique_id=36991001]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0046658516, -1.1920929e-07, 0.0036978722)
@@ -1673,3 +1674,34 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8789816, 1.3160244, -27.180
 
 [node name="Barrel3" parent="Items" unique_id=1554600565 instance=ExtResource("25_egfj8")]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 1.0788038, 1.4970386, -27.45455)
+
+[node name="Generator5" parent="props" unique_id=800308536 instance=ExtResource("17_webon")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 2.7468512, 1.9863582, -38.16914)
+
+[node name="Generator6" parent="props" unique_id=899780505 instance=ExtResource("17_webon")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 5.746851, 1.9863582, -38.16914)
+
+[node name="Generator7" parent="props" unique_id=647610909 instance=ExtResource("17_webon")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 8.746851, 1.9863582, -38.16914)
+
+[node name="PipeLWide2" parent="props" unique_id=170794005 instance=ExtResource("23_b2pdp")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 6.0305614, 2.518402, -27.296059)
+
+[node name="PipeLWide3" parent="props" unique_id=143126403 instance=ExtResource("23_b2pdp")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 8.030561, 4.0371943, -27.266869)
+
+[node name="PipeValve" parent="props" unique_id=1412313963 instance=ExtResource("26_8a2xl")]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 8, 2, -28.362041)
+
+[node name="PipeLong5" parent="props" unique_id=1579704896 instance=ExtResource("22_57tvp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.633224, 5.7074018, -28.04726)
+
+[node name="Container_16" parent="props" unique_id=1006738407 instance=ExtResource("15_rtrpl")]
+transform = Transform3D(0.81531984, -0.57901084, -2.5309367e-08, 0, -4.371139e-08, 1, -0.57901084, -0.81531984, -3.5638763e-08, -3.329906, 2.3466554, -32.595474)
+
+[node name="Container_17" parent="props" unique_id=1917424087 instance=ExtResource("15_rtrpl")]
+transform = Transform3D(-0.055124503, -0.9984795, -4.3644924e-08, 0, -4.371139e-08, 1, -0.9984795, 0.055124503, 2.4095685e-09, 3.8758411, 2.3466554, -31.214907)
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=282405852]
+stream = ExtResource("27_40233")
+autoplay = true

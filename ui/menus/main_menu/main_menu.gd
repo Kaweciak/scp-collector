@@ -7,6 +7,8 @@ var current_page: Node
 @export var lobby_scene: PackedScene
 @export var tutorial_scene: PackedScene
 
+@onready var audio_stream_player: AudioStreamPlayer3D = $AudioStreamPlayer3D
+
 
 func _ready() -> void:
 	pages_arr = get_node("Pages").get_children()
@@ -35,6 +37,8 @@ func _on_paper_screen_event(event_name: String, args: Array = []) -> void:
 			_host_game(args[0])
 		"join_game":
 			_join_game(args[0], args[1])
+		"settings_pressed":
+			_flip_page_to("SettingsScreenPage")
 		"return_pressed":
 			_flip_page_to("TitleScreenPage")
 
@@ -57,11 +61,13 @@ func _flip_page_to(page_name: String) -> bool:
 
 	while current_index < target_index:
 		current_page.flip_forward()
+		audio_stream_player.play()
 		current_index += 1
 		current_page = pages_arr[current_index]
 
 	while current_index > target_index:
 		current_index -= 1
+		audio_stream_player.play()
 		current_page = pages_arr[current_index]
 		current_page.flip_back()
 

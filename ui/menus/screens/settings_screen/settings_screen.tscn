@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://co66o7htx5cl8"]
+
+[ext_resource type="Theme" uid="uid://bxvf2f7vgqd4h" path="res://ui/menus/main_menu/main_menu_theme.tres" id="1_p15u8"]
+[ext_resource type="Script" uid="uid://bpbjvid5thrgw" path="res://ui/menus/screens/settings_screen/settings_screen.gd" id="2_k3s0u"]
+[ext_resource type="Texture2D" uid="uid://drcp5pcypvvp5" path="res://ui/icons/scp_logo_transparent.png" id="3_8205t"]
+
+[node name="TitleScreen" type="MarginContainer" unique_id=1072418236]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("1_p15u8")
+script = ExtResource("2_k3s0u")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1795447660]
+layout_mode = 2
+
+[node name="Logo" type="TextureRect" parent="VBoxContainer" unique_id=1070641507]
+layout_mode = 2
+size_flags_vertical = 0
+texture = ExtResource("3_8205t")
+expand_mode = 5
+
+[node name="FullScreenContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1540192985]
+layout_mode = 2
+
+[node name="FullScreenCheckbox" type="CheckBox" parent="VBoxContainer/FullScreenContainer" unique_id=1458787725]
+layout_mode = 2
+text = "FULL SCREEN"
+alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer" unique_id=409547385]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1244295166]
+layout_mode = 2
+text = "GENERAL VOLUME"
+horizontal_alignment = 1
+
+[node name="AudioSliderContainer" type="MarginContainer" parent="VBoxContainer" unique_id=1423206789]
+layout_mode = 2
+
+[node name="AudioSlider" type="HSlider" parent="VBoxContainer/AudioSliderContainer" unique_id=762340835]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 1.0
+
+[node name="HSeparator2" type="HSeparator" parent="VBoxContainer" unique_id=1042662430]
+layout_mode = 2
+
+[node name="ReturnButton" type="Button" parent="VBoxContainer" unique_id=743723702]
+layout_mode = 2
+text = "RETURN"
+flat = true
+
+[connection signal="toggled" from="VBoxContainer/FullScreenContainer/FullScreenCheckbox" to="." method="_on_fullscreen_check_box_toggled"]
+[connection signal="value_changed" from="VBoxContainer/AudioSliderContainer/AudioSlider" to="." method="_on_volume_slider_value_changed"]
+[connection signal="pressed" from="VBoxContainer/ReturnButton" to="." method="_on_return_button_pressed"]
