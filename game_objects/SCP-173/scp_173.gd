@@ -5,6 +5,9 @@ class_name SCP_173 extends CharacterBody3D
 @export var kill_distance: float = 1.8
 @export var teleport_interval: float = 0.05
 @export var fov_dot_threshold: float = 0.5
+@export var hunting_speed_multiplier_min: float = 5.0
+@export var hunting_speed_multiplier_max: float = 10.0
+@export var scaling_limit_timer: float = 1200.0
 
 #Teleportation safeguard variables
 @export var stuck_timeout_limit: float = 0.4
@@ -17,6 +20,7 @@ var wander_target: Vector3 = Vector3.ZERO
 var is_wandering: bool = false
 
 #Wandering variables
+@export var wander_speed_multiplier: float = 1.0/2.0
 @export var max_wander_target_duration: float = 2.0
 var wander_timeout_timer: float = 0.0
 
@@ -259,8 +263,20 @@ func _teleport_towards_position(target_pos: Vector3, delta: float) -> void:
 		#Get the next node in the path
 		var next_path_pos = nav_agent.get_next_path_position()
 		
+		#Get the current time and its factor
+		var current_match_time: float = GameState.current_game_time_elapsed
+		var time_factor: float = clamp(current_match_time / scaling_limit_timer, 0.0, 1.0)
+		
+		var dynamic_speed: float = move_speed
+		#Calculate the current hunting speed if hunting
+		if active_target != null:
+			var current_tracking_multiplier: float = lerp(hunting_speed_multiplier_min, hunting_speed_multiplier_max, time_factor)
+			dynamic_speed *= current_tracking_multiplier
+		else: #Apply speed reduction if idle
+			dynamic_speed *= wander_speed_multiplier
+		
 		#Calculate the distance it can travel in this interval
-		var distance_to_move = move_speed * teleport_interval
+		var distance_to_move = dynamic_speed * teleport_interval
 		
 		#Teleport the anomaly forward along the path
 		global_position = global_position.move_toward(next_path_pos, distance_to_move)
