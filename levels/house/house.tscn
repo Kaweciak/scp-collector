@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://diln36m863vwt" path="res://game_objects/SCP-184/scp_184.tscn" id="2_2u60b"]
 [ext_resource type="Texture2D" uid="uid://b8eymm1ur131k" path="res://levels/house/assests/house2_RoofingTiles012B_1K-JPG_Color.jpg-RoofingTiles012B_1K-JPG_Opacity.png" id="3_2u60b"]
 [ext_resource type="PackedScene" uid="uid://b6mkvk6wm72oj" path="res://game_objects/van.tscn" id="3_3xbg0"]
+[ext_resource type="PackedScene" uid="uid://bskiuf3it3yto" path="res://game_objects/SCP-173/scp_173.tscn" id="3_8e1ha"]
+[ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="4_s7fov"]
 [ext_resource type="Texture2D" uid="uid://xsocy6ox0c1k" path="res://levels/house/assests/house2_RoofingTiles012B_1K-JPG_Roughness.png" id="4_ypd8r"]
 [ext_resource type="Texture2D" uid="uid://dorum8xcwsf6b" path="res://levels/house/assests/house2_RoofingTiles012B_1K-JPG_NormalGL.jpg" id="5_8e1ha"]
 [ext_resource type="PackedScene" uid="uid://cf25du2g6k7nj" path="res://game_objects/doors/manor_doors.tscn" id="6_hqfmh"]
@@ -7138,7 +7140,7 @@ shadow_mesh = SubResource("ArrayMesh_6xpsn")
 
 [node name="House" type="Node3D" unique_id=1062811088]
 script = ExtResource("1_nll3y")
-anomaly_scenes = Array[PackedScene]([ExtResource("2_2u60b")])
+anomaly_scenes = Array[PackedScene]([ExtResource("2_2u60b"), ExtResource("3_8e1ha"), ExtResource("4_s7fov")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1114252263]
 environment = SubResource("Environment_2vnkb")

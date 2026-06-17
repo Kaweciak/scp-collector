@@ -3,12 +3,9 @@
 [ext_resource type="Theme" uid="uid://cqruciomkq3xh" path="res://ui/menus/pause_menu/pause_menu_theme.tres" id="1_3a2ww"]
 [ext_resource type="Script" uid="uid://peta35ggm2cn" path="res://ui/menus/pause_menu/pause_menu.gd" id="2_2gx4h"]
 [ext_resource type="Texture2D" uid="uid://gnjbg1shvpa3" path="res://ui/menus/pause_menu/icons/cross.png" id="2_57ky2"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_3a2ww"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_57ky2"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2gx4h"]
+[ext_resource type="Texture2D" uid="uid://c7phvdswjqqht" path="res://ui/menus/pause_menu/icons/scp173.png" id="3_cid4m"]
+[ext_resource type="Texture2D" uid="uid://suvtj6qy27g8" path="res://ui/menus/pause_menu/icons/scp184.png" id="4_yio2i"]
+[ext_resource type="Texture2D" uid="uid://2a6wjp386vwt" path="res://ui/menus/pause_menu/icons/scp428.png" id="5_bom27"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2gx4h"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -127,7 +124,7 @@ Capturing SCP-173 requires maintaining distance and constant eye contact. Member
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer173/HBoxContainer" unique_id=382431503]
 layout_mode = 2
 size_flags_horizontal = 3
-texture = SubResource("CompressedTexture2D_3a2ww")
+texture = ExtResource("3_cid4m")
 expand_mode = 4
 stretch_mode = 6
 
@@ -149,7 +146,7 @@ Capturing SCP-184 requires good navigational skills and a large capture squad. N
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer184/HBoxContainer" unique_id=525072569]
 layout_mode = 2
 size_flags_horizontal = 3
-texture = SubResource("CompressedTexture2D_57ky2")
+texture = ExtResource("4_yio2i")
 expand_mode = 4
 stretch_mode = 5
 
@@ -170,7 +167,7 @@ To capture me scientists need to cooperate. They need to ensure one isn't direct
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/AnomaliesMenuContainer/InfoContainer428/HBoxContainer" unique_id=106227739]
 layout_mode = 2
 size_flags_horizontal = 3
-texture = SubResource("CompressedTexture2D_2gx4h")
+texture = ExtResource("5_bom27")
 expand_mode = 4
 stretch_mode = 5
 

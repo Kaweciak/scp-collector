@@ -1,6 +1,7 @@
 extends Node
 
 signal players_updated
+signal connection_failed(error_message: String)
 
 var peer = ENetMultiplayerPeer.new()
 var player_scene: PackedScene = preload("res://player/player_body_3d.tscn")
@@ -14,6 +15,9 @@ var spawner: MultiplayerSpawner = MultiplayerSpawner.new()
 func _ready() -> void:
 	add_child(spawner)
 	spawner.add_spawnable_scene("res://player/player_body_3d.tscn")
+	
+	#Connect the network failure signal to a local function
+	multiplayer.connection_failed.connect(_on_connection_failed)
 
 
 func host(nickname: String) -> void:
@@ -33,14 +37,21 @@ func host(nickname: String) -> void:
 
 func join(ip_address: String = "127.0.0.1", nickname: String = "Player") -> void:
 	var result = peer.create_client(ip_address, 2137)
+	
 	if result == OK:
 		multiplayer.multiplayer_peer = peer
-
+		
 		multiplayer.connected_to_server.connect(func():
 			rpc_id(1, "register_player", nickname)
 		)
-	multiplayer.server_disconnected.connect(_on_server_disconnected)
-
+		
+		multiplayer.server_disconnected.connect(_on_server_disconnected)
+		
+		#Pause code execution until the screen is completely black
+		await TransitionScreen.fade_out()
+	else:
+		connection_failed.emit("Invalid IP address or host unresolvable.")
+		
 
 @rpc("any_peer")
 func register_player(nickname: String) -> void:
@@ -119,6 +130,7 @@ func del_player(id: int) -> void:
 
 func _on_server_disconnected() -> void:
 	print("Lost connection to the host")
+	connection_failed.emit("Lost connection to the host.")
 	go_to_main_menu()
 
 func go_to_main_menu() -> void:
@@ -128,5 +140,10 @@ func go_to_main_menu() -> void:
 
 	connected_peer_ids.clear()
 	player_names.clear()
+	
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
 	get_tree().change_scene_to_file("res://ui/menus/main_menu/main_menu.tscn")
+
+func _on_connection_failed() -> void:
+	connection_failed.emit("Failed to connect to host. Please double check the IP address.")
