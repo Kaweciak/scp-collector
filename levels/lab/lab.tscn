@@ -922,6 +922,18 @@ mesh = SubResource("PlaneMesh_ibu5n")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, 12)
 shape = SubResource("ConcavePolygonShape3D_lbb84")
 
+[node name="CollisionShape3D176" type="CollisionShape3D" parent="NavigationRegion3D/Walls" unique_id=1589156488]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, -11, 1, 22)
+shape = SubResource("ConcavePolygonShape3D_lbb84")
+
+[node name="CollisionShape3D177" type="CollisionShape3D" parent="NavigationRegion3D/Walls" unique_id=2085125133]
+transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, -36, 1, 22)
+shape = SubResource("ConcavePolygonShape3D_lbb84")
+
+[node name="CollisionShape3D178" type="CollisionShape3D" parent="NavigationRegion3D/Walls" unique_id=739367030]
+transform = Transform3D(-4.371139e-08, 1, 4.371139e-08, 0, -4.371139e-08, 1, 1, 4.371139e-08, 1.9106855e-15, 14, 1, 22)
+shape = SubResource("ConcavePolygonShape3D_lbb84")
+
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="NavigationRegion3D/Walls" unique_id=789745798]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0, -28)
 mesh = SubResource("PlaneMesh_lbb84")
