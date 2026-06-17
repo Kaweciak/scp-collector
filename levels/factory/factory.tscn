@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dta6ix4l6ydbs"]
 
 [ext_resource type="Script" uid="uid://bo0spnwujjijg" path="res://levels/level_controller.gd" id="1_qb8lh"]
+[ext_resource type="PackedScene" uid="uid://bskiuf3it3yto" path="res://game_objects/SCP-173/scp_173.tscn" id="3_8a2xl"]
 [ext_resource type="PackedScene" uid="uid://yhvx6grd7fl0" path="res://game_objects/SCP-426/scp_426.tscn" id="3_fdwq4"]
 [ext_resource type="Texture2D" uid="uid://chx4r4viwwemh" path="res://levels/factory/assets/textures/house2_Grass001_1K-JPG_Color.jpg" id="6_lgar0"]
 [ext_resource type="Texture2D" uid="uid://bl67ydim3urun" path="res://levels/factory/assets/textures/house2_Grass001_1K-JPG_NormalGL.jpg" id="7_88cs6"]
@@ -265,7 +266,7 @@ data = PackedVector3Array(0.5, 0, 2, -0.5, 0, 2, 0.5, 0, -2, -0.5, 0, 2, -0.5, 0
 
 [node name="Factory" type="Node3D" unique_id=1062811088]
 script = ExtResource("1_qb8lh")
-anomaly_scenes = Array[PackedScene]([ExtResource("3_fdwq4")])
+anomaly_scenes = Array[PackedScene]([ExtResource("3_fdwq4"), ExtResource("3_8a2xl")])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1114252263]
 environment = SubResource("Environment_2vnkb")
