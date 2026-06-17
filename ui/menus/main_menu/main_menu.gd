@@ -17,6 +17,9 @@ func _ready() -> void:
 		page.deactivate()
 	current_page = pages_arr[0]
 	current_page.activate()
+	
+	multiplayer.connected_to_server.connect(_on_connected_to_server)
+	MultiplayerController.connection_failed.connect(_on_connection_failed)
 
 # taking button press signal back from paper
 func _on_paper_screen_event(event_name: String, args: Array = []) -> void:
@@ -79,15 +82,38 @@ func _host_game(nickname: String) -> void:
 	
 	set_process_unhandled_input(false)
 	
+	#Pause code execution until the screen is completely black
+	await TransitionScreen.fade_out()
+	
 	get_tree().call_deferred("change_scene_to_packed", lobby_scene)
+	
+	#Clear the lag spikes and fade the screen back to normal
+	TransitionScreen.fade_in()
 
 func _join_game(ip: String, nickname: String) -> void:
-	print("Joining game lobby")
-	MultiplayerController.join(ip, nickname)
+	print("Attempting to join game lobby...")
 	
 	set_process_unhandled_input(false)
 	
+	MultiplayerController.join(ip, nickname)
+	
+#Triggered only when the network establishes a successful connection
+func _on_connected_to_server() -> void:
+	print("Successfully connected to host. Loading lobby...")
 	get_tree().call_deferred("change_scene_to_packed", lobby_scene)
+	
+	#Clear the lag spikes and fade the screen back to normal
+	TransitionScreen.fade_in()
+
+#Triggered when the MultiplayerController Autoload emits a failure
+func _on_connection_failed(_error_message: String) -> void:
+	print("Connection failed, unlocking menu.")
+	
+	#Clear the black screen so the player can see the menu
+	TransitionScreen.fade_in()
+	
+	#Re-enable inputs so the user can interact with the menu and try again
+	set_process_unhandled_input(true)
 
 func _start_tutorial() -> void:
 	MultiplayerController.host("Player")

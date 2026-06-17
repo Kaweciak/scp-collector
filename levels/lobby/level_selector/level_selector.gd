@@ -192,4 +192,9 @@ func _get_winning_map() -> String:
 @rpc("authority", "reliable", "call_local")
 func start_game(map_name: String):
 	print("Loading map: ", map_name)
+	
+	await TransitionScreen.fade_out()
+	
 	get_tree().change_scene_to_file(maps[map_name])
+	
+	TransitionScreen.fade_in()

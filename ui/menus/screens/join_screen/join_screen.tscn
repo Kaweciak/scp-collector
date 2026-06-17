@@ -22,6 +22,14 @@ size_flags_vertical = 0
 texture = ExtResource("3_mp2dg")
 expand_mode = 5
 
+[node name="ErrorLabel" type="Label" parent="VBoxContainer" unique_id=1958764451]
+custom_minimum_size = Vector2(0, 65)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="IPInput" type="LineEdit" parent="VBoxContainer" unique_id=1155010334]
 layout_mode = 2
 placeholder_text = "Enter host IP"

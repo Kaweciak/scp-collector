@@ -17,6 +17,11 @@ height = 1.8
 radius = 0.3
 height = 1.2
 
+[sub_resource type="LabelSettings" id="LabelSettings_467px"]
+font_size = 28
+outline_size = 9
+outline_color = Color(0, 0, 0, 1)
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_rjoga"]
 resource_local_to_scene = true
 shader = ExtResource("2_ryni8")
@@ -159,6 +164,7 @@ visible = false
 offset_right = 198.0
 offset_bottom = 23.0
 text = "Press interact to Spectate"
+label_settings = SubResource("LabelSettings_467px")
 
 [node name="SanityFilter" type="ColorRect" parent="MainCamera/HUD" unique_id=195940665]
 material = SubResource("ShaderMaterial_rjoga")

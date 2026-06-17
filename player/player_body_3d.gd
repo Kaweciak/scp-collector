@@ -171,6 +171,9 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not is_inside_tree() or not multiplayer.has_multiplayer_peer():
+		return
+	
 	#If the player is attached to the current instance
 	if is_multiplayer_authority():
 		#process spectator logic if dead
@@ -228,6 +231,9 @@ func _physics_process(delta: float) -> void:
 
 #Process unhandled input
 func _unhandled_input(event: InputEvent) -> void:
+	if not is_inside_tree() or not multiplayer.has_multiplayer_peer():
+		return
+		
 	#Only the owner instance can process input for the player
 	if not is_multiplayer_authority():
 		return
@@ -252,7 +258,7 @@ func _unhandled_input(event: InputEvent) -> void:
 					get_viewport().set_input_as_handled()
 					return
 				elif event.is_action_pressed("godmode"):
-					admin_immortality_enabled = !admin_immortality_enabled
+					_toggle_godmode.rpc(!admin_immortality_enabled)
 					get_viewport().set_input_as_handled()
 					return
 				elif event.is_action_pressed("noclip"):
@@ -512,7 +518,17 @@ func death() -> void:
 	emit_signal("died")
 	
 	if is_multiplayer_authority():
-		hint_label.show()
+		#Check if there are other players alive to spectate
+		var players = get_tree().get_nodes_in_group("Player")
+		var any_alive = false
+		for p in players:
+			if p != self and not p.dead:
+				any_alive = true
+				break
+				
+		#Only show the spectator hint if there is actually someone to spectate
+		if any_alive:
+			hint_label.show()
 		
 		#Drop any currently held item
 		if held != null:
@@ -533,15 +549,12 @@ func death() -> void:
 	#Stop standard animations so they don't override the physics
 	animation_player.stop()
 	
-	#Find the skeleton and start the ragdoll simulation
-	var skeleton = _find_skeleton(model)
-	if skeleton:
-		skeleton.physical_bones_start_simulation()
-		
-		#Transfer the player's momentum to the corpse so it slumps realistically
-		for child in skeleton.get_children():
-			if child is PhysicalBone3D:
-				child.linear_velocity = velocity
+	#Hide the model entirely for all players
+	model.visible = false
+	
+	#Safely disable hitboxes so the invisible body doesn't obstruct other players
+	base_collision.set_deferred("disabled", true)
+	crouch_collision.set_deferred("disabled", true)
 	
 	audio_stream_player.stream = death_sound
 	audio_stream_player.play()
@@ -765,30 +778,30 @@ func _process_footsteps(delta: float) -> void:
 	if dead or admin_noclip_enabled:
 		audio_stream_player.stop()
 		return
-
+	
 	var is_moving := move_dir.length() > 0.1
-
+	var interval := run_step_interval if sprinting else walk_step_interval
+	
 	if not is_moving or not is_on_floor():
-		footstep_timer = 0.0
-
+		footstep_timer = max(0.0, interval - 0.15)
+		
 		if audio_stream_player.playing:
 			audio_stream_player.stop()
-
+		
 		return
-
-	var interval := run_step_interval if sprinting else walk_step_interval
-
+	
+	
 	footstep_timer += delta
-
+	
 	if footstep_timer >= interval:
 		footstep_timer = 0.0
-
+	
 		var target_stream := run_sound if sprinting else walk_sound
-
+	
 		if audio_stream_player.stream != target_stream:
 			audio_stream_player.stop()
 			audio_stream_player.stream = target_stream
-
+		
 		if not audio_stream_player.playing:
 			audio_stream_player.play()
 
@@ -1041,3 +1054,8 @@ func _process_noclip(delta: float) -> void:
 	#Apply the movement
 	var current_fly_speed = flight_speed * sprint_factor * 2.0 if sprinting else flight_speed * 2.0
 	global_position += fly_dir.normalized() * current_fly_speed * delta
+
+#Multiplayer synched godmode toggle
+@rpc("call_local", "any_peer", "reliable")
+func _toggle_godmode(state: bool) -> void:
+	admin_immortality_enabled = state
